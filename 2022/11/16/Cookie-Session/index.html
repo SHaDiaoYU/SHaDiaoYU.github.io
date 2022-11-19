@@ -16,7 +16,7 @@
 <meta property="og:image" content="c:/Users/ShangJiaWei/AppData/Roaming/Typora/typora-user-images/image-20221116141255489.png">
 <meta property="og:image" content="c:/Users/ShangJiaWei/AppData/Roaming/Typora/typora-user-images/image-20221116141406786.png">
 <meta property="article:published_time" content="2022-11-16T07:40:55.000Z">
-<meta property="article:modified_time" content="2022-11-16T07:41:30.625Z">
+<meta property="article:modified_time" content="2022-11-19T05:02:25.546Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="c:/Users/ShangJiaWei/AppData/Roaming/Typora/typora-user-images/image-20221116141255489.png">
@@ -156,11 +156,67 @@
 </ul>
 </li>
 </ol>
-<h2 id="（二）Session："><a href="#（二）Session：" class="headerlink" title="（二）Session："></a>（二）Session：</h2><h3 id="（1）Session的基本使用："><a href="#（1）Session的基本使用：" class="headerlink" title="（1）Session的基本使用："></a>（1）Session的基本使用：</h3><h3 id="（2）-Session的原理："><a href="#（2）-Session的原理：" class="headerlink" title="（2） Session的原理："></a>（2） Session的原理：</h3><h3 id="（3）-Session的使用细节："><a href="#（3）-Session的使用细节：" class="headerlink" title="（3） Session的使用细节："></a>（3） Session的使用细节：</h3>
+<h2 id="（二）Session："><a href="#（二）Session：" class="headerlink" title="（二）Session："></a>（二）Session：</h2><h3 id="（1）Session的基本使用："><a href="#（1）Session的基本使用：" class="headerlink" title="（1）Session的基本使用："></a>（1）Session的基本使用：</h3><ul>
+<li><p>Session：服务端会话跟踪技术，将数据保存到服务端。</p>
+</li>
+<li><p>JavaEE提供HttpSession接口，来实现一次会话的多次请求间数据共享功能；</p>
+</li>
+<li><p>使用：</p>
+<ol>
+<li><p>获取Session对象</p>
+<p><code>HttpSession session = request.getSession();</code></p>
+</li>
+<li><p>Session对象功能</p>
+<ul>
+<li>void setAttribute(String name,Object o):存储对象到session域中；</li>
+<li>Object getAttribute(String name)：根据key，获取值；</li>
+<li>void removeAttribute(String name)：根据key，删除该键值对；</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="（2）-Session的原理："><a href="#（2）-Session的原理：" class="headerlink" title="（2） Session的原理："></a>（2） Session的原理：</h3><ul>
+<li>Session是基于Cookie实现的，同一会话内进行<code>request.getSession()</code>后得到的是同一个对象；</li>
+<li>同一会话内，首次获取Session对象时，生成一个SessionID，在响应时存入响应头<code>set-cookie:JSESSIONIDE=xxx</code>，之后的每一次请求的请求头内，携带sessionID(<code>cookie:JSESSIONID = xxx</code>)，服务端据此寻找是否有该ID的session对象，如果有就直接拿来用，以此保证拿到的session对象为同一个。</li>
+</ul>
+<h3 id="（3）-Session的使用细节："><a href="#（3）-Session的使用细节：" class="headerlink" title="（3） Session的使用细节："></a>（3） Session的使用细节：</h3><ul>
+<li><p>Session钝化、活化：</p>
+<ul>
+<li><p>服务器重启后，session中的数据是否还在？</p>
+<p>不会丢失，前提为服务器是正常启动停止的。</p>
+<ul>
+<li>钝化：在服务器正常关闭后，Tomcat会自动将Session数据写入硬盘的文件中；</li>
+<li>活化：再次启动服务器后，从文件中加载数据到Session中；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Session销毁：</p>
+<ul>
+<li><p>默认情况下，无操作，30分钟自动销毁；</p>
+</li>
+<li><p>调用Session对象的invalidate()方法；</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="（三）小结"><a href="#（三）小结" class="headerlink" title="（三）小结"></a>（三）小结</h2><ul>
+<li>Cookie和Session都是来完成一次会话内多次请求间<strong>数据共享</strong>的</li>
+<li>区别：<ul>
+<li>存储位置：Cookie是将数据存储在客户端，Session将数据存储在服务端；</li>
+<li>安全性：Cookie不安全，Session安全；</li>
+<li>数据大小：Cookie最大3KB，Session无大小限制；</li>
+<li>存储时间：Cookie可以长期存储，Session默认30分钟；</li>
+<li>服务器性能：Cookie不占用服务器资源，Session占用服务器资源；</li>
+</ul>
+</li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://gitee.com/SHaDiaoYU/2022/11/16/Cookie-Session/" data-id="clangngxn0000x4ua8vns8i5s" data-title="Cookie &amp; Session" class="article-share-link">Share</a>
+      <a data-url="http://gitee.com/SHaDiaoYU/2022/11/16/Cookie-Session/" data-id="clangrozr0000ycua5cjhbw0r" data-title="Cookie &amp; Session" class="article-share-link">Share</a>
       
       
       
