@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/test1/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/test1/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/test1/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/test1/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/test1/css/main.css">
+
+
+<link rel="stylesheet" href="/test1/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gitee.com","root":"/test1/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="工具调研情况1.密码字典生成工具：Crunch 可以非常快速的生成所有可能的密码组合。还可以在遇到任何困难时按文件大小和支持来分解结果。它支持数字、符号、大写和小写字母的组合。 项目地址：jaalto&#x2F;external-sf–crunch-wordlist: 3rd party (Sourceforge) (github.com) 编写语言：c 使用教程：linux密码生成工具crunc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我是嘉宝">
+<meta property="og:url" content="https://gitee.com/SHaDiaoYU/2023/01/14/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94%E6%83%85%E5%86%B5/index.html">
+<meta property="og:site_name" content="我是嘉宝">
+<meta property="og:description" content="工具调研情况1.密码字典生成工具：Crunch 可以非常快速的生成所有可能的密码组合。还可以在遇到任何困难时按文件大小和支持来分解结果。它支持数字、符号、大写和小写字母的组合。 项目地址：jaalto&#x2F;external-sf–crunch-wordlist: 3rd party (Sourceforge) (github.com) 编写语言：c 使用教程：linux密码生成工具crunc">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-14T06:24:28.354Z">
+<meta property="article:modified_time" content="2023-01-15T12:49:44.655Z">
+<meta property="article:author" content="jiawei">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://gitee.com/SHaDiaoYU/2023/01/14/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94%E6%83%85%E5%86%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | 我是嘉宝</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/test1/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">我是嘉宝</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/test1/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/test1/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/01/14/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94%E6%83%85%E5%86%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我是嘉宝">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-14 14:24:28" itemprop="dateCreated datePublished" datetime="2023-01-14T14:24:28+08:00">2023-01-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-15 20:49:44" itemprop="dateModified" datetime="2023-01-15T20:49:44+08:00">2023-01-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="工具调研情况"><a href="#工具调研情况" class="headerlink" title="工具调研情况"></a>工具调研情况</h1><h4 id="1-密码字典生成工具：Crunch"><a href="#1-密码字典生成工具：Crunch" class="headerlink" title="1.密码字典生成工具：Crunch"></a>1.密码字典生成工具：Crunch</h4><ul>
+<li>可以非常快速的生成所有可能的密码组合。还可以在遇到任何困难时按文件大小和支持来分解结果。它支持数字、符号、大写和小写字母的组合。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/jaalto/external-sf--crunch-wordlist">jaalto&#x2F;external-sf–crunch-wordlist: 3rd party (Sourceforge) (github.com)</a></li>
+<li>编写语言：c</li>
+<li>使用教程：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/72f9262ba6c1">linux密码生成工具crunch使用攻略 - 简书 (jianshu.com)</a></li>
+</ul>
+<h4 id="2-密码破解工具：hydra"><a href="#2-密码破解工具：hydra" class="headerlink" title="2.密码破解工具：hydra"></a>2.密码破解工具：hydra</h4><ul>
+<li>可使用自带或外部的密码字典，这个密码攻击工具是一个集中式并行登录破解，有多种攻击协议。可针对添加新模块进行定制。该工具可以远程获得对系统的未经授权的访问。它适用于 Cisco AAA、Cisco 授权、FTP、HTTPS GET&#x2F;POST&#x2F;PROXY、IMAP、MySQL、MSSQL、Oracle、<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/postgresql?from=10680">PostgreSQL</a>、SIP、POP3、SMTP、SSHkey、SSH 等等。可以使用指令，也具有图形化界面。</li>
+<li>github地址：<a target="_blank" rel="noopener" href="https://github.com/vanhauser-thc/thc-hydra">https://github.com/vanhauser-thc/thc-hydra</a></li>
+<li>编写语言：c</li>
+<li>hydra使用：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/397779150">https://zhuanlan.zhihu.com/p/397779150</a></li>
+<li>ubuntu下安装：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/135259422">https://zhuanlan.zhihu.com/p/135259422</a></li>
+</ul>
+<h4 id="3-密码破解工具：Medusa"><a href="#3-密码破解工具：Medusa" class="headerlink" title="3.密码破解工具：Medusa"></a>3.密码破解工具：Medusa</h4><ul>
+<li>与hydra类似的一款工具，稳定性相比较更好，但是模块要稍少一些</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/jmk-foofus/medusa">jmk-foofus&#x2F;medusa: Medusa is a speedy, parallel, and modular, login brute-forcer. (github.com)</a></li>
+<li>编写语言：c</li>
+<li>简易使用教程：<a target="_blank" rel="noopener" href="https://bbskali.cn/thread-275-1-1.html">medusa密码破解攻略-Kali笔记 (bbskali.cn)</a></li>
+</ul>
+<h4 id="4-web渗透测试工具：Burp-Suite-BP"><a href="#4-web渗透测试工具：Burp-Suite-BP" class="headerlink" title="4. web渗透测试工具：Burp Suite(BP)"></a>4. web渗透测试工具：Burp Suite(BP)</h4><ul>
+<li>在对表单的破解方面，比hydra&#x2F;medusa强，但是只有图形化界面，无github地址，不是开源项目。</li>
+<li>编写语言：Java</li>
+</ul>
+<h4 id="5-抓包工具：tcpdump"><a href="#5-抓包工具：tcpdump" class="headerlink" title="5. 抓包工具：tcpdump"></a>5. 抓包工具：tcpdump</h4><ul>
+<li><p>抓包工具，输出结果可以导出文件到wireshark中展示分析。</p>
+</li>
+<li><p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/the-tcpdump-group/tcpdump">https://github.com/the-tcpdump-group/tcpdump</a></p>
+</li>
+<li><p>编写语言：c</p>
+</li>
+<li><p>使用教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_33699914/article/details/91724383?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1-91724383-blog-121565278.pc_relevant_landingrelevant&spm=1001.2101.3001.4242.2&utm_relevant_index=4">(43条消息) tcpdump 安装 使用及详解_weixin_33699914的博客-CSDN博客</a></p>
+</li>
+<li><p>代码比较多，集成工作有难度。</p>
+</li>
+</ul>
+<h4 id="6-提权工具：LinEnum"><a href="#6-提权工具：LinEnum" class="headerlink" title="6. 提权工具：LinEnum"></a>6. 提权工具：LinEnum</h4><ul>
+<li>LinEnum 是一个高级 Bash 脚本，它从目标系统中提取了大量有用的信息，可以复制文件并进行导出，同时可以搜索包含关键字的文件。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/rebootuser/LinEnum">https://github.com/rebootuser/LinEnum</a></li>
+<li>编写语言：shell</li>
+<li>使用教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43571641/article/details/124374101">(43条消息) Linux提权辅助工具_Luckysec的博客-CSDN博客_linux-exploit-suggester</a></li>
+<li>解析：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/315052950">Linux提权辅助脚本-LinEnum解析 - 知乎 (zhihu.com)</a></li>
+</ul>
+<h4 id="7-提权工具：Linux-Exploit-Suggester"><a href="#7-提权工具：Linux-Exploit-Suggester" class="headerlink" title="7. 提权工具：Linux_Exploit_Suggester"></a>7. 提权工具：Linux_Exploit_Suggester</h4><ul>
+<li>根据操作系统版本号自动查找相应提权脚本，如果不带任何参数运行该脚本的话，将执行<strong>uname -r</strong>返回的操作系统发行版本，或者手工输入-k参数查找指定版本号。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/PenturaLabs/Linux_Exploit_Suggester">https://github.com/PenturaLabs/Linux_Exploit_Suggester</a></li>
+<li>编写语言：perl</li>
+</ul>
+<h4 id="8-渗透测试工具：Metasploit-Framework-MSF"><a href="#8-渗透测试工具：Metasploit-Framework-MSF" class="headerlink" title="8.渗透测试工具：Metasploit Framework(MSF)"></a>8.渗透测试工具：Metasploit Framework(MSF)</h4><ul>
+<li>是一款开源的漏洞监测工具，功能十分强大，包含权限提升模块，它可以使用多种技术在目标系统中实现提权，可以生成测试报告。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/rapid7/metasploit-framework">rapid7&#x2F;metasploit-framework: Metasploit Framework (github.com)</a></li>
+<li>编写语言：Ruby</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/csnd/p/11807588.html">Metasploit Framework(MSF)的使用 - 蒋璐 - 博客园 (cnblogs.com)</a></li>
+<li>编写语言为ruby，集成起来有难度。</li>
+</ul>
+<h4 id="9-DNS欺骗工具：dnschef"><a href="#9-DNS欺骗工具：dnschef" class="headerlink" title="9. DNS欺骗工具：dnschef"></a>9. DNS欺骗工具：dnschef</h4><ul>
+<li>dnschef是一个高度可配置的dns代理，用于渗透测试和恶意软件分析，DNS代理又被称作假DNS，可以用来分析用户间传输的流量。比如我们可以使用一个DNS代理伪造所有到某一域名的请求到本地计算机，从而对流量进行分析。</li>
+<li>编写语言：python</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/iphelix/dnschef">iphelix&#x2F;dnschef: DNSChef - DNS proxy for Penetration Testers and Malware Analysts (github.com)</a></li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaoxuetu_/article/details/76042369">(43条消息) DNSChef的使用_xiaoxuetu_的博客-CSDN博客_dnschef</a></li>
+</ul>
+<h4 id="10-web漏洞分析工具：Nikto"><a href="#10-web漏洞分析工具：Nikto" class="headerlink" title="10.web漏洞分析工具：Nikto"></a>10.web漏洞分析工具：Nikto</h4><ul>
+<li>可对web服务器进行多项安全测试，Nikto可以扫描指定主机的web类型、主机名、指定目录、特定CGI漏洞、返回主机允许的http模式等。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/sullo/nikto">sullo&#x2F;nikto: Nikto web server scanner (github.com)</a></li>
+<li>编写语言：perl</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/124246499">Web漏洞扫描神器Nikto使用指南 - 知乎 (zhihu.com)</a></li>
+</ul>
+<h4 id="11-密码分析工具：pipal"><a href="#11-密码分析工具：pipal" class="headerlink" title="11. 密码分析工具：pipal"></a>11. 密码分析工具：pipal</h4><ul>
+<li>主要功能是进行密码合集文件进行分析。分析结果主要有密码频率Top N、词语频率Top N、 密码长度频率分析（从序列和排名两项给出），在terminal中给出了图形化的分析结果。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/digininja/pipal/">digininja&#x2F;pipal: Pipal, THE password analyser (github.com)</a></li>
+<li>编写语言：ruby</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/124246499">Web漏洞扫描神器Nikto使用指南 - 知乎 (zhihu.com)</a></li>
+</ul>
+<h4 id="12-渗透工具：WPScan"><a href="#12-渗透工具：WPScan" class="headerlink" title="12.渗透工具：WPScan"></a>12.渗透工具：WPScan</h4><ul>
+<li>只是针对特定wordPress站点的漏洞扫描,感觉参考价值不大。</li>
+</ul>
+<h4 id="13-web漏洞分析工具：Wapiti"><a href="#13-web漏洞分析工具：Wapiti" class="headerlink" title="13. web漏洞分析工具：Wapiti"></a>13. web漏洞分析工具：Wapiti</h4><ul>
+<li>wapiti是一个基于终端的web漏洞扫描工具，它发送 GET 和 POST 请求给目标站点，来寻找漏洞。它目前搜索 <a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=XSS&spm=1001.2101.3001.7020">XSS</a>、SQL 和 XPath 注入、文件包含、命令执行、XXE 注入、CRLF 注入、服务器端请求伪造、开放重定向等漏洞。在wapiti扫描完成后，会生成一个html报告，显示各类项目的漏洞数量。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/wapiti-scanner/wapiti">wapiti-scanner&#x2F;wapiti: Web vulnerability scanner written in Python3 (github.com)</a></li>
+<li>编写语言：python</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_59923059/article/details/123867361">(43条消息) Wapiti是什么以及使用教程_Griy日记的博客-CSDN博客</a></li>
+</ul>
+<h4 id="14-web漏洞分析工具：skipfish"><a href="#14-web漏洞分析工具：skipfish" class="headerlink" title="14.web漏洞分析工具：skipfish"></a>14.web漏洞分析工具：skipfish</h4><ul>
+<li>一款由谷歌开发的实验性的主动web安全评估工具，体量小但是功能齐全。特点是：递归爬站，基于字典的探测，速度较快，误报相对较低。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/spinkham/skipfish">spinkham&#x2F;skipfish: Web application security scanner created by lcamtuf for google - Unofficial Mirror (github.com)</a></li>
+<li>编写语言：c</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39353923/article/details/82531865?spm=1001.2101.3001.6650.8&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-8-82531865-blog-107693542.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-8-82531865-blog-107693542.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=9">(43条消息) Web扫描之Skipfish详解实践_Louisnie的博客-CSDN博客_skipfish</a></li>
+</ul>
+<h4 id="15-密码破解工具：hashcat"><a href="#15-密码破解工具：hashcat" class="headerlink" title="15.密码破解工具：hashcat"></a>15.密码破解工具：hashcat</h4><ul>
+<li>开源，支持CPU、GPU、APU、FPGA等多种计算核心，号称史上最快的密码破解工具，支持多种hash散列算法，支持对rar、office、pdf、windows账户、wifi等多种密码的破解。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/hashcat/hashcat">hashcat&#x2F;hashcat: World’s fastest and most advanced password recovery utility (github.com)</a></li>
+<li>编写语言：c</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44754436/article/details/123628350">(43条消息) Hashcat从入门到入土（一）_杂化轨道VSEPR的博客-CSDN博客_hashcat</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/test1/2022/11/19/%E8%AF%B7%E6%B1%82%E8%BD%AC%E5%8F%91%E4%B8%8E%E9%87%8D%E5%AE%9A%E5%90%91/" rel="prev" title="请求转发与重定向">
+      <i class="fa fa-chevron-left"></i> 请求转发与重定向
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94%E6%83%85%E5%86%B5"><span class="nav-number">1.</span> <span class="nav-text">工具调研情况</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AF%86%E7%A0%81%E5%AD%97%E5%85%B8%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7%EF%BC%9ACrunch"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1.密码字典生成工具：Crunch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%9Ahydra"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2.密码破解工具：hydra</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%9AMedusa"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3.密码破解工具：Medusa</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-web%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%EF%BC%9ABurp-Suite-BP"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">4. web渗透测试工具：Burp Suite(BP)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E6%8A%93%E5%8C%85%E5%B7%A5%E5%85%B7%EF%BC%9Atcpdump"><span class="nav-number">1.0.0.5.</span> <span class="nav-text">5. 抓包工具：tcpdump</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E6%8F%90%E6%9D%83%E5%B7%A5%E5%85%B7%EF%BC%9ALinEnum"><span class="nav-number">1.0.0.6.</span> <span class="nav-text">6. 提权工具：LinEnum</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E6%8F%90%E6%9D%83%E5%B7%A5%E5%85%B7%EF%BC%9ALinux-Exploit-Suggester"><span class="nav-number">1.0.0.7.</span> <span class="nav-text">7. 提权工具：Linux_Exploit_Suggester</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%EF%BC%9AMetasploit-Framework-MSF"><span class="nav-number">1.0.0.8.</span> <span class="nav-text">8.渗透测试工具：Metasploit Framework(MSF)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-DNS%E6%AC%BA%E9%AA%97%E5%B7%A5%E5%85%B7%EF%BC%9Adnschef"><span class="nav-number">1.0.0.9.</span> <span class="nav-text">9. DNS欺骗工具：dnschef</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-web%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9ANikto"><span class="nav-number">1.0.0.10.</span> <span class="nav-text">10.web漏洞分析工具：Nikto</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9Apipal"><span class="nav-number">1.0.0.11.</span> <span class="nav-text">11. 密码分析工具：pipal</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-%E6%B8%97%E9%80%8F%E5%B7%A5%E5%85%B7%EF%BC%9AWPScan"><span class="nav-number">1.0.0.12.</span> <span class="nav-text">12.渗透工具：WPScan</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-web%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9AWapiti"><span class="nav-number">1.0.0.13.</span> <span class="nav-text">13. web漏洞分析工具：Wapiti</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14-web%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%9Askipfish"><span class="nav-number">1.0.0.14.</span> <span class="nav-text">14.web漏洞分析工具：skipfish</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#15-%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%9Ahashcat"><span class="nav-number">1.0.0.15.</span> <span class="nav-text">15.密码破解工具：hashcat</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">jiawei</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/test1/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jiawei</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/test1/lib/anime.min.js"></script>
+  <script src="/test1/lib/velocity/velocity.min.js"></script>
+  <script src="/test1/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/test1/js/utils.js"></script>
+
+<script src="/test1/js/motion.js"></script>
+
+
+<script src="/test1/js/schemes/pisces.js"></script>
+
+
+<script src="/test1/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
