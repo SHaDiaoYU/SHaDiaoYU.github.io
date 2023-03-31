@@ -176,7 +176,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-27 20:19:04" itemprop="dateModified" datetime="2023-03-27T20:19:04+08:00">2023-03-27</time>
+                <time title="修改时间：2023-03-31 11:06:00" itemprop="dateModified" datetime="2023-03-31T11:06:00+08:00">2023-03-31</time>
               </span>
 
           
@@ -261,6 +261,29 @@
 <li>类的字节码二进制数据(跟.class字节码文件是不同的)，是放在方法区的，有的地方称为类的元数据（包括方法代码、变量名、方法名、访问权限等）</li>
 </ol>
 <p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/QQ%E6%88%AA%E5%9B%BE20230327194724.png"></p>
+<h5 id="获取java对象的方式："><a href="#获取java对象的方式：" class="headerlink" title="获取java对象的方式："></a>获取java对象的方式：</h5><ol>
+<li><p>在代码阶段&#x2F;编译阶段： 使用<code>Class.forName()</code>获取</p>
+<p>​	<strong>前提</strong>：已知一个类的全类名，且该类在类路径下，可通过Class类的静态方法<code>forName()</code>获取，可能抛出ClassNotFoundException;</p>
+<p>​	<strong>实例</strong>：<code>Class cls1 = Class.forName(&quot;java.lang.Cat&quot;);</code></p>
+<p>​	<strong>应用场景</strong>：多用于配置文件，读取全类名，加载类；</p>
+</li>
+<li><p>在Class类阶段(加载阶段)：使用<code>类.class</code>获取</p>
+<p>​	<strong>前提</strong>：已知具体的类，通过类的class获取，该方式最为安全可靠，程序性能最高；</p>
+<p>​	<strong>实例</strong>：<code>Class cls2 = Cat.class;</code></p>
+<p>​	<strong>应用场景：</strong> 多用于参数传递，比如通过反射得到对应构造器对象； </p>
+</li>
+<li><p>在运行阶段(此时已经有对象被创建出来了)：使用<code>对象.getClass()</code>获取</p>
+</li>
+<li><p>通过类加载器ClassLoader获取：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 首先获取到类加载器</span></span><br><span class="line"><span class="type">ClassLoader</span> <span class="variable">classLoader</span> <span class="operator">=</span> cat.getClass().getClassLoader();</span><br><span class="line"><span class="comment">// 通过类加载器得到class对象</span></span><br><span class="line"><span class="type">Class</span> <span class="variable">cls4</span> <span class="operator">=</span> classLoader.loadClass(<span class="string">&quot;com.java.Cat&quot;</span>);</span><br><span class="line">System.out.println(cls4);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基本数据类型（int,char,boolean,float,double,byte,long,short）按照如下方式得到Class类对象：</p>
+<p>​	<code>Class cls = 基本数据类型.class</code></p>
+</li>
+<li><p>基本数据类型对应的包装类，可以通过<code>.TYPE</code>得到Class类对象</p>
+<p>​	<strong>实例：</strong><code>Class cls = 包装类.TYPE</code></p>
+</li>
+</ol>
 
       
     </div>
