@@ -21,9 +21,9 @@
   </script>
 
   <meta property="og:type" content="website">
-<meta property="og:title" content="我是嘉宝">
+<meta property="og:title" content="沙雕鱼罐头">
 <meta property="og:url" content="https://gitee.com/SHaDiaoYU/index.html">
-<meta property="og:site_name" content="我是嘉宝">
+<meta property="og:site_name" content="沙雕鱼罐头">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="jiawei">
 <meta name="twitter:card" content="summary">
@@ -41,7 +41,7 @@
   };
 </script>
 
-  <title>我是嘉宝</title>
+  <title>沙雕鱼罐头</title>
   
 
 
@@ -92,7 +92,7 @@
 
     <a href="/test1/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">我是嘉宝</h1>
+      <h1 class="site-title">沙雕鱼罐头</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -145,6 +145,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/03/SpringBoot%E5%AD%A6%E4%B9%A0-%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2023/04/03/SpringBoot%E5%AD%A6%E4%B9%A0-%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A/" class="post-title-link" itemprop="url">SpringBoot学习--配置绑定</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-03 11:16:46 / 修改时间：14:01:28" itemprop="dateCreated datePublished" datetime="2023-04-03T11:16:46+08:00">2023-04-03</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="需求场景："><a href="#需求场景：" class="headerlink" title="需求场景："></a>需求场景：</h4><p>有这样的一个<em>javaBean</em> ，其内容如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Car</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String brand;</span><br><span class="line">    <span class="keyword">private</span> Integer price;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//getter、setter、toString()等方法已省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在配置文件application.properties内，有这样的两条配置：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">myCar.brand</span>=<span class="string">&quot;benz&quot;</span></span><br><span class="line"><span class="attr">myCar.price</span>=<span class="string">1000</span></span><br></pre></td></tr></table></figure>
+
+<p>现在需要读取properties文件的内容，并且把它封装到<em>javaBean</em>内，如果使用普通的方式实现，需要用IO流来读取跟数据有关的配置（配置文件中的配置信息可能有很多，因此读取起来可能会很耗时间）再完成封装。这个过程会很麻烦。SpringBoot给我们提供了实现配置绑定的几种方式，以下作简单介绍。</p>
+<h4 id="SpringBoot实现配置绑定的几种方式："><a href="#SpringBoot实现配置绑定的几种方式：" class="headerlink" title="SpringBoot实现配置绑定的几种方式："></a>SpringBoot实现配置绑定的几种方式：</h4><ol>
+<li><p>使用**@ConfigurationProperties**注解</p>
+<ul>
+<li><p>位置：在javaBean–Car内，使用注解**@ConfigurationProperties** ，并设置<strong>prefix</strong>属性为 “myCar”,该属性会将组件中的属性与配置文件中该前缀的属性配置绑定;</p>
+</li>
+<li><p>使用**@Component**注解，标识当前javaBean为组件，将当前的javaBean（组件）添加至容器内，因为只有在容器中的组件才能使用SpringBoot的强大功能；</p>
+</li>
+</ul>
+<p>示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;mycar&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Car</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String brand;</span><br><span class="line">    <span class="keyword">private</span> Integer price;</span><br><span class="line">	......</span><br></pre></td></tr></table></figure>
+
+<p>查看是否完成了配置绑定：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloController</span> &#123;</span><br><span class="line">    <span class="comment">// 利用spring提供的自动注入，将容器中的组件car拿过来就行</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    Car car;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/car&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Car <span class="title function_">car</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> car;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>使用**@EnableConfigurationProperties**注解</p>
+<ul>
+<li>位置：被**@Configuration<strong>标识过的配置类中，使用</strong>@EnableConfigurationProperties<strong>注解，并设置参数为</strong>(javaBean)xxx.class**</li>
+<li>即可为javaBean开启属性配置绑定功能，同时为javaBean自动注册到容器中（这样的话，就不需要再为javaBean添加@Component注解了）。</li>
+<li>适用的场景：在使用第三方包的时候，不便于在类上设置@Component注解时，便可使用此方法在配置类上进行操作。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableConfigurationProperties(Car.class)</span></span><br><span class="line"><span class="meta">@Configuration(proxyBeanMethods = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Myconfig</span> &#123;</span><br><span class="line">	......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/03/26/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -154,7 +245,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
+      <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -176,7 +267,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-31 11:06:00" itemprop="dateModified" datetime="2023-03-31T11:06:00+08:00">2023-03-31</time>
+                <time title="修改时间：2023-03-31 20:37:45" itemprop="dateModified" datetime="2023-03-31T20:37:45+08:00">2023-03-31</time>
               </span>
 
           
@@ -284,6 +375,27 @@
 <p>​	<strong>实例：</strong><code>Class cls = 包装类.TYPE</code></p>
 </li>
 </ol>
+<h5 id="哪些类型有Class对象："><a href="#哪些类型有Class对象：" class="headerlink" title="哪些类型有Class对象："></a>哪些类型有Class对象：</h5><ul>
+<li>外部类、成员内部类、静态内部类、局部内部类、匿名内部类；</li>
+<li>interface</li>
+<li>数组</li>
+<li>enum枚举</li>
+<li>annotation注解</li>
+<li>基本数据类型</li>
+<li>void</li>
+</ul>
+<h5 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h5><p>反射机制是java实现动态语言的关键，也就是通过反射实现类动态加载。</p>
+<ul>
+<li><strong>静态加载</strong>：编译时加载相关的类，如果没有则报错，依赖性过强</li>
+<li><strong>动态加载</strong>：运行时加载需要的类，如果运行时不用该类（即使不存在该类），则不报错，降低了依赖性</li>
+</ul>
+<p><strong>类加载的时机</strong>：</p>
+<ul>
+<li>当创建对象时 &lt;&#x3D;&#x3D;&#x3D;&#x3D; 属于静态加载；</li>
+<li>当子类被加载时（子类被加载则父类也需要加载）&lt;&#x3D;&#x3D;&#x3D;&#x3D; 属于静态加载；</li>
+<li>调用类中的静态成员时&lt;&#x3D;&#x3D;&#x3D;&#x3D; 属于静态加载；</li>
+<li>通过反射&lt;&#x3D;&#x3D;&#x3D;&#x3D; 属于动态加载；</li>
+</ul>
 
       
     </div>
@@ -312,7 +424,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
+      <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -394,7 +506,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
+      <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -474,7 +586,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
+      <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -545,7 +657,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
+      <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -648,7 +760,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
+      <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -835,7 +947,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
+      <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -948,7 +1060,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
+      <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -1025,7 +1137,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
+      <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -1190,67 +1302,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2022/08/29/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/test1/images/avatar.gif">
-      <meta itemprop="name" content="jiawei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我是嘉宝">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/test1/2022/08/29/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" class="post-title-link" itemprop="url">我的第一篇博客</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-08-29 14:59:31 / 修改时间：15:35:45" itemprop="dateCreated datePublished" datetime="2022-08-29T14:59:31+08:00">2022-08-29</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="我的第一篇博客"><a href="#我的第一篇博客" class="headerlink" title="我的第一篇博客"></a><strong>我的第一篇博客</strong></h1><p>hello world!</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/test1/page/2/">2</a><a class="extend next" rel="next" href="/test1/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -1315,7 +1371,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/test1/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
