@@ -145,6 +145,206 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/22/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2023/04/22/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91/" class="post-title-link" itemprop="url">SpringBoot学习-多环境开发</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-22 14:06:25" itemprop="dateCreated datePublished" datetime="2023-04-22T14:06:25+08:00">2023-04-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/22/SpringBoot%E5%AD%A6%E4%B9%A0-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2023/04/22/SpringBoot%E5%AD%A6%E4%B9%A0-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">SpringBoot学习-配置文件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-22 13:28:54 / 修改时间：14:03:17" itemprop="dateCreated datePublished" datetime="2023-04-22T13:28:54+08:00">2023-04-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="、临时属性"><a href="#、临时属性" class="headerlink" title="、临时属性"></a>、临时属性</h4><h4 id="一、临时属性"><a href="#一、临时属性" class="headerlink" title="一、临时属性"></a>一、临时属性</h4><ul>
+<li>指定服务运行所在的端口（格式：<code>--属性</code>）：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar xxxx(项目包名).jar --server.port=8080(端口号)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果需要设置多条指令，各个指令之间需要用空格分开，实例如下：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar xxxx(项目包名).jar --server.port=8080(端口号) --spring.datasource.druid.password=123</span><br></pre></td></tr></table></figure>
+
+<p><strong>临时属性在开发环境进行测试：</strong></p>
+<p>作为后端人员，需要把这些命令测通，才能交给运维人员去使用，所以该如何在开发环境下测试这些命令呢？</p>
+<ol>
+<li>配置运行程序，点击Edit Configurations…</li>
+</ol>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230421134224056.png" alt="image-20230421134224056" style="zoom:67%;" />
+
+<ol start="2">
+<li>在右侧菜单的 Configuration –&gt; Environment –&gt;Program arguments 内，配置临时属性：</li>
+</ol>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230421134604273.png" alt="image-20230421134604273" style="zoom: 50%;" />
+
+<p>在这里填写的命令，都会进到运行程序的 String[] args 参数中:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BootApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(Arrays.toString(args)); <span class="comment">// 这里会输出配置的内容如：[--server.port=8081]</span></span><br><span class="line">        SpringApplication.run(BootApplication.class, args);<span class="comment">// 接收args作为参数</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SpringApplication.run() 方法也支持不带配置参数的形式，此时无论如何进行配置，都不会生效：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(Arrays.toString(args)); <span class="comment">// 这里会输出配置的内容如：[--server.port=8081]</span></span><br><span class="line">    	<span class="comment">// 可以在启动boot程序时断开读取外部临时配置对应的入口，也就是去掉读取外部参数的形参</span></span><br><span class="line">        SpringApplication.run(BootApplication.class);<span class="comment">// 不带配置参数</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、配置文件等级："><a href="#二、配置文件等级：" class="headerlink" title="二、配置文件等级："></a>二、配置文件等级：</h4><p>根据需求的不同，可能会有不同的配置，我们可以创建不同级别的配置文件来达到灵活配置同时又避免冲突的目的。</p>
+<ol>
+<li>在 resources 目录（类路径）下，新创建目录 config ，在该目录下创建配置文件application.yml:</li>
+</ol>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230421142340010.png" alt="image-20230421142340010" style="zoom: 67%;" />
+
+<p>新的application.yml是更高级别的配置文件，新的配置文件与原来的配置文件是共同作用的，如果它们配置了相同的属性，优先级高的配置生效（高级别的覆盖低级别的配置）。</p>
+<p><em>新的问题：</em>有些配置，由于保密权限，我们无法得到并配置（比如数据库的权限、密码等等），并且也无法使用临时属性，这时该如何进行配置呢？</p>
+<p><em>解决：</em> SpringBoot给我们提供了全新的配置文件等级，来帮助我们完成不同等级的配置。</p>
+<p><strong>配置文件4级分类：</strong></p>
+<ol>
+<li>SpringBoot中4级配置文件</li>
+</ol>
+<ul>
+<li><p>1级（<strong>最高级别</strong>）： file : config &#x2F; application.yml</p>
+<p>说明： 在项目jar包同级目录下，有一个config目录，里面有我们的配置文件。 </p>
+</li>
+<li><p>2级：file : application.yml</p>
+<p>说明：在项目jar包同级目录下，有我们的配置文件。</p>
+</li>
+<li><p>3级：classPath :  config&#x2F;application.yml</p>
+<p>说明：在项目jar包内的resources目录（类路径）下，有一个config目录，里面有我们的配置文件。</p>
+</li>
+<li><p>4级（<strong>最低级别</strong>）：classPath :  application.yml</p>
+<p>说明： 在项目jar包内的resources目录（类路径）下，有我们的配置文件。</p>
+</li>
+</ul>
+<ol start="2">
+<li>作用：</li>
+</ol>
+<ul>
+<li>1级与2级留作系统打包后设置通用属性，1级常用于运维经理进行线上整体项目部署方案调控；</li>
+<li>3级与4级用于系统开发阶段设置通用属性，3级常用于项目经理进行整体项目属性调控；</li>
+</ul>
+<h4 id="三、自定义配置文件"><a href="#三、自定义配置文件" class="headerlink" title="三、自定义配置文件"></a>三、自定义配置文件</h4><p>配置文件一般都默认为application.yml(.properties , .yaml等等等等)，但是我们可以对配置文件名称进行自定义。</p>
+<p>现在假设我们的配置文件有两个，一个是ebank.yml，另一个是ebank-server.yml，下面介绍如何使用我们自定义的配置文件。</p>
+<ul>
+<li><p><strong>方法1：</strong>通过启动参数加载配置文件（无需书写配置文件扩展名）。</p>
+<p>格式： <code>--spring.config.name=配置文件名</code>；</p>
+<p>注意： yml格式与properties格式的配置文件都支持；</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230422134351183.png" alt="image-20230422134351183" style="zoom:67%;" />
+</li>
+<li><p><strong>方法2：</strong>通过启动参数加载指定文件路径下的配置文件（使用这种方式可以加载多个配置文件）</p>
+<p>格式：<code>--spring.config.location=classpath:/配置1.yml,classpath:/配置2.yml，...... </code>;</p>
+<p>注意：(a) yml格式与properties格式的配置文件都支持；</p>
+<p>​		    (b) 当加载多个配置文件时，如果涉及相同的配置，则在队列中最后的配置文件中的这一项配置生效。</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230422135425217.png" alt="image-20230422135425217" style="zoom:67%;" />
+
+<p>如图中的两个配置文件有冲突时，后面的对应配置会生效。</p>
+</li>
+</ul>
+<p><strong>重要说明：</strong></p>
+<ul>
+<li>单服务器项目：使用自定义配置文件需求较低；</li>
+<li>多服务器项目：使用自定义配置文件需求较高，将所有的配置文件放在一个目录中，统一进行管理；</li>
+<li>基于SpringCloud技术，所有的服务器将不再设置配置文件，而是通过配置中心进行设定，动态加载配置信息；</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/15/SpringBoot%E5%AD%A6%E4%B9%A0-%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85%E8%BF%90%E8%A1%8C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -168,10 +368,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-04-15 14:36:53 / 修改时间：15:46:15" itemprop="dateCreated datePublished" datetime="2023-04-15T14:36:53+08:00">2023-04-15</time>
+              <time title="创建时间：2023-04-15 14:36:53" itemprop="dateCreated datePublished" datetime="2023-04-15T14:36:53+08:00">2023-04-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-22 13:29:58" itemprop="dateModified" datetime="2023-04-22T13:29:58+08:00">2023-04-22</time>
+              </span>
 
           
 
@@ -211,7 +417,6 @@
 
 <p>在打包过程中，我们也可能会遇到端口被占用的问题，这个时候就需要我们手动结束占用该端口的进程,具体的操作指令如下：</p>
 <img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230415151857372.png" alt="image-20230415151857372" style="zoom: 33%;" />
-
 
       
     </div>
@@ -919,296 +1124,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/01/15/web%E6%B8%97%E9%80%8F%E6%96%B9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/test1/images/avatar.gif">
-      <meta itemprop="name" content="jiawei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="沙雕鱼罐头">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/test1/2023/01/15/web%E6%B8%97%E9%80%8F%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">web渗透方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-15 21:00:31" itemprop="dateCreated datePublished" datetime="2023-01-15T21:00:31+08:00">2023-01-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-03 19:01:45" itemprop="dateModified" datetime="2023-02-03T19:01:45+08:00">2023-02-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Web渗透的核心技术包括SQL注入、XSS攻击、CSRF攻击、SSRF攻击、暴力破解、文件上传、命令执行漏洞攻击、逻辑漏洞攻击、XXE漏洞攻击、WAF绕过等。</p>
-<h4 id="1-SQL注入"><a href="#1-SQL注入" class="headerlink" title="1.SQL注入"></a>1.SQL注入</h4><p>SQL注入攻击（SQL Injection），简称注入攻击、SQL注入，被广泛用于非法获取网站控制权，是发生在应用程序的数据库层上的安全漏洞。在设计程序，忽略了对输入字符串中夹带的SQL指令的检查，被数据库误认为是正常的SQL指令而运行，从而使数据库受到攻击，可能导致数据被窃取、更改、删除，以及进一步导致网站被嵌入恶意代码、被植入后门程序等危害。</p>
-<p>通常情况下，SQL注入的位置包括：</p>
-<p>(1) 表单提交，主要是POST请求，也包括GET请求；</p>
-<p>(2) URL参数提交，主要为GET请求参数；</p>
-<p>(3) Cookie参数提交；</p>
-<p>(4) HTTP请求头部的一些可修改的值，比如Referer、User_Agent等；</p>
-<p>(5) 一些边缘的输入点，比如.mp3文件的一些文件信息等。</p>
-<p>常见的防范方法</p>
-<p>(1) 所有的查询语句都使用数据库提供的参数化查询接口，参数化的语句使用参数而不是将用户输入变量嵌入到SQL语句中。当前几乎所有的数据库系统都提供了参数化SQL语句执行接口，使用此接口可以非常有效的防止SQL注入攻击。</p>
-<p>(2) 对进入数据库的特殊字符（’”&lt;&gt;&amp;*;等）进行转义处理，或编码转换。</p>
-<p>(3) 确认每种数据的类型，比如数字型的数据就必须是数字，数据库中的存储字段必须对应为int型。</p>
-<p>(4) 数据长度应该严格规定，能在一定程度上防止比较长的SQL注入语句无法正确执行。</p>
-<p>(5) 网站每个数据层的编码统一，建议全部使用UTF-8编码，上下层编码不一致有可能导致一些过滤模型被绕过。</p>
-<p>(6) 严格限制网站用户的数据库的操作权限，给此用户提供仅仅能够满足其工作的权限，从而最大限度的减少注入攻击对数据库的危害。</p>
-<p>(7) 避免网站显示SQL错误信息，比如类型错误、字段不匹配等，防止攻击者利用这些错误信息进行一些判断。</p>
-<p>(8) 在网站发布之前建议使用一些专业的SQL注入检测工具进行检测，及时修补这些SQL注入漏洞。</p>
-<h4 id="2-跨站脚本漏洞"><a href="#2-跨站脚本漏洞" class="headerlink" title="2. 跨站脚本漏洞"></a>2. 跨站脚本漏洞</h4><p>跨站脚本攻击（Cross-site scripting，通常简称为XSS）发生在客户端，可被用于进行窃取隐私、钓鱼欺骗、窃取密码、传播恶意代码等攻击。</p>
-<p>XSS攻击使用到的技术主要为HTML和Javascript，也包括VBScript和ActionScript等。XSS攻击对WEB服务器虽无直接危害，但是它借助网站进行传播，使网站的使用用户受到攻击，导致网站用户帐号被窃取，从而对网站也产生了较严重的危害。</p>
-<p>XSS类型包括：</p>
-<p>(1) 非持久型跨站：即反射型跨站脚本漏洞，是目前最普遍的跨站类型。跨站代码一般存在于链接中，请求这样的链接时，跨站代码经过服务端反射回来，这类跨站的代码不存储到服务端（比如数据库中）。上面章节所举的例子就是这类情况。</p>
-<p>(2) 持久型跨站：这是危害最直接的跨站类型，跨站代码存储于服务端（比如数据库中）。常见情况是某用户在论坛发贴，如果论坛没有过滤用户输入的Javascript代码数据，就会导致其他浏览此贴的用户的浏览器会执行发贴人所嵌入的Javascript代码。</p>
-<p>(3) DOM跨站（DOM XSS）：是一种发生在客户端DOM（Document Object Model文档对象模型）中的跨站漏洞，很大原因是因为客户端脚本处理逻辑导致的安全问题。</p>
-<p>常用的防止XSS技术包括：</p>
-<p>(1) 与SQL注入防护的建议一样，假定所有输入都是可疑的，必须对所有输入中的script、iframe等字样进行严格的检查。这里的输入不仅仅是用户可以直接交互的输入接口，也包括HTTP请求中的Cookie中的变量，HTTP请求头部中的变量等。</p>
-<p>(2) 不仅要验证数据的类型，还要验证其格式、长度、范围和内容。</p>
-<p>(3) 不要仅仅在客户端做数据的验证与过滤，关键的过滤步骤在服务端进行。</p>
-<p>(4) 对输出的数据也要检查，数据库里的值有可能会在一个大网站的多处都有输出，即使在输入做了编码等操作，在各处的输出点时也要进行安全检查。</p>
-<p>(5) 在发布应用程序之前测试所有已知的威胁。</p>
-<h4 id="3-CSRF攻击"><a href="#3-CSRF攻击" class="headerlink" title="3.CSRF攻击"></a>3.CSRF攻击</h4><p>CSRF（Cross-Site Request Forgery）的全称是“跨站请求伪造”，也被称为“One Click Attack”或者“Session Riding”，通常缩写为CSRF或者XSRF。CSRF的中文名称尽管听起来像跨站脚本攻击（XSS），但它与XSS非常不同，并且攻击方式几乎相左。XSS<strong>利用</strong>站点内的信任用户，而CSRF则通过<strong>伪装</strong>来自受信任用户的请求来攻击受信任的网站。与XSS攻击相比，CSRF攻击往往不大流行（因此对其进行防范的资源也相当稀少）和难以防范，所以被认为比XSS更具危险性。</p>
-<p>CSRF攻击攻击原理及过程如下：</p>
-<p>(1) 用户C打开浏览器，访问受信任网站A，输入用户名和密码请求登录网站A；(2) 在用户信息通过验证后，网站A产生Cookie信息并返回给浏览器，此时用户登录网站A成功，可以正常发送请求到网站A；</p>
-<p>(3) 用户未退出网站A之前，在同一浏览器中，打开一个TAB页访问网站B；</p>
-<p>(4) 网站B接收到用户请求后，返回一些攻击性代码，并发出一个请求要求访问第三方站点A；</p>
-<p>(5) 浏览器在接收到这些攻击性代码后，根据网站B的请求，在用户不知情的情况下携带Cookie信息，向网站A发出请求。网站A并不知道该请求其实是由B发起的，所以会根据用户C的Cookie信息以C的权限处理该请求，导致来自网站B的恶意代码被执行。</p>
-<h4 id="4-文件上传漏洞"><a href="#4-文件上传漏洞" class="headerlink" title="4.文件上传漏洞"></a>4.文件上传漏洞</h4><p>文件上传漏洞通常由于网页代码中的文件上传路径变量过滤不严造成的，如果文件上传功能实现代码没有严格限制用户上传的文件后缀以及文件类型，攻击者可通过 Web 访问的目录上传任意文件，包括网站后门文件（webshell），进而远程控制网站服务器。</p>
-<p>因此，在开发网站及应用程序过程中，需严格限制和校验上传的文件，禁止上传恶意代码的文件。同时限制相关目录的执行权限，防范webshell攻击。</p>
-<h4 id="5-目录遍历"><a href="#5-目录遍历" class="headerlink" title="5. 目录遍历"></a>5. 目录遍历</h4><p>目录浏览漏洞是由于网站存在配置缺陷，导致网站目录可以被任意浏览，这会导致网站很多隐私文件与目录泄露，比如数据库备份文件、配置文件等，攻击者利用该信息可以为进一步入侵网站做准备。</p>
-<p>目录遍历漏洞的危害是：击者通过访问网站某一目录时，该目录没有默认首页文件或没有正确设置默认首页文件，将会把整个目录结构列出来，将网站结构完全暴露给攻击者； 攻击者可能通过浏览目录结构，访问到某些隐秘文件（如PHPINFO文件、服务器探针文件、网站管理员后台访问地址、数据库连接文件等）。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/01/14/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94%E6%83%85%E5%86%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/test1/images/avatar.gif">
-      <meta itemprop="name" content="jiawei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="沙雕鱼罐头">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/test1/2023/01/14/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94%E6%83%85%E5%86%B5/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-14 14:24:28" itemprop="dateCreated datePublished" datetime="2023-01-14T14:24:28+08:00">2023-01-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-03 22:31:20" itemprop="dateModified" datetime="2023-02-03T22:31:20+08:00">2023-02-03</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="工具调研情况"><a href="#工具调研情况" class="headerlink" title="工具调研情况"></a>工具调研情况</h1><h4 id="1-密码字典生成工具：Crunch"><a href="#1-密码字典生成工具：Crunch" class="headerlink" title="1.密码字典生成工具：Crunch"></a>1.密码字典生成工具：Crunch</h4><ul>
-<li>可以非常快速的生成所有可能的密码组合。还可以在遇到任何困难时按文件大小和支持来分解结果。它支持数字、符号、大写和小写字母的组合。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/jaalto/external-sf--crunch-wordlist">jaalto&#x2F;external-sf–crunch-wordlist: 3rd party (Sourceforge) (github.com)</a></li>
-<li>编写语言：c</li>
-<li>使用教程：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/72f9262ba6c1">linux密码生成工具crunch使用攻略 - 简书 (jianshu.com)</a></li>
-</ul>
-<h4 id="2-密码破解工具：hydra"><a href="#2-密码破解工具：hydra" class="headerlink" title="2.密码破解工具：hydra"></a>2.密码破解工具：hydra</h4><ul>
-<li>可使用自带或外部的密码字典，这个密码攻击工具是一个集中式并行登录破解，有多种攻击协议。可针对添加新模块进行定制。该工具可以远程获得对系统的未经授权的访问。它适用于 Cisco AAA、Cisco 授权、FTP、HTTPS GET&#x2F;POST&#x2F;PROXY、IMAP、MySQL、MSSQL、Oracle、<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/postgresql?from=10680">PostgreSQL</a>、SIP、POP3、SMTP、SSHkey、SSH 等等。可以使用指令，也具有图形化界面。</li>
-<li>github地址：<a target="_blank" rel="noopener" href="https://github.com/vanhauser-thc/thc-hydra">https://github.com/vanhauser-thc/thc-hydra</a></li>
-<li>编写语言：c</li>
-<li>hydra使用：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/397779150">https://zhuanlan.zhihu.com/p/397779150</a></li>
-<li>ubuntu下安装：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/135259422">https://zhuanlan.zhihu.com/p/135259422</a></li>
-</ul>
-<h4 id="3-密码破解工具：Medusa"><a href="#3-密码破解工具：Medusa" class="headerlink" title="3.密码破解工具：Medusa"></a>3.密码破解工具：Medusa</h4><ul>
-<li>与hydra类似的一款工具，稳定性相比较更好，但是模块要稍少一些</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/jmk-foofus/medusa">jmk-foofus&#x2F;medusa: Medusa is a speedy, parallel, and modular, login brute-forcer. (github.com)</a></li>
-<li>编写语言：c</li>
-<li>简易使用教程：<a target="_blank" rel="noopener" href="https://bbskali.cn/thread-275-1-1.html">medusa密码破解攻略-Kali笔记 (bbskali.cn)</a></li>
-</ul>
-<h4 id="4-密码破解工具：hashcat"><a href="#4-密码破解工具：hashcat" class="headerlink" title="4.密码破解工具：hashcat"></a>4.密码破解工具：hashcat</h4><ul>
-<li>开源，支持CPU、GPU、APU、FPGA等多种计算核心，号称史上最快的密码破解工具，支持多种hash散列算法，支持对rar、office、pdf、windows账户、wifi等多种密码的破解。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/hashcat/hashcat">hashcat&#x2F;hashcat: World’s fastest and most advanced password recovery utility (github.com)</a></li>
-<li>编写语言：c</li>
-<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44754436/article/details/123628350">(43条消息) Hashcat从入门到入土（一）_杂化轨道VSEPR的博客-CSDN博客_hashcat</a></li>
-</ul>
-<h4 id="5-密码分析工具：pipal"><a href="#5-密码分析工具：pipal" class="headerlink" title="5. 密码分析工具：pipal"></a>5. 密码分析工具：pipal</h4><ul>
-<li>主要功能是进行密码合集文件进行分析。分析结果主要有密码频率Top N、词语频率Top N、 密码长度频率分析（从序列和排名两项给出），在terminal中给出了图形化的分析结果。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/digininja/pipal/">digininja&#x2F;pipal: Pipal, THE password analyser (github.com)</a></li>
-<li>编写语言：ruby</li>
-<li>使用参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/124246499">Web漏洞扫描神器Nikto使用指南 - 知乎 (zhihu.com)</a></li>
-</ul>
-<h4 id="6-提权工具：LinEnum"><a href="#6-提权工具：LinEnum" class="headerlink" title="6. 提权工具：LinEnum"></a>6. 提权工具：LinEnum</h4><ul>
-<li>LinEnum 是一个高级 Bash 脚本，它从目标系统中提取了大量有用的信息，可以复制文件并进行导出，同时可以搜索包含关键字的文件。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/rebootuser/LinEnum">https://github.com/rebootuser/LinEnum</a></li>
-<li>编写语言：shell</li>
-<li>使用教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43571641/article/details/124374101">(43条消息) Linux提权辅助工具_Luckysec的博客-CSDN博客_linux-exploit-suggester</a></li>
-<li>解析：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/315052950">Linux提权辅助脚本-LinEnum解析 - 知乎 (zhihu.com)</a></li>
-</ul>
-<h4 id="7-提权工具：Linux-Exploit-Suggester"><a href="#7-提权工具：Linux-Exploit-Suggester" class="headerlink" title="7. 提权工具：Linux_Exploit_Suggester"></a>7. 提权工具：Linux_Exploit_Suggester</h4><ul>
-<li>根据操作系统版本号自动查找相应提权脚本，如果不带任何参数运行该脚本的话，将执行<strong>uname -r</strong>返回的操作系统发行版本，或者手工输入-k参数查找指定版本号。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/PenturaLabs/Linux_Exploit_Suggester">https://github.com/PenturaLabs/Linux_Exploit_Suggester</a></li>
-<li>编写语言：perl</li>
-</ul>
-<h4 id="8-web渗透测试工具：Burp-Suite-BP"><a href="#8-web渗透测试工具：Burp-Suite-BP" class="headerlink" title="8. web渗透测试工具：Burp Suite(BP)"></a>8. web渗透测试工具：Burp Suite(BP)</h4><ul>
-<li>在对表单的破解方面，比hydra&#x2F;medusa强，但是只有图形化界面，无github地址，不是开源项目。</li>
-<li>编写语言：Java</li>
-</ul>
-<h4 id="9-渗透测试工具：Metasploit-Framework-MSF"><a href="#9-渗透测试工具：Metasploit-Framework-MSF" class="headerlink" title="9.渗透测试工具：Metasploit Framework(MSF)"></a>9.渗透测试工具：Metasploit Framework(MSF)</h4><ul>
-<li>是一款开源的漏洞监测工具，功能十分强大，包含权限提升模块，它可以使用多种技术在目标系统中实现提权，可以生成测试报告。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/rapid7/metasploit-framework">rapid7&#x2F;metasploit-framework: Metasploit Framework (github.com)</a></li>
-<li>编写语言：Ruby</li>
-<li>使用参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/csnd/p/11807588.html">Metasploit Framework(MSF)的使用 - 蒋璐 - 博客园 (cnblogs.com)</a></li>
-<li>编写语言为ruby，集成起来有难度。</li>
-</ul>
-<h4 id="10-web漏洞分析工具：skipfish"><a href="#10-web漏洞分析工具：skipfish" class="headerlink" title="10.web漏洞分析工具：skipfish"></a>10.web漏洞分析工具：skipfish</h4><ul>
-<li>一款由谷歌开发的实验性的主动web安全评估工具，体量小但是功能齐全。特点是：递归爬站，基于字典的探测，速度较快，误报相对较低。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/spinkham/skipfish">spinkham&#x2F;skipfish: Web application security scanner created by lcamtuf for google - Unofficial Mirror (github.com)</a></li>
-<li>编写语言：c</li>
-<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39353923/article/details/82531865?spm=1001.2101.3001.6650.8&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-8-82531865-blog-107693542.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-8-82531865-blog-107693542.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=9">(43条消息) Web扫描之Skipfish详解实践_Louisnie的博客-CSDN博客_skipfish</a></li>
-</ul>
-<h4 id="11-web漏洞分析工具：Wapiti"><a href="#11-web漏洞分析工具：Wapiti" class="headerlink" title="11. web漏洞分析工具：Wapiti"></a>11. web漏洞分析工具：Wapiti</h4><ul>
-<li>wapiti是一个基于终端的web漏洞扫描工具，它发送 GET 和 POST 请求给目标站点，来寻找漏洞。它目前搜索 <a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=XSS&spm=1001.2101.3001.7020">XSS</a>、SQL 和 XPath 注入、文件包含、命令执行、XXE 注入、CRLF 注入、服务器端请求伪造、开放重定向等漏洞。在wapiti扫描完成后，会生成一个html报告，显示各类项目的漏洞数量。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/wapiti-scanner/wapiti">wapiti-scanner&#x2F;wapiti: Web vulnerability scanner written in Python3 (github.com)</a></li>
-<li>编写语言：python</li>
-<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_59923059/article/details/123867361">(43条消息) Wapiti是什么以及使用教程_Griy日记的博客-CSDN博客</a></li>
-</ul>
-<h4 id="12-web漏洞分析工具：Nikto"><a href="#12-web漏洞分析工具：Nikto" class="headerlink" title="12.web漏洞分析工具：Nikto"></a>12.web漏洞分析工具：Nikto</h4><ul>
-<li>可对web服务器进行多项安全测试，Nikto可以扫描指定主机的web类型、主机名、指定目录、特定CGI漏洞、返回主机允许的http模式等。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/sullo/nikto">sullo&#x2F;nikto: Nikto web server scanner (github.com)</a></li>
-<li>编写语言：perl</li>
-<li>使用参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/124246499">Web漏洞扫描神器Nikto使用指南 - 知乎 (zhihu.com)</a></li>
-</ul>
-<h4 id="13-抓包工具：tcpdump"><a href="#13-抓包工具：tcpdump" class="headerlink" title="13. 抓包工具：tcpdump"></a>13. 抓包工具：tcpdump</h4><ul>
-<li><p>抓包工具，输出结果可以导出文件到wireshark中展示分析。</p>
-</li>
-<li><p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/the-tcpdump-group/tcpdump">https://github.com/the-tcpdump-group/tcpdump</a></p>
-</li>
-<li><p>编写语言：c</p>
-</li>
-<li><p>使用教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_33699914/article/details/91724383?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1-91724383-blog-121565278.pc_relevant_landingrelevant&spm=1001.2101.3001.4242.2&utm_relevant_index=4">(43条消息) tcpdump 安装 使用及详解_weixin_33699914的博客-CSDN博客</a></p>
-</li>
-<li><p>代码比较多，集成工作有难度。</p>
-</li>
-</ul>
-<h4 id="14-DNS欺骗工具：dnschef"><a href="#14-DNS欺骗工具：dnschef" class="headerlink" title="14. DNS欺骗工具：dnschef"></a>14. DNS欺骗工具：dnschef</h4><ul>
-<li>dnschef是一个高度可配置的dns代理，用于渗透测试和恶意软件分析，DNS代理又被称作假DNS，可以用来分析用户间传输的流量。比如我们可以使用一个DNS代理伪造所有到某一域名的请求到本地计算机，从而对流量进行分析。</li>
-<li>编写语言：python</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/iphelix/dnschef">iphelix&#x2F;dnschef: DNSChef - DNS proxy for Penetration Testers and Malware Analysts (github.com)</a></li>
-<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaoxuetu_/article/details/76042369">(43条消息) DNSChef的使用_xiaoxuetu_的博客-CSDN博客_dnschef</a></li>
-</ul>
-<h4 id="15-SQL注入工具：SQLMap"><a href="#15-SQL注入工具：SQLMap" class="headerlink" title="15. SQL注入工具：SQLMap"></a>15. SQL注入工具：SQLMap</h4><ul>
-<li>SQLMap是一个自动化的SQL注入工具，主要功能是扫描、发现并利用给定URL的SQL注入漏洞，内置了很多绕过插件，支持的数据库是MySQL，Oracle、 PostgreSQL、Microsoft SQL Server、Microsoft Access、IBM DB2、SQLite Firebird、Sybase、SAP MaxDB。<br> SQLMap的强大的功能包括数据库指纹识别、数据库枚举、数据提取、访问目标文件系统，并在获取完全的操作权限时实行任意命令。当常规的注入工具不能利用SQL注入漏洞进行注入时，使用SQLMap会有意想不到的效果。</li>
-<li>编写语言：python</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/sqlmapproject/sqlmap">GitHub - sqlmapproject&#x2F;sqlmap: Automatic SQL injection and database takeover tool</a></li>
-<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/smli_ng/article/details/106026901">sqlmap详细使用教程_星落.的博客-CSDN博客_sqlmap</a></li>
-</ul>
-<h4 id="16-目录遍历工具：dirsearch"><a href="#16-目录遍历工具：dirsearch" class="headerlink" title="16. 目录遍历工具：dirsearch"></a>16. 目录遍历工具：dirsearch</h4><ul>
-<li>dirsearch是一个基于python的命令行工具，旨在暴力扫描页面结构，包括网页中的目录和文件。其特点是多线程、可保持连接、支持多种后缀（-e|–extensions asp,php）、生成报告（纯文本，JSON）、启发式检测无效的网页、递归的暴力扫描、支持HTTP代理、用户代理随机化、批量处理。</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/maurosoria/dirsearch">GitHub - maurosoria&#x2F;dirsearch: Web path scanner</a></li>
-<li>编写语言：python</li>
-<li>使用参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/537515948">dirsearch目录扫描工具下载与使用 - 知乎 (zhihu.com)</a></li>
-</ul>
-<h4 id="15-渗透工具：WPScan"><a href="#15-渗透工具：WPScan" class="headerlink" title="15.渗透工具：WPScan"></a>15.渗透工具：WPScan</h4><ul>
-<li>只是针对特定wordPress站点的漏洞扫描,感觉参考价值不大。</li>
-</ul>
-<h4 id="16-网络扫描工具-Nmap"><a href="#16-网络扫描工具-Nmap" class="headerlink" title="16.网络扫描工具:Nmap"></a>16.网络扫描工具:Nmap</h4><ul>
-<li>nmap可以搜索指定网络内的主机并返回活动主机，扫描目标主机，一般的返回信息主要有是否在线、所在网络的拓扑、开放的端口、所使用的操作系统、所运行的服务与版本以及所存在的漏洞。</li>
-<li>编写语言：c++</li>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://gitlab.com/kalilinux/packages/nmap">Kali Linux &#x2F; Packages &#x2F; nmap · GitLab</a></li>
-</ul>
-<h4 id="17-sql密码爆破工具：sqldict"><a href="#17-sql密码爆破工具：sqldict" class="headerlink" title="17.sql密码爆破工具：sqldict"></a>17.sql密码爆破工具：sqldict</h4><h4 id="18-xss漏洞实施工具：XXSer"><a href="#18-xss漏洞实施工具：XXSer" class="headerlink" title="18. xss漏洞实施工具：XXSer"></a>18. xss漏洞实施工具：XXSer</h4><ul>
-<li><p>XXSer是一个实施XXS攻击的工具，是一个自动框架，用于检测、利用以及报告基于Web的应用程序中的XSS漏洞。它包含几个尝试绕过某些过滤器的选项，以及各种特殊的代码注入技术。</p>
-</li>
-<li><p>项目地址：<a target="_blank" rel="noopener" href="https://gitlab.com/kalilinux/packages/xsser">Kali Linux &#x2F; Packages &#x2F; xsser · GitLab</a></p>
-</li>
-<li><p>开发语言：python</p>
-</li>
-</ul>
-<h4 id="19-漏洞扫描工具：davtest"><a href="#19-漏洞扫描工具：davtest" class="headerlink" title="19. 漏洞扫描工具：davtest"></a>19. 漏洞扫描工具：davtest</h4><ul>
-<li>项目地址：<a target="_blank" rel="noopener" href="https://gitlab.com/kalilinux/packages/davtest">Kali Linux &#x2F; Packages &#x2F; davtest · GitLab</a></li>
-<li>开发语言：perl</li>
-<li></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1278,7 +1193,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/test1/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
