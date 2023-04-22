@@ -20,13 +20,15 @@
     var CONFIG = {"hostname":"gitee.com","root":"/test1/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="article">
+  <meta name="description" content="一、引入一个项目在开发过程中会经历多个环境，包括开发环境、测试环境、生产环境等等，而在这不同的环境中，对于某些数据的配置又会有所区别。所以需要保证我们在开发的时候是一个环境，部署到线上时又能切换到另外的环境了。 二、具体操作（yaml版本）第一步，设置环境，不同的环境之间用---作分隔： 123456789101112131415161718192021222324252627282930#应用环">
+<meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot学习-多环境开发">
 <meta property="og:url" content="https://gitee.com/SHaDiaoYU/2023/04/22/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91/index.html">
 <meta property="og:site_name" content="沙雕鱼罐头">
+<meta property="og:description" content="一、引入一个项目在开发过程中会经历多个环境，包括开发环境、测试环境、生产环境等等，而在这不同的环境中，对于某些数据的配置又会有所区别。所以需要保证我们在开发的时候是一个环境，部署到线上时又能切换到另外的环境了。 二、具体操作（yaml版本）第一步，设置环境，不同的环境之间用---作分隔： 123456789101112131415161718192021222324252627282930#应用环">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-22T06:06:25.000Z">
-<meta property="article:modified_time" content="2023-04-22T06:06:25.590Z">
+<meta property="article:modified_time" content="2023-04-22T08:32:00.569Z">
 <meta property="article:author" content="jiawei">
 <meta name="twitter:card" content="summary">
 
@@ -170,8 +172,9 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2023-04-22 14:06:25" itemprop="dateCreated datePublished" datetime="2023-04-22T14:06:25+08:00">2023-04-22</time>
+              <time title="创建时间：2023-04-22 14:06:25 / 修改时间：16:32:00" itemprop="dateCreated datePublished" datetime="2023-04-22T14:06:25+08:00">2023-04-22</time>
             </span>
 
           
@@ -185,7 +188,94 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h4 id="一、引入"><a href="#一、引入" class="headerlink" title="一、引入"></a>一、引入</h4><p>一个项目在开发过程中会经历多个环境，包括开发环境、测试环境、生产环境等等，而在这不同的环境中，对于某些数据的配置又会有所区别。所以需要保证我们在开发的时候是一个环境，部署到线上时又能切换到另外的环境了。</p>
+<h4 id="二、具体操作（yaml版本）"><a href="#二、具体操作（yaml版本）" class="headerlink" title="二、具体操作（yaml版本）"></a>二、具体操作（yaml版本）</h4><p>第一步，设置环境，不同的环境之间用<code>---</code>作分隔：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#应用环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">pro</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">#公共配置</span></span><br><span class="line"></span><br><span class="line"><span class="string">......</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment">#设置环境</span></span><br><span class="line"><span class="comment">#生产环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span> <span class="string">pro</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8081</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment">#开发环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8082</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment">#测试环境(标准格式)</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">config:</span> </span><br><span class="line">   <span class="attr">activate:</span></span><br><span class="line">  	<span class="attr">on-profile:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8083</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li>在设置环境部分，我们通过为每一个环境指定spring.profiles属性的值来为我们的环境配置命名；</li>
+<li>在应用环境部分，我们通过设置spring.profiles.active属性的值来指定我们使用哪一个环境的配置；</li>
+</ul>
+<p><strong>这种操作的缺陷：</strong></p>
+<p>​	各种环境的配置都放在了一个配置文件内，有暴露配置的风险（比如敏感的数据库密码等等），因此需要一种新的解决方式。</p>
+<p><strong>多文件配置：</strong></p>
+<p>使用多文件配置，将不同环境的配置以及公共配置独立成为不同的文件，并分别进行配置：</p>
+<ol>
+<li>主启动配置文件 application.yml</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>环境分类配置文件 application-pro.yml （注意格式：application**-类型**.yml）</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line"><span class="string">......</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>环境分类配置文件 application-dev.yml</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">8081</span></span><br><span class="line"><span class="string">......</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>环境分类配置文件 application-test.yml</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">8082</span></span><br><span class="line"><span class="string">......</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li>主配置文件中设置公共配置（全局）；</li>
+<li>环境分类配置文件中常用于设置冲突属性（局部）；</li>
+</ul>
+<h4 id="三、具体操作（properties版本）"><a href="#三、具体操作（properties版本）" class="headerlink" title="三、具体操作（properties版本）"></a>三、具体操作（properties版本）</h4><p>使用多文件配置，将不同环境的配置以及公共配置独立成为不同的文件，并分别进行配置：</p>
+<ol>
+<li>主启动配置文件 application.properties</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.profiles.active</span>=<span class="string">dev</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>环境分类配置文件 application-pro.properties（注意格式：application**-类型**.yml）</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8080</span></span><br><span class="line"><span class="attr">......</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>环境分类配置文件 application-dev.properties</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8081</span></span><br><span class="line"><span class="attr">......</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>环境分类配置文件 application-test.properties</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8082</span></span><br><span class="line"><span class="attr">......</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="四、信息拆分-amp-独立"><a href="#四、信息拆分-amp-独立" class="headerlink" title="四、信息拆分&amp;独立"></a>四、信息拆分&amp;独立</h4><ul>
+<li><p>根据功能对配置文件中的信息进行拆分，并制作成独立的配置文件，命名规则如下：</p>
+<ul>
+<li><p>application-devDB.yml</p>
+</li>
+<li><p>application-devRedis.yml</p>
+</li>
+<li><p>application-devMVC.yml</p>
+<p>…..</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>方法一：</strong></p>
+<p>使用include属性在激活指定环境的情况下，同时对多个环境进行加载使其生效，多个环境之间用逗号分隔。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">include:</span> <span class="string">devDB,devRedis,devMVC</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：include之中的<strong>顺序</strong>问题，如果涉及相同的配置，则顺序靠后的配置生效。</p>
+<p>缺点：如果需要切换环境，则需要重新写一遍include中的内容，很繁琐。</p>
+<p><strong>方法二：</strong></p>
+<p>使用group属性定义多种主环境与子环境的包含关系，格式如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">group:</span></span><br><span class="line">   <span class="attr">&quot;dev&quot;:</span> <span class="string">devDB,devRedis</span></span><br><span class="line">   <span class="attr">&quot;pro&quot;:</span> <span class="string">proDB,proMVC</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> </p>
+<ul>
+<li>当主环境dev与其他环境有相同属性时，主环境生效；</li>
+<li>其他环境中有相同属性时，最后加载的环境属性生效；</li>
+</ul>
+
     </div>
 
     
@@ -262,6 +352,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">一、引入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C%EF%BC%88yaml%E7%89%88%E6%9C%AC%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">二、具体操作（yaml版本）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C%EF%BC%88properties%E7%89%88%E6%9C%AC%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">三、具体操作（properties版本）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E4%BF%A1%E6%81%AF%E6%8B%86%E5%88%86-amp-%E7%8B%AC%E7%AB%8B"><span class="nav-number">4.</span> <span class="nav-text">四、信息拆分&amp;独立</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
