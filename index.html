@@ -145,6 +145,128 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/27/SpringBoot%E5%AD%A6%E4%B9%A0-%E6%97%A5%E5%BF%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2023/04/27/SpringBoot%E5%AD%A6%E4%B9%A0-%E6%97%A5%E5%BF%97/" class="post-title-link" itemprop="url">SpringBoot学习-日志</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-27 19:25:33 / 修改时间：20:51:03" itemprop="dateCreated datePublished" datetime="2023-04-27T19:25:33+08:00">2023-04-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="一、日志的作用"><a href="#一、日志的作用" class="headerlink" title="一、日志的作用"></a>一、日志的作用</h4><ul>
+<li>编程期调试代码</li>
+<li>运营期记录信息<ul>
+<li>记录日常运营重要信息（峰值流量、平均响应时长。。。）</li>
+<li>记录应用报错信息（错误堆栈）</li>
+<li>记录运维过程数据（扩容、宕机、报警。。。）</li>
+</ul>
+</li>
+</ul>
+<h4 id="二、使用日志"><a href="#二、使用日志" class="headerlink" title="二、使用日志"></a>二、使用日志</h4><p>日志的使用分为两部分：(1) 创建记录日志的对象、(2) 手工的记录日志</p>
+<ul>
+<li>创建记录日志的对象：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1、创建记录日志的对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(UserController.class);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>手工记录日志</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/users&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">getAllUser</span><span class="params">()</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;the information&quot;</span>);</span><br><span class="line">        log.error(<span class="string">&quot;the error&quot;</span>);</span><br><span class="line">        log.debug(<span class="string">&quot;debug...&quot;</span>);</span><br><span class="line">        log.warn(<span class="string">&quot;the warning&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> service.list();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>日志级别： error &gt; warning &gt; info &gt;debug</strong></p>
+<p><strong>开启debug模式</strong></p>
+<p>项目启动后，默认显示的日志内容为info及以上级别的，如果需要显示debug日志，则需要手动开启debug模式</p>
+<p>方式1：在program arguments 内部添加 <code>--debug</code>;</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230427194247750.png" alt="image-20230427194247750" style="zoom:67%;" />
+
+<p>方式2： 在配置文件application.yml中添加属性<code>debug: true</code>（以上两种方式不推荐使用）</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230427194523699.png" alt="image-20230427194523699" style="zoom:67%;" />
+
+<p>方式3： 在配置文件application.yml中，进行配置，这种方式的好处就是可以定义显示的日志级别：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line">  <span class="attr">level:</span></span><br><span class="line">    <span class="attr">root:</span> <span class="string">debug</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="三、设置日志级别"><a href="#三、设置日志级别" class="headerlink" title="三、设置日志级别"></a>三、设置日志级别</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line">  <span class="comment"># 设置分组</span></span><br><span class="line">  <span class="attr">group:</span></span><br><span class="line">   <span class="attr">ebank:</span> <span class="string">com.jiawei.boot.service,com.jiawei.boot.controller</span></span><br><span class="line">   <span class="attr">iservice:</span> <span class="string">com.alibaba</span></span><br><span class="line">  <span class="attr">level:</span></span><br><span class="line">    <span class="attr">root:</span> <span class="string">info</span></span><br><span class="line">    <span class="comment"># 1. 设置某个包的日志级别(不推荐，很低效)</span></span><br><span class="line">    <span class="attr">com.jiawei.boot.service:</span> <span class="string">debug</span></span><br><span class="line">    <span class="comment"># 2. 设置分组，对某个分组设置日志级别</span></span><br><span class="line">    <span class="attr">ebank:</span> <span class="string">warn</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="四、快速创建日志对象"><a href="#四、快速创建日志对象" class="headerlink" title="四、快速创建日志对象"></a>四、快速创建日志对象</h4><p>在每个类上创建记录日志的对象，很冗余。下面介绍快速创建日志对象的方式：</p>
+<p>方法1：使用继承类，创建一个Basement.java，在使用的类上继承Basement即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Basement</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Class clazz;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Logger log;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Basement</span><span class="params">()</span> &#123;</span><br><span class="line">        clazz = <span class="built_in">this</span>.getClass();</span><br><span class="line">        log = LoggerFactory.getLogger(clazz);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法2：使用<code>@Slf4j</code>注解，注释在类上，使用<code>log.info(xxx)</code>使用；</p>
+<h4 id="五、日志输出格式控制"><a href="#五、日志输出格式控制" class="headerlink" title="五、日志输出格式控制"></a>五、日志输出格式控制</h4><p><strong>日志输出格式</strong></p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230427202254834.png" alt="image-20230427202254834"></p>
+<ul>
+<li>PID： 进程ID，用于表明当前操作所属的进程，当多服务同时记录日志时，该值课用于协助程序员调试程序。</li>
+<li>所属类&#x2F;接口名： 当前显示信息为SpringBoot重写后的信息，名称过长时，简化包名书写为首字母，甚至直接删除。</li>
+</ul>
+<p><strong>日志输出格式控制</strong></p>
+<p>在配置文件中设置日志输出格式：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line"> <span class="attr">group:</span></span><br><span class="line"> <span class="attr">pattern:</span></span><br><span class="line">  <span class="comment"># 自定义的日志输出格式 %d:日期，%p:级别，%m:消息，%n:换行</span></span><br><span class="line">  <span class="attr">console:</span> <span class="string">&quot;%d %5p - %m %n&quot;</span></span><br><span class="line">  <span class="comment"># 自定义颜色，以及输出展位控制.5p意味着该信息占据5个空格,%t代表线程名,%c代表类名,-40.40c意味着左对齐40个字符的位置</span></span><br><span class="line">  <span class="attr">console:</span> <span class="string">&quot;%d %clr(%5p) --- [%16t] %clr(%-40.40c)&#123;color&#125; : %m %n&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="六、文件记录日志"><a href="#六、文件记录日志" class="headerlink" title="六、文件记录日志"></a>六、文件记录日志</h4><ul>
+<li>使用文件记录日志信息，在配置文件中进行配置即可:</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line"> <span class="attr">file:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">server.log</span></span><br></pre></td></tr></table></figure>
+
+<p>日志文件server.log位于工程目录下。</p>
+<ul>
+<li>设置日志文件记录日志大小，超出这个大小就会创建新的日志文件。</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line"> <span class="attr">logback:</span></span><br><span class="line">  <span class="attr">rollingpolicy:</span></span><br><span class="line">   <span class="comment"># 设置日志文件大小限制</span></span><br><span class="line">   <span class="attr">max-file-size:</span> <span class="string">4KB</span></span><br><span class="line">   <span class="comment">#设置日志文件名称格式( %d即date,%i即index )：下面格式的示例为：server.2020-01-01.0.log </span></span><br><span class="line">   <span class="attr">file-name-pattern:</span> <span class="string">server.%d&#123;yyyy-MM-dd&#125;.%i.log</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/27/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91-%E6%8E%A7%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1202,88 +1324,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/03/19/vue%E7%BB%84%E4%BB%B6%E4%BC%A0%E5%8F%82/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/test1/images/avatar.gif">
-      <meta itemprop="name" content="jiawei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="沙雕鱼罐头">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/test1/2023/03/19/vue%E7%BB%84%E4%BB%B6%E4%BC%A0%E5%8F%82/" class="post-title-link" itemprop="url">vue组件传参</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-03-19 19:52:02 / 修改时间：20:47:44" itemprop="dateCreated datePublished" datetime="2023-03-19T19:52:02+08:00">2023-03-19</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="组件的关系可分为-父子-与-兄弟-关系"><a href="#组件的关系可分为-父子-与-兄弟-关系" class="headerlink" title="组件的关系可分为 父子 与 兄弟 关系"></a>组件的关系可分为 父子 与 兄弟 关系</h4><p>类型1：父组件向子组件共享数据</p>
-<ol>
-<li>父组件向子组件共享数据需要使用自定义属性。示例：</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//父组件</span><br><span class="line">&lt;son :msg= &#x27;message&#x27; :user = &quot;userinfo&quot;&gt;&lt;/son&gt;</span><br><span class="line">data()&#123;</span><br><span class="line">	return&#123;</span><br><span class="line">		message: &#x27;hello&#x27;,</span><br><span class="line">		userinfo: &#123;name: &#x27;zd&#x27;,age: &#x27;20&#x27;&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">//子组件son内：</span><br><span class="line">&lt;template&gt;</span><br><span class="line">	&lt;p&gt; &#123;&#123;msg&#125;&#125;&lt;/p&gt;</span><br><span class="line">	&lt;p&gt; &#123;&#123;userinfo&#125;&#125;&lt;p&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">props:[&#x27;msg&#x27;,&#x27;user&#x27;] //请注意不要修改props的数据</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>子组件向父组件共享数据需要使用自定义事件。示例：</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//子组件son内容</span><br><span class="line">&lt;template&gt;</span><br><span class="line">	&lt;p&gt;&#123;&#123; count &#125;&#125;&lt;/p&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">data() &#123;</span><br><span class="line">	return &#123;</span><br><span class="line">	count: 0</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;，</span><br><span class="line">methods: &#123;</span><br><span class="line">	add() &#123;</span><br><span class="line">	this.count +=1</span><br><span class="line">	// 修改数据时，通过 $emit()触发自定义事件</span><br><span class="line">	this.$emit(&#x27;numchange&#x27; , this.count)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">//父组件内容 @numchange函数被触发时会调用getNewCount方法</span><br><span class="line">&lt;son @numchange= &#x27;getNewCount&#x27;&gt;&lt;/son&gt;</span><br><span class="line">data() &#123;</span><br><span class="line">	return &#123;</span><br><span class="line">	// 定义 countFromSon 来接收子组件传递过来的数据</span><br><span class="line">	coutFromSon: 0</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;,</span><br><span class="line">methods:&#123;</span><br><span class="line">	getNewCount(val) &#123;</span><br><span class="line">	this.countFromSon = val</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>类型2： 兄弟组件之间共享数据</p>
-<p>在vue2.x中，兄弟组件之间共享数据的方案是EventBus。</p>
-<p>EventBus的使用步骤：</p>
-<ol>
-<li>创建eventBus.js模块，并向外共享一个Vue的实例对象</li>
-<li>在数据<em>发送方</em> ，调用bus.$emit(‘事件名称’，要发送的数据)方法触发自定义事件</li>
-<li>在数据<em>接收方</em>，调用bus.$on(‘事件名称’，事件处理函数)方法注册一个自定义事件</li>
-</ol>
-<p>示例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//eventBus.js模块</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="comment">//向外共享Vue的实例对象</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> <span class="title class_">Vue</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">//兄弟组件A（发送方）</span></span><br><span class="line"><span class="keyword">import</span> bus form <span class="string">&#x27;./eventBus.js&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">	<span class="title function_">data</span>(<span class="params"></span>) &#123;</span><br><span class="line">		<span class="attr">return</span>:&#123;</span><br><span class="line">			<span class="attr">msg</span>: <span class="string">&#x27;hello&#x27;</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="attr">methods</span>: &#123;</span><br><span class="line">		<span class="title function_">sendMsg</span>(<span class="params"></span>) &#123; <span class="comment">// $emit()触发发送事件，该事件内包含需共享的数据</span></span><br><span class="line">			bus.$emit(<span class="string">&#x27;share&#x27;</span>, <span class="variable language_">this</span>.<span class="property">msg</span>)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//兄弟组件B（数据接收方）	</span></span><br><span class="line"><span class="keyword">import</span> bus form <span class="string">&#x27;./eventBus.js&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">	<span class="title function_">data</span>(<span class="params"></span>) &#123;</span><br><span class="line">		<span class="attr">return</span>:&#123;</span><br><span class="line">			<span class="attr">msgFromA</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">	<span class="title function_">created</span>(<span class="params"></span>) &#123; <span class="comment">//钩子函数，接收数据，执行后接受的参数被赋值给自己的data()元素中</span></span><br><span class="line">		bus.$on(<span class="string">&#x27;share&#x27;</span>,<span class="function"><span class="params">val</span>=&gt;</span>&#123;</span><br><span class="line">			<span class="variable language_">this</span>.<span class="property">msgFromA</span> = val</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1353,7 +1393,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/test1/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
