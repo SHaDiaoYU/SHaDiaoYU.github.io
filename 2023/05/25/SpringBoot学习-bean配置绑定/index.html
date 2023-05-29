@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/test1/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/test1/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/test1/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/test1/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/test1/css/main.css">
+
+
+<link rel="stylesheet" href="/test1/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gitee.com","root":"/test1/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. 让自己定义的bean在初始化的时候自动加载配置文件中的配置： 配置类：  12345servers: port: 1234 ipAddress: 192.168.1 timeout: -1   在我们定义的bean上使用@ConfigurationProperties(prefix &#x3D; &quot;servers&quot;)指定配置内容即可实现，注意设置prefix内容。  1234567">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot学习-bean配置绑定">
+<meta property="og:url" content="https://gitee.com/SHaDiaoYU/2023/05/25/SpringBoot%E5%AD%A6%E4%B9%A0-bean%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A/index.html">
+<meta property="og:site_name" content="沙雕鱼罐头">
+<meta property="og:description" content="1. 让自己定义的bean在初始化的时候自动加载配置文件中的配置： 配置类：  12345servers: port: 1234 ipAddress: 192.168.1 timeout: -1   在我们定义的bean上使用@ConfigurationProperties(prefix &#x3D; &quot;servers&quot;)指定配置内容即可实现，注意设置prefix内容。  1234567">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230526154319821.png">
+<meta property="article:published_time" content="2023-05-25T11:43:35.000Z">
+<meta property="article:modified_time" content="2023-05-28T07:47:29.763Z">
+<meta property="article:author" content="jiawei">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230526154319821.png">
+
+<link rel="canonical" href="https://gitee.com/SHaDiaoYU/2023/05/25/SpringBoot%E5%AD%A6%E4%B9%A0-bean%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SpringBoot学习-bean配置绑定 | 沙雕鱼罐头</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/test1/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">沙雕鱼罐头</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/test1/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/test1/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/05/25/SpringBoot%E5%AD%A6%E4%B9%A0-bean%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringBoot学习-bean配置绑定
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-25 19:43:35" itemprop="dateCreated datePublished" datetime="2023-05-25T19:43:35+08:00">2023-05-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-28 15:47:29" itemprop="dateModified" datetime="2023-05-28T15:47:29+08:00">2023-05-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="1-让自己定义的bean在初始化的时候自动加载配置文件中的配置："><a href="#1-让自己定义的bean在初始化的时候自动加载配置文件中的配置：" class="headerlink" title="1. 让自己定义的bean在初始化的时候自动加载配置文件中的配置："></a>1. 让自己定义的bean在初始化的时候自动加载配置文件中的配置：</h4><ul>
+<li>配置类：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">servers:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">1234</span></span><br><span class="line"> <span class="attr">ipAddress:</span> <span class="number">192.168</span><span class="number">.1</span></span><br><span class="line"> <span class="attr">timeout:</span> <span class="number">-1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在我们定义的bean上使用<code>@ConfigurationProperties(prefix = &quot;servers&quot;)</code>指定配置内容即可实现，注意设置prefix内容。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;servers&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ServerConfig</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String ipAdress;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> port;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> timeout;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-如果不是自定义的bean而是给第三方bean绑定属性，又该如何实现呢？"><a href="#2-如果不是自定义的bean而是给第三方bean绑定属性，又该如何实现呢？" class="headerlink" title="2. 如果不是自定义的bean而是给第三方bean绑定属性，又该如何实现呢？"></a>2. 如果不是自定义的bean而是给第三方bean绑定属性，又该如何实现呢？</h4><p>使用druid来做示例（注意，druid只有在真正的连接数据可的时候才会进行初始化操作）：</p>
+<ul>
+<li>在配置类中添加值，为bean注入数据：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">datasource:</span></span><br><span class="line">  <span class="attr">driverClassName:</span> <span class="string">com.mysql.jdbc.driver123123</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在配置类下添加bean，使用@ConfigurationProperties 注解并指定前缀:</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一个第三方bean</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;datasource&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DruidDataSource <span class="title function_">dataSource</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">DruidDataSource</span> <span class="variable">druidDataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DruidDataSource</span>();</span><br><span class="line">        <span class="keyword">return</span> druidDataSource;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="补充：-EnableConfigurationProperties注解"><a href="#补充：-EnableConfigurationProperties注解" class="headerlink" title="补充：@EnableConfigurationProperties注解"></a>补充：<code>@EnableConfigurationProperties</code>注解</h4><ol>
+<li><p>可以将其理解为一个开关，其作用是标识集合中的类开启属性配置功能，可以通过配置中的属性向我们定义的类中做属性注入。</p>
+</li>
+<li><p>所以那些在集合中的类需要使用<code>@ConfigurationProperties</code>注解关联配置文件进行配置（当然也可以不用）。</p>
+</li>
+</ol>
+<p><strong>注意：</strong>在类上添加<code>@EnableConfigurationProperties(Server.class)</code>指定<code>Server.class</code>起作用时，springboot会自动为该类注入spring容器以进行管理。所以在使用此注解后，已经将<code>Server.class</code>类注入了，就不需要在Server类上使用@Bean或是其衍生注解将其注入容器了，否则springboot会报错。</p>
+<h4 id="3-松散绑定"><a href="#3-松散绑定" class="headerlink" title="3.松散绑定"></a>3.松散绑定</h4><p><strong>问题引入：</strong></p>
+<p>现在，我们的配置文件中的配置是这样的：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dataSource:</span></span><br><span class="line">  <span class="attr">driverClassName:</span> <span class="string">com.mysql.jdbc.driver123123</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，我们的配置名称中使用了驼峰命名法，包含了大写字符。现在我们为已创建的bean使用此配置进行绑定，我们很容易想到，为我们的bean上添加如下注解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   <span class="meta">@Bean</span></span><br><span class="line"><span class="comment">//这里的前缀内容跟配置文件中的保持了一致，其中包含了大写字母</span></span><br><span class="line">   <span class="meta">@ConfigurationProperties(prefix = &quot;dataSource&quot;)</span> </span><br><span class="line">   <span class="keyword">public</span> DruidDataSource <span class="title function_">dataSource</span><span class="params">()</span>&#123;</span><br><span class="line">       ......</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在运行时却发现springboot报错了，明明我们都保持一致了，为什么还会报错呢？</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230526154319821.png" alt="image-20230526154319821"></p>
+<p>观察报错内容就能够看出来为什么会报错，springboot规定prefix属性的名称必须为kebab-case(烤肉串模式)，小写的数字字母组合且必须以字母开头。</p>
+<ul>
+<li><p><strong>@ConfigurationProperties绑定属性支持属性名宽松绑定</strong></p>
+<p>在我们的配置中，springboot支持多种属性命名方式，方便地支持我们进行属性绑定。下面对ipAddress属性的配置都能够生效：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">1234</span></span><br><span class="line"> <span class="comment">#ipAddress: 192.168.1 # 驼峰命名法</span></span><br><span class="line"> <span class="comment">#ipaddress: 192.168.1</span></span><br><span class="line"> <span class="attr">ip-address:</span> <span class="number">192.168</span><span class="number">.1</span> <span class="comment"># 烤肉串模式，0-0-0-0----，官方推荐使用</span></span><br><span class="line"> <span class="comment">#IPADDRESS: 192.168.1 </span></span><br><span class="line"> <span class="comment">#IP_ADDRESS: 192.168.1 # 常量命名方式</span></span><br><span class="line"> <span class="comment">#IP-A_D_D-RESS: 192.168.1</span></span><br><span class="line"> </span><br><span class="line"> <span class="attr">timeout:</span> <span class="number">-1</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>注意：</strong>宽松绑定不支持注解@Value引用单个属性的方式。</p>
+</li>
+</ul>
+<h4 id="4-常用计量单位使用"><a href="#4-常用计量单位使用" class="headerlink" title="4. 常用计量单位使用"></a>4. 常用计量单位使用</h4><p>某些情况下，指定配置值的单位是有必要的。</p>
+<ul>
+<li>springboot支持jdk8提供的时间与空间单位：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;servers&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ServerConfig</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String ipAdress;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> port;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> timeout;</span><br><span class="line">    <span class="comment">// 时间单位：day</span></span><br><span class="line">    <span class="meta">@DurationUnit(ChronoUnit.DAYS)</span></span><br><span class="line">    <span class="keyword">private</span> Duration serverTimeOut;</span><br><span class="line">    <span class="comment">//空间单位： byte</span></span><br><span class="line">    <span class="meta">@DataSizeUnit(DataUnit.MEGABYTES)</span></span><br><span class="line">    <span class="keyword">private</span> DataSize dataSize;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<h4 id="5-bean属性校验"><a href="#5-bean属性校验" class="headerlink" title="5. bean属性校验"></a>5. bean属性校验</h4><p>当我们为某些属性设置了错误的数据类型，我们希望能够获得提醒。由此引出数据校验，数据校验有助于引出系统安全性，J2EE规范中JSR303规范定义了一组有关数据校验相关的API。</p>
+<p><strong>使用：</strong></p>
+<p>（1）第一步，在pom文件中引入依赖，导入JSR303规范坐标（这是接口）与Hibernate校验框架对应坐标（这是实现）：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.validation<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>validation-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.hibernate.validator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hibernate-validator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>（2）对bean开启校验功能：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;servers&quot;)</span></span><br><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ServerConfig</span> &#123;</span><br><span class="line">   ......</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>（3）设置校验规则：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;servers&quot;)</span></span><br><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ServerConfig</span> &#123;</span><br><span class="line">   ......</span><br><span class="line">   <span class="meta">@Max(value= 8888,message=&quot;最大值不能超过8888&quot;)</span></span><br><span class="line">   <span class="keyword">private</span> <span class="type">int</span> port;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<h4 id="6-进制数据转换规则"><a href="#6-进制数据转换规则" class="headerlink" title="6. 进制数据转换规则"></a>6. 进制数据转换规则</h4>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/test1/2023/04/27/SpringBoot%E5%AD%A6%E4%B9%A0-%E6%97%A5%E5%BF%97/" rel="prev" title="SpringBoot学习-日志">
+      <i class="fa fa-chevron-left"></i> SpringBoot学习-日志
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E8%AE%A9%E8%87%AA%E5%B7%B1%E5%AE%9A%E4%B9%89%E7%9A%84bean%E5%9C%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9A%84%E6%97%B6%E5%80%99%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E9%85%8D%E7%BD%AE%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">1. 让自己定义的bean在初始化的时候自动加载配置文件中的配置：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%A6%82%E6%9E%9C%E4%B8%8D%E6%98%AF%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84bean%E8%80%8C%E6%98%AF%E7%BB%99%E7%AC%AC%E4%B8%89%E6%96%B9bean%E7%BB%91%E5%AE%9A%E5%B1%9E%E6%80%A7%EF%BC%8C%E5%8F%88%E8%AF%A5%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%91%A2%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">2. 如果不是自定义的bean而是给第三方bean绑定属性，又该如何实现呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9A-EnableConfigurationProperties%E6%B3%A8%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">补充：@EnableConfigurationProperties注解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%9D%BE%E6%95%A3%E7%BB%91%E5%AE%9A"><span class="nav-number">4.</span> <span class="nav-text">3.松散绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%B8%B8%E7%94%A8%E8%AE%A1%E9%87%8F%E5%8D%95%E4%BD%8D%E4%BD%BF%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">4. 常用计量单位使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-bean%E5%B1%9E%E6%80%A7%E6%A0%A1%E9%AA%8C"><span class="nav-number">6.</span> <span class="nav-text">5. bean属性校验</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E8%BF%9B%E5%88%B6%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E8%A7%84%E5%88%99"><span class="nav-number">7.</span> <span class="nav-text">6. 进制数据转换规则</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">jiawei</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/test1/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jiawei</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/test1/lib/anime.min.js"></script>
+  <script src="/test1/lib/velocity/velocity.min.js"></script>
+  <script src="/test1/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/test1/js/utils.js"></script>
+
+<script src="/test1/js/motion.js"></script>
+
+
+<script src="/test1/js/schemes/pisces.js"></script>
+
+
+<script src="/test1/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
