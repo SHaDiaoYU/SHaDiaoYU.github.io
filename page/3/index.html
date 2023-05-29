@@ -20,32 +20,28 @@
     var CONFIG = {"hostname":"gitee.com","root":"/test1/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="SpringMVC请求中文参数乱码的问题讲解：尚硅谷SpringMVC P32 get请求不会发生乱码，get请求的乱码是由tomcat造成的，解决需要修改tomcat&#x2F;conf&#x2F;server.xml，可以一次性解决。 使用post方式时如果出现乱码，在控制器具体方法内使用characterEndocing设置请求编码无法解决问题，因为获取请求参数先发生，在请求方法里设置编码是">
-<meta property="og:type" content="article">
-<meta property="og:title" content="SpringMVC请求参数中文乱码问题">
-<meta property="og:url" content="https://gitee.com/SHaDiaoYU/2022/11/19/SpringMVC%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="沙雕鱼罐头">
+<meta property="og:url" content="https://gitee.com/SHaDiaoYU/page/3/index.html">
 <meta property="og:site_name" content="沙雕鱼罐头">
-<meta property="og:description" content="SpringMVC请求中文参数乱码的问题讲解：尚硅谷SpringMVC P32 get请求不会发生乱码，get请求的乱码是由tomcat造成的，解决需要修改tomcat&#x2F;conf&#x2F;server.xml，可以一次性解决。 使用post方式时如果出现乱码，在控制器具体方法内使用characterEndocing设置请求编码无法解决问题，因为获取请求参数先发生，在请求方法里设置编码是">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-11-19T04:57:26.000Z">
-<meta property="article:modified_time" content="2022-11-19T04:58:32.094Z">
 <meta property="article:author" content="jiawei">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://gitee.com/SHaDiaoYU/2022/11/19/SpringMVC%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/">
+<link rel="canonical" href="https://gitee.com/SHaDiaoYU/page/3/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
-    isPost : true,
+    isHome : true,
+    isPost : false,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>SpringMVC请求参数中文乱码问题 | 沙雕鱼罐头</title>
+  <title>沙雕鱼罐头</title>
   
 
 
@@ -143,14 +139,13 @@
         <div class="content-wrap">
           
 
-          <div class="content post posts-expand">
+          <div class="content index posts-expand">
             
-
-    
+      
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2022/11/19/SpringMVC%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2022/08/29/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/test1/images/avatar.gif">
@@ -162,9 +157,10 @@
       <meta itemprop="name" content="沙雕鱼罐头">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          SpringMVC请求参数中文乱码问题
-        </h1>
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2022/08/29/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" class="post-title-link" itemprop="url">我的第一篇博客</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -174,7 +170,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-11-19 12:57:26 / 修改时间：12:58:32" itemprop="dateCreated datePublished" datetime="2022-11-19T12:57:26+08:00">2022-11-19</time>
+              <time title="创建时间：2022-08-29 14:59:31 / 修改时间：15:35:45" itemprop="dateCreated datePublished" datetime="2022-08-29T14:59:31+08:00">2022-08-29</time>
             </span>
 
           
@@ -188,54 +184,27 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="SpringMVC请求中文参数乱码的问题"><a href="#SpringMVC请求中文参数乱码的问题" class="headerlink" title="SpringMVC请求中文参数乱码的问题"></a>SpringMVC请求中文参数乱码的问题</h1><h2 id="讲解：尚硅谷SpringMVC-P32"><a href="#讲解：尚硅谷SpringMVC-P32" class="headerlink" title="讲解：尚硅谷SpringMVC P32"></a>讲解：尚硅谷SpringMVC P32</h2><ul>
-<li>get请求不会发生乱码，get请求的乱码是由tomcat造成的，解决需要修改tomcat&#x2F;conf&#x2F;server.xml，可以一次性解决。</li>
-<li>使用post方式时如果出现乱码，在控制器具体方法内使用characterEndocing设置请求编码无法解决问题，因为获取请求参数先发生，在请求方法里设置编码是无效的。</li>
-</ul>
-<h3 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h3><ul>
-<li><p>在servlet执行之前完成参数的编码。（）</p>
-</li>
-<li><p>联想服务器中三大组件：监听器、过滤器、servlet。其中servletContextListener加载时间最早，其次是过滤器、最后是servlet。</p>
-</li>
-<li><p>对于监听器servletContextListener，由于其在整个生命周期内只执行一次，所以用来解决多个请求的编码是不合适的。</p>
-</li>
-<li><p>对于过滤器，只要满足请求路径，就会对请求进行过滤，因此考虑使用过滤器解决编码问题。</p>
-</li>
-<li><p>修改web.xml，添加过滤器：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;encoding&lt;/param-name&gt;</span><br><span class="line">      &lt;param-value&gt;utf-<span class="number">8</span>&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">  &lt;/filter&gt;</span><br><span class="line">  &lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;<span class="comment">/*&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="comment">  &lt;/filter-mapping&gt;</span></span><br></pre></td></tr></table></figure>
+          <h1 id="我的第一篇博客"><a href="#我的第一篇博客" class="headerlink" title="我的第一篇博客"></a><strong>我的第一篇博客</strong></h1><p>hello world!</p>
 
-<p>注：SpringMVC中处理编码的过滤器一定要配置到其他过滤器之前，否则无效。</p>
-</li>
-</ul>
-
+      
     </div>
 
     
     
     
-
       <footer class="post-footer">
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/test1/2022/11/16/Cookie-Session/" rel="prev" title="Cookie & Session">
-      <i class="fa fa-chevron-left"></i> Cookie & Session
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/test1/2022/11/19/%E8%AF%B7%E6%B1%82%E8%BD%AC%E5%8F%91%E4%B8%8E%E9%87%8D%E5%AE%9A%E5%90%91/" rel="next" title="请求转发与重定向">
-      请求转发与重定向 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
+        <div class="post-eof"></div>
       </footer>
-    
   </article>
   
   
   
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/test1/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/test1/">1</a><a class="page-number" href="/test1/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
 
 
 
@@ -287,7 +256,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringMVC%E8%AF%B7%E6%B1%82%E4%B8%AD%E6%96%87%E5%8F%82%E6%95%B0%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">SpringMVC请求中文参数乱码的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%B2%E8%A7%A3%EF%BC%9A%E5%B0%9A%E7%A1%85%E8%B0%B7SpringMVC-P32"><span class="nav-number">1.1.</span> <span class="nav-text">讲解：尚硅谷SpringMVC P32</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95%EF%BC%9A"><span class="nav-number">1.1.1.</span> <span class="nav-text">解决办法：</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
