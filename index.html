@@ -168,10 +168,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-29 14:21:21 / 修改时间：21:09:13" itemprop="dateCreated datePublished" datetime="2023-05-29T14:21:21+08:00">2023-05-29</time>
+              <time title="创建时间：2023-05-29 14:21:21" itemprop="dateCreated datePublished" datetime="2023-05-29T14:21:21+08:00">2023-05-29</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-30 16:21:59" itemprop="dateModified" datetime="2023-05-30T16:21:59+08:00">2023-05-30</time>
+              </span>
 
           
 
@@ -253,6 +259,27 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testHeader</span><span class="params">(<span class="meta">@Autowired</span> MockMvc mvc)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="comment">// 创建虚拟请求，设置访问路径</span></span><br><span class="line">    <span class="type">MockHttpServletRequestBuilder</span> <span class="variable">mockHttpServletRequestBuilder</span> <span class="operator">=</span> MockMvcRequestBuilders.get(<span class="string">&quot;/users&quot;</span>);</span><br><span class="line">    <span class="comment">//执行请求</span></span><br><span class="line">    <span class="type">ResultActions</span> <span class="variable">perform</span> <span class="operator">=</span> mvc.perform(mockHttpServletRequestBuilder);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置本次调用的 预期值</span></span><br><span class="line">    <span class="type">HeaderResultMatchers</span> <span class="variable">header</span> <span class="operator">=</span> MockMvcResultMatchers.header();</span><br><span class="line">    <span class="type">ResultMatcher</span> <span class="variable">string</span> <span class="operator">=</span> header.string(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json&quot;</span>);</span><br><span class="line">    <span class="comment">// 添加预期值到本次调用过程中进行匹配</span></span><br><span class="line">    perform.andExpect(string);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 <p>上述匹配规则可以组合使用。</p>
+<h4 id="5-业务层测试事务回滚"><a href="#5-业务层测试事务回滚" class="headerlink" title="5. 业务层测试事务回滚"></a>5. 业务层测试事务回滚</h4><p>我们期望，测试产生的结果数据不要存放在数据库中，只是关注它的过程数据就行。</p>
+<ul>
+<li><p>方法：使用@Transaction注解即可：</p>
+<ul>
+<li>为用例添加事务，SpringBoot会对测试用例对应的事务提交操作并进行回滚：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MapperTest</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    UserService service;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">insertTest</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setUsername(<span class="string">&quot;zhangsan&quot;</span>);</span><br><span class="line">        user.setPassword(<span class="string">&quot;lisi&quot;</span>);</span><br><span class="line">        service.saveUser(user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>注意：</strong>如果想在测试用例中提交事务，可以通过**@RollBack**注解设置：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="meta">@RollBack(false)</span> <span class="comment">// 如果为false,则不回滚，事务正常提交；如果为true，则回滚，事务不会被提交。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MapperTest</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    UserService service;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">insertTest</span><span class="params">()</span>&#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="6-测试用例设置随机数据"><a href="#6-测试用例设置随机数据" class="headerlink" title="6. 测试用例设置随机数据"></a>6. 测试用例设置随机数据</h4><p>在设置测试用例数据的时候，我们不能想上面那样直接用setter设置，而是使用springboot生成的随机数据完成。</p>
+<p>使用方式：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">typecase:</span></span><br><span class="line"> <span class="attr">id:</span> <span class="string">$&#123;random.int&#125;</span></span><br><span class="line"> <span class="attr">id2:</span> <span class="string">$&#123;random.int(10)&#125;</span> <span class="comment">#1-10之间</span></span><br><span class="line"> <span class="attr">type:</span> <span class="string">$&#123;random.int(5-10)&#125;</span> <span class="comment">#5-10</span></span><br><span class="line"> <span class="attr">name:</span> <span class="string">这是$&#123;random.value&#125;</span></span><br><span class="line"> <span class="attr">uuid:</span> <span class="string">$&#123;random.uuid&#125;</span></span><br><span class="line"> <span class="attr">publishTime:</span> <span class="string">$&#123;random.long&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
 
       
     </div>
