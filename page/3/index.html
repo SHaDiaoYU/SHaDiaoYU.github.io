@@ -145,6 +145,561 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/01/14/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94%E6%83%85%E5%86%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2023/01/14/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%A0%94%E6%83%85%E5%86%B5/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-14 14:24:28" itemprop="dateCreated datePublished" datetime="2023-01-14T14:24:28+08:00">2023-01-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-03 22:31:20" itemprop="dateModified" datetime="2023-02-03T22:31:20+08:00">2023-02-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="工具调研情况"><a href="#工具调研情况" class="headerlink" title="工具调研情况"></a>工具调研情况</h1><h4 id="1-密码字典生成工具：Crunch"><a href="#1-密码字典生成工具：Crunch" class="headerlink" title="1.密码字典生成工具：Crunch"></a>1.密码字典生成工具：Crunch</h4><ul>
+<li>可以非常快速的生成所有可能的密码组合。还可以在遇到任何困难时按文件大小和支持来分解结果。它支持数字、符号、大写和小写字母的组合。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/jaalto/external-sf--crunch-wordlist">jaalto&#x2F;external-sf–crunch-wordlist: 3rd party (Sourceforge) (github.com)</a></li>
+<li>编写语言：c</li>
+<li>使用教程：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/72f9262ba6c1">linux密码生成工具crunch使用攻略 - 简书 (jianshu.com)</a></li>
+</ul>
+<h4 id="2-密码破解工具：hydra"><a href="#2-密码破解工具：hydra" class="headerlink" title="2.密码破解工具：hydra"></a>2.密码破解工具：hydra</h4><ul>
+<li>可使用自带或外部的密码字典，这个密码攻击工具是一个集中式并行登录破解，有多种攻击协议。可针对添加新模块进行定制。该工具可以远程获得对系统的未经授权的访问。它适用于 Cisco AAA、Cisco 授权、FTP、HTTPS GET&#x2F;POST&#x2F;PROXY、IMAP、MySQL、MSSQL、Oracle、<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/postgresql?from=10680">PostgreSQL</a>、SIP、POP3、SMTP、SSHkey、SSH 等等。可以使用指令，也具有图形化界面。</li>
+<li>github地址：<a target="_blank" rel="noopener" href="https://github.com/vanhauser-thc/thc-hydra">https://github.com/vanhauser-thc/thc-hydra</a></li>
+<li>编写语言：c</li>
+<li>hydra使用：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/397779150">https://zhuanlan.zhihu.com/p/397779150</a></li>
+<li>ubuntu下安装：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/135259422">https://zhuanlan.zhihu.com/p/135259422</a></li>
+</ul>
+<h4 id="3-密码破解工具：Medusa"><a href="#3-密码破解工具：Medusa" class="headerlink" title="3.密码破解工具：Medusa"></a>3.密码破解工具：Medusa</h4><ul>
+<li>与hydra类似的一款工具，稳定性相比较更好，但是模块要稍少一些</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/jmk-foofus/medusa">jmk-foofus&#x2F;medusa: Medusa is a speedy, parallel, and modular, login brute-forcer. (github.com)</a></li>
+<li>编写语言：c</li>
+<li>简易使用教程：<a target="_blank" rel="noopener" href="https://bbskali.cn/thread-275-1-1.html">medusa密码破解攻略-Kali笔记 (bbskali.cn)</a></li>
+</ul>
+<h4 id="4-密码破解工具：hashcat"><a href="#4-密码破解工具：hashcat" class="headerlink" title="4.密码破解工具：hashcat"></a>4.密码破解工具：hashcat</h4><ul>
+<li>开源，支持CPU、GPU、APU、FPGA等多种计算核心，号称史上最快的密码破解工具，支持多种hash散列算法，支持对rar、office、pdf、windows账户、wifi等多种密码的破解。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/hashcat/hashcat">hashcat&#x2F;hashcat: World’s fastest and most advanced password recovery utility (github.com)</a></li>
+<li>编写语言：c</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44754436/article/details/123628350">(43条消息) Hashcat从入门到入土（一）_杂化轨道VSEPR的博客-CSDN博客_hashcat</a></li>
+</ul>
+<h4 id="5-密码分析工具：pipal"><a href="#5-密码分析工具：pipal" class="headerlink" title="5. 密码分析工具：pipal"></a>5. 密码分析工具：pipal</h4><ul>
+<li>主要功能是进行密码合集文件进行分析。分析结果主要有密码频率Top N、词语频率Top N、 密码长度频率分析（从序列和排名两项给出），在terminal中给出了图形化的分析结果。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/digininja/pipal/">digininja&#x2F;pipal: Pipal, THE password analyser (github.com)</a></li>
+<li>编写语言：ruby</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/124246499">Web漏洞扫描神器Nikto使用指南 - 知乎 (zhihu.com)</a></li>
+</ul>
+<h4 id="6-提权工具：LinEnum"><a href="#6-提权工具：LinEnum" class="headerlink" title="6. 提权工具：LinEnum"></a>6. 提权工具：LinEnum</h4><ul>
+<li>LinEnum 是一个高级 Bash 脚本，它从目标系统中提取了大量有用的信息，可以复制文件并进行导出，同时可以搜索包含关键字的文件。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/rebootuser/LinEnum">https://github.com/rebootuser/LinEnum</a></li>
+<li>编写语言：shell</li>
+<li>使用教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43571641/article/details/124374101">(43条消息) Linux提权辅助工具_Luckysec的博客-CSDN博客_linux-exploit-suggester</a></li>
+<li>解析：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/315052950">Linux提权辅助脚本-LinEnum解析 - 知乎 (zhihu.com)</a></li>
+</ul>
+<h4 id="7-提权工具：Linux-Exploit-Suggester"><a href="#7-提权工具：Linux-Exploit-Suggester" class="headerlink" title="7. 提权工具：Linux_Exploit_Suggester"></a>7. 提权工具：Linux_Exploit_Suggester</h4><ul>
+<li>根据操作系统版本号自动查找相应提权脚本，如果不带任何参数运行该脚本的话，将执行<strong>uname -r</strong>返回的操作系统发行版本，或者手工输入-k参数查找指定版本号。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/PenturaLabs/Linux_Exploit_Suggester">https://github.com/PenturaLabs/Linux_Exploit_Suggester</a></li>
+<li>编写语言：perl</li>
+</ul>
+<h4 id="8-web渗透测试工具：Burp-Suite-BP"><a href="#8-web渗透测试工具：Burp-Suite-BP" class="headerlink" title="8. web渗透测试工具：Burp Suite(BP)"></a>8. web渗透测试工具：Burp Suite(BP)</h4><ul>
+<li>在对表单的破解方面，比hydra&#x2F;medusa强，但是只有图形化界面，无github地址，不是开源项目。</li>
+<li>编写语言：Java</li>
+</ul>
+<h4 id="9-渗透测试工具：Metasploit-Framework-MSF"><a href="#9-渗透测试工具：Metasploit-Framework-MSF" class="headerlink" title="9.渗透测试工具：Metasploit Framework(MSF)"></a>9.渗透测试工具：Metasploit Framework(MSF)</h4><ul>
+<li>是一款开源的漏洞监测工具，功能十分强大，包含权限提升模块，它可以使用多种技术在目标系统中实现提权，可以生成测试报告。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/rapid7/metasploit-framework">rapid7&#x2F;metasploit-framework: Metasploit Framework (github.com)</a></li>
+<li>编写语言：Ruby</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/csnd/p/11807588.html">Metasploit Framework(MSF)的使用 - 蒋璐 - 博客园 (cnblogs.com)</a></li>
+<li>编写语言为ruby，集成起来有难度。</li>
+</ul>
+<h4 id="10-web漏洞分析工具：skipfish"><a href="#10-web漏洞分析工具：skipfish" class="headerlink" title="10.web漏洞分析工具：skipfish"></a>10.web漏洞分析工具：skipfish</h4><ul>
+<li>一款由谷歌开发的实验性的主动web安全评估工具，体量小但是功能齐全。特点是：递归爬站，基于字典的探测，速度较快，误报相对较低。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/spinkham/skipfish">spinkham&#x2F;skipfish: Web application security scanner created by lcamtuf for google - Unofficial Mirror (github.com)</a></li>
+<li>编写语言：c</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39353923/article/details/82531865?spm=1001.2101.3001.6650.8&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-8-82531865-blog-107693542.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-8-82531865-blog-107693542.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=9">(43条消息) Web扫描之Skipfish详解实践_Louisnie的博客-CSDN博客_skipfish</a></li>
+</ul>
+<h4 id="11-web漏洞分析工具：Wapiti"><a href="#11-web漏洞分析工具：Wapiti" class="headerlink" title="11. web漏洞分析工具：Wapiti"></a>11. web漏洞分析工具：Wapiti</h4><ul>
+<li>wapiti是一个基于终端的web漏洞扫描工具，它发送 GET 和 POST 请求给目标站点，来寻找漏洞。它目前搜索 <a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=XSS&spm=1001.2101.3001.7020">XSS</a>、SQL 和 XPath 注入、文件包含、命令执行、XXE 注入、CRLF 注入、服务器端请求伪造、开放重定向等漏洞。在wapiti扫描完成后，会生成一个html报告，显示各类项目的漏洞数量。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/wapiti-scanner/wapiti">wapiti-scanner&#x2F;wapiti: Web vulnerability scanner written in Python3 (github.com)</a></li>
+<li>编写语言：python</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_59923059/article/details/123867361">(43条消息) Wapiti是什么以及使用教程_Griy日记的博客-CSDN博客</a></li>
+</ul>
+<h4 id="12-web漏洞分析工具：Nikto"><a href="#12-web漏洞分析工具：Nikto" class="headerlink" title="12.web漏洞分析工具：Nikto"></a>12.web漏洞分析工具：Nikto</h4><ul>
+<li>可对web服务器进行多项安全测试，Nikto可以扫描指定主机的web类型、主机名、指定目录、特定CGI漏洞、返回主机允许的http模式等。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/sullo/nikto">sullo&#x2F;nikto: Nikto web server scanner (github.com)</a></li>
+<li>编写语言：perl</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/124246499">Web漏洞扫描神器Nikto使用指南 - 知乎 (zhihu.com)</a></li>
+</ul>
+<h4 id="13-抓包工具：tcpdump"><a href="#13-抓包工具：tcpdump" class="headerlink" title="13. 抓包工具：tcpdump"></a>13. 抓包工具：tcpdump</h4><ul>
+<li><p>抓包工具，输出结果可以导出文件到wireshark中展示分析。</p>
+</li>
+<li><p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/the-tcpdump-group/tcpdump">https://github.com/the-tcpdump-group/tcpdump</a></p>
+</li>
+<li><p>编写语言：c</p>
+</li>
+<li><p>使用教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_33699914/article/details/91724383?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1-91724383-blog-121565278.pc_relevant_landingrelevant&spm=1001.2101.3001.4242.2&utm_relevant_index=4">(43条消息) tcpdump 安装 使用及详解_weixin_33699914的博客-CSDN博客</a></p>
+</li>
+<li><p>代码比较多，集成工作有难度。</p>
+</li>
+</ul>
+<h4 id="14-DNS欺骗工具：dnschef"><a href="#14-DNS欺骗工具：dnschef" class="headerlink" title="14. DNS欺骗工具：dnschef"></a>14. DNS欺骗工具：dnschef</h4><ul>
+<li>dnschef是一个高度可配置的dns代理，用于渗透测试和恶意软件分析，DNS代理又被称作假DNS，可以用来分析用户间传输的流量。比如我们可以使用一个DNS代理伪造所有到某一域名的请求到本地计算机，从而对流量进行分析。</li>
+<li>编写语言：python</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/iphelix/dnschef">iphelix&#x2F;dnschef: DNSChef - DNS proxy for Penetration Testers and Malware Analysts (github.com)</a></li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaoxuetu_/article/details/76042369">(43条消息) DNSChef的使用_xiaoxuetu_的博客-CSDN博客_dnschef</a></li>
+</ul>
+<h4 id="15-SQL注入工具：SQLMap"><a href="#15-SQL注入工具：SQLMap" class="headerlink" title="15. SQL注入工具：SQLMap"></a>15. SQL注入工具：SQLMap</h4><ul>
+<li>SQLMap是一个自动化的SQL注入工具，主要功能是扫描、发现并利用给定URL的SQL注入漏洞，内置了很多绕过插件，支持的数据库是MySQL，Oracle、 PostgreSQL、Microsoft SQL Server、Microsoft Access、IBM DB2、SQLite Firebird、Sybase、SAP MaxDB。<br> SQLMap的强大的功能包括数据库指纹识别、数据库枚举、数据提取、访问目标文件系统，并在获取完全的操作权限时实行任意命令。当常规的注入工具不能利用SQL注入漏洞进行注入时，使用SQLMap会有意想不到的效果。</li>
+<li>编写语言：python</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/sqlmapproject/sqlmap">GitHub - sqlmapproject&#x2F;sqlmap: Automatic SQL injection and database takeover tool</a></li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/smli_ng/article/details/106026901">sqlmap详细使用教程_星落.的博客-CSDN博客_sqlmap</a></li>
+</ul>
+<h4 id="16-目录遍历工具：dirsearch"><a href="#16-目录遍历工具：dirsearch" class="headerlink" title="16. 目录遍历工具：dirsearch"></a>16. 目录遍历工具：dirsearch</h4><ul>
+<li>dirsearch是一个基于python的命令行工具，旨在暴力扫描页面结构，包括网页中的目录和文件。其特点是多线程、可保持连接、支持多种后缀（-e|–extensions asp,php）、生成报告（纯文本，JSON）、启发式检测无效的网页、递归的暴力扫描、支持HTTP代理、用户代理随机化、批量处理。</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/maurosoria/dirsearch">GitHub - maurosoria&#x2F;dirsearch: Web path scanner</a></li>
+<li>编写语言：python</li>
+<li>使用参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/537515948">dirsearch目录扫描工具下载与使用 - 知乎 (zhihu.com)</a></li>
+</ul>
+<h4 id="15-渗透工具：WPScan"><a href="#15-渗透工具：WPScan" class="headerlink" title="15.渗透工具：WPScan"></a>15.渗透工具：WPScan</h4><ul>
+<li>只是针对特定wordPress站点的漏洞扫描,感觉参考价值不大。</li>
+</ul>
+<h4 id="16-网络扫描工具-Nmap"><a href="#16-网络扫描工具-Nmap" class="headerlink" title="16.网络扫描工具:Nmap"></a>16.网络扫描工具:Nmap</h4><ul>
+<li>nmap可以搜索指定网络内的主机并返回活动主机，扫描目标主机，一般的返回信息主要有是否在线、所在网络的拓扑、开放的端口、所使用的操作系统、所运行的服务与版本以及所存在的漏洞。</li>
+<li>编写语言：c++</li>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://gitlab.com/kalilinux/packages/nmap">Kali Linux &#x2F; Packages &#x2F; nmap · GitLab</a></li>
+</ul>
+<h4 id="17-sql密码爆破工具：sqldict"><a href="#17-sql密码爆破工具：sqldict" class="headerlink" title="17.sql密码爆破工具：sqldict"></a>17.sql密码爆破工具：sqldict</h4><h4 id="18-xss漏洞实施工具：XXSer"><a href="#18-xss漏洞实施工具：XXSer" class="headerlink" title="18. xss漏洞实施工具：XXSer"></a>18. xss漏洞实施工具：XXSer</h4><ul>
+<li><p>XXSer是一个实施XXS攻击的工具，是一个自动框架，用于检测、利用以及报告基于Web的应用程序中的XSS漏洞。它包含几个尝试绕过某些过滤器的选项，以及各种特殊的代码注入技术。</p>
+</li>
+<li><p>项目地址：<a target="_blank" rel="noopener" href="https://gitlab.com/kalilinux/packages/xsser">Kali Linux &#x2F; Packages &#x2F; xsser · GitLab</a></p>
+</li>
+<li><p>开发语言：python</p>
+</li>
+</ul>
+<h4 id="19-漏洞扫描工具：davtest"><a href="#19-漏洞扫描工具：davtest" class="headerlink" title="19. 漏洞扫描工具：davtest"></a>19. 漏洞扫描工具：davtest</h4><ul>
+<li>项目地址：<a target="_blank" rel="noopener" href="https://gitlab.com/kalilinux/packages/davtest">Kali Linux &#x2F; Packages &#x2F; davtest · GitLab</a></li>
+<li>开发语言：perl</li>
+<li></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2022/11/19/%E8%AF%B7%E6%B1%82%E8%BD%AC%E5%8F%91%E4%B8%8E%E9%87%8D%E5%AE%9A%E5%90%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2022/11/19/%E8%AF%B7%E6%B1%82%E8%BD%AC%E5%8F%91%E4%B8%8E%E9%87%8D%E5%AE%9A%E5%90%91/" class="post-title-link" itemprop="url">请求转发与重定向</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-19 16:28:19 / 修改时间：16:28:37" itemprop="dateCreated datePublished" datetime="2022-11-19T16:28:19+08:00">2022-11-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="请求的转发与重定向"><a href="#请求的转发与重定向" class="headerlink" title="请求的转发与重定向"></a>请求的转发与重定向</h1><h2 id="一-请求的重定向（Redirect）"><a href="#一-请求的重定向（Redirect）" class="headerlink" title="一. 请求的重定向（Redirect）"></a>一. 请求的重定向（Redirect）</h2><h3 id="1-工作原理："><a href="#1-工作原理：" class="headerlink" title="1. 工作原理："></a>1. 工作原理：</h3><p>​	用户通过浏览器访问servlet1,servlet1工作完成后，将servlet2写入响应头中，在localhost属性内，这会导致tomcat将302状态码写入状态行；</p>
+<p>​	浏览器接收请求，读取到302状态行，此时浏览器自动根据响应头中的localhost属性地址，发起第二次请求去访问servlet2，以完成剩余的任务。</p>
+<h3 id="2-实现方法"><a href="#2-实现方法" class="headerlink" title="2. 实现方法"></a>2. 实现方法</h3><p>​	<code>response.sendRedirect(URL)</code>，将重定向的地址写入响应头内。</p>
+<h3 id="3-重定向的特点"><a href="#3-重定向的特点" class="headerlink" title="3. 重定向的特点"></a>3. 重定向的特点</h3><ul>
+<li>浏览器地址栏会发生变化；</li>
+<li>请求次数为<strong>两次</strong>，只有第一次请求是用户发送的，后续请求为浏览器进行；</li>
+<li>重定向解决方案中，通过地址栏通知浏览器发起下一次请求。其中第一次为用户发起的请求，请求方式为<strong>get&#x2F;post</strong>，第二次之后的请求方式都为<strong>get</strong>；</li>
+<li>可以重定向到外部URL ;</li>
+<li>请求的两个servlet间不共享request或response域的信息；</li>
+<li><strong>重定向的缺点</strong>：重定向方案需要在浏览器与服务器间进行多次往返，大量的时间消耗在往返上，增加了用户等待的时间。</li>
+</ul>
+<p><strong>重定向总结</strong>：好比为，用户向A去借钱，但是A没有钱，但A告知用户B有钱，然后用户再去B借钱，若B也没钱，可能会发生多次重定向过程。</p>
+<h2 id="二-请求的转发（forward）"><a href="#二-请求的转发（forward）" class="headerlink" title="二. 请求的转发（forward）"></a>二. 请求的转发（forward）</h2><h3 id="1-请求原理："><a href="#1-请求原理：" class="headerlink" title="1. 请求原理："></a>1. 请求原理：</h3><p>​	用户请求浏览器访问servlet1,在servlet1完成之后，通过当前的请求对象代替浏览器向服务器发送请求申请调用servlet2(该过程是在服务器内部进行的，还没有向浏览器发送响应)；</p>
+<p>​	服务器接受请求，访问servlet2完成剩余的任务；</p>
+<h3 id="2-实现方法："><a href="#2-实现方法：" class="headerlink" title="2. 实现方法："></a>2. 实现方法：</h3><ul>
+<li><code>void setAttribute(String name,Object o)</code>：存储数据到request域中；</li>
+<li><code>Object getAttribute(String name)</code>：根据key，获取值；</li>
+<li><code>void removeAttribute(String)</code>：根据key，删除该键值对；</li>
+</ul>
+<h3 id="3-转发的特点："><a href="#3-转发的特点：" class="headerlink" title="3. 转发的特点："></a>3. 转发的特点：</h3><ul>
+<li>浏览器地址栏路径不发生变化；</li>
+<li>只能转发到当前服务器的内部资源；</li>
+<li>请求次数为<strong>一次</strong>，可以在转发的资源间使用request共享数据；</li>
+<li>第一次发起的是什么请求，之后的转发就是什么请求；</li>
+</ul>
+<p><strong>转发总结：</strong>好比为，用户向A借钱，A没有钱或者钱不多，于是A去找B或其他人借钱，最后把借来的钱给用户。</p>
+<hr>
+<h2 id="三-重定向与转发区别："><a href="#三-重定向与转发区别：" class="headerlink" title="三. 重定向与转发区别："></a>三. 重定向与转发区别：</h2><table>
+<thead>
+<tr>
+<th>重定向</th>
+<th>转发</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.请求次数至少为2次</td>
+<td>1.请求次数只有1次</td>
+</tr>
+<tr>
+<td>2. 浏览器地址会发生改变</td>
+<td>2.浏览器地址栏不会发生变化</td>
+</tr>
+<tr>
+<td>3. 不可以共享request&#x2F;response域中的数据</td>
+<td>3.可以共享request&#x2F;response域的数据</td>
+</tr>
+<tr>
+<td>4.不可以转发到WEB-INF目录下</td>
+<td>4. 可以转发到WEB-INF目录下</td>
+</tr>
+<tr>
+<td>5.第一次的请求方式可以为post或get，之后的请求都为get</td>
+<td>5. 用户第一次发起什么请求，后面的转发就是什么请求</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2022/11/19/SpringMVC%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2022/11/19/SpringMVC%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">SpringMVC请求参数中文乱码问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-19 12:57:26 / 修改时间：12:58:32" itemprop="dateCreated datePublished" datetime="2022-11-19T12:57:26+08:00">2022-11-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="SpringMVC请求中文参数乱码的问题"><a href="#SpringMVC请求中文参数乱码的问题" class="headerlink" title="SpringMVC请求中文参数乱码的问题"></a>SpringMVC请求中文参数乱码的问题</h1><h2 id="讲解：尚硅谷SpringMVC-P32"><a href="#讲解：尚硅谷SpringMVC-P32" class="headerlink" title="讲解：尚硅谷SpringMVC P32"></a>讲解：尚硅谷SpringMVC P32</h2><ul>
+<li>get请求不会发生乱码，get请求的乱码是由tomcat造成的，解决需要修改tomcat&#x2F;conf&#x2F;server.xml，可以一次性解决。</li>
+<li>使用post方式时如果出现乱码，在控制器具体方法内使用characterEndocing设置请求编码无法解决问题，因为获取请求参数先发生，在请求方法里设置编码是无效的。</li>
+</ul>
+<h3 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h3><ul>
+<li><p>在servlet执行之前完成参数的编码。（）</p>
+</li>
+<li><p>联想服务器中三大组件：监听器、过滤器、servlet。其中servletContextListener加载时间最早，其次是过滤器、最后是servlet。</p>
+</li>
+<li><p>对于监听器servletContextListener，由于其在整个生命周期内只执行一次，所以用来解决多个请求的编码是不合适的。</p>
+</li>
+<li><p>对于过滤器，只要满足请求路径，就会对请求进行过滤，因此考虑使用过滤器解决编码问题。</p>
+</li>
+<li><p>修改web.xml，添加过滤器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;encoding&lt;/param-name&gt;</span><br><span class="line">      &lt;param-value&gt;utf-<span class="number">8</span>&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">  &lt;/filter&gt;</span><br><span class="line">  &lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;<span class="comment">/*&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="comment">  &lt;/filter-mapping&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注：SpringMVC中处理编码的过滤器一定要配置到其他过滤器之前，否则无效。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2022/11/16/Cookie-Session/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2022/11/16/Cookie-Session/" class="post-title-link" itemprop="url">Cookie & Session</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-11-16 15:40:55" itemprop="dateCreated datePublished" datetime="2022-11-16T15:40:55+08:00">2022-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-19 13:02:25" itemprop="dateModified" datetime="2022-11-19T13:02:25+08:00">2022-11-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Cookie与Session内容"><a href="#Cookie与Session内容" class="headerlink" title="Cookie与Session内容"></a>Cookie与Session内容</h1><h2 id="一-cookie"><a href="#一-cookie" class="headerlink" title="(一) cookie:"></a>(一) cookie:</h2><h3 id="（1）Cookie基本使用："><a href="#（1）Cookie基本使用：" class="headerlink" title="（1）Cookie基本使用："></a>（1）Cookie基本使用：</h3><ul>
+<li><p>Cookie：客户端会话技术，将数据保存到客户端，以后每次请求都携带Cookie数据进行访问</p>
+</li>
+<li><p>Cookie基本使用：</p>
+<ol>
+<li><p>创建Cookie对象，设置数据：</p>
+<p><code> Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</code></p>
+</li>
+<li><p>发送Cookie到客户端(浏览器)，使用response对象：</p>
+<p><code> response.addCookie(cookie);</code></p>
+</li>
+<li><p>获取客户端携带的所有cookie,使用request对象</p>
+<p><code>Cookie[] cookies = request.getCookies();</code></p>
+</li>
+<li><p>遍历数组，获取每一个Cookie对象：for循环  </p>
+</li>
+<li><p>使用Cookie对象方法获取数据</p>
+<p><code> cookie.getName();</code> </p>
+<p><code>cookie.getValue();</code></p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="（2）Cookie原理："><a href="#（2）Cookie原理：" class="headerlink" title="（2）Cookie原理："></a>（2）Cookie原理：</h3><ol>
+<li><p>Cookie的实现是基于HTTP协议的</p>
+<ul>
+<li><p>响应头（由服务端发出）：set-cookie</p>
+<p><img src="C:\Users\ShangJiaWei\AppData\Roaming\Typora\typora-user-images\image-20221116141255489.png"></p>
+</li>
+<li><p>请求头（由客户端发出）：cookie</p>
+<p><img src="C:\Users\ShangJiaWei\AppData\Roaming\Typora\typora-user-images\image-20221116141406786.png" alt="image-20221116141406786"></p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="（3）Cookie的使用细节"><a href="#（3）Cookie的使用细节" class="headerlink" title="（3）Cookie的使用细节"></a>（3）Cookie的使用细节</h3><ol>
+<li><p>Cookie存活时间：</p>
+<ul>
+<li>默认情况下，Cookie存储在浏览器内存中，浏览器关闭后，Cookie被销毁。</li>
+<li>setMaxAge(int seconds)：设置Cookie存活时间<ol>
+<li>正数：将Cookie写入硬盘，持久化保存，到时间自动删除；</li>
+<li>负数：默认值，Cookie在浏览器内存中，浏览器关闭，则Cookie自动销毁；</li>
+<li>零：删除对应的Cookie；</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Cookie存储中文：</p>
+<ul>
+<li><p>Cookie不能直接存储中文；</p>
+</li>
+<li><p>如果需要存储，则需要进行转码：URL转码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> <span class="string">&quot;张三&quot;</span>；</span><br><span class="line"><span class="comment">//URL 编码</span></span><br><span class="line">value = URLEncoder.encode(value,<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line"><span class="type">Cookie</span> <span class="variable">cookie</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Cookie</span>(<span class="string">&quot;username&quot;</span>,value);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//URL解码</span></span><br><span class="line">value = URLDecoder.decode(value,<span class="string">&quot;UTF-8&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h2 id="（二）Session："><a href="#（二）Session：" class="headerlink" title="（二）Session："></a>（二）Session：</h2><h3 id="（1）Session的基本使用："><a href="#（1）Session的基本使用：" class="headerlink" title="（1）Session的基本使用："></a>（1）Session的基本使用：</h3><ul>
+<li><p>Session：服务端会话跟踪技术，将数据保存到服务端。</p>
+</li>
+<li><p>JavaEE提供HttpSession接口，来实现一次会话的多次请求间数据共享功能；</p>
+</li>
+<li><p>使用：</p>
+<ol>
+<li><p>获取Session对象</p>
+<p><code>HttpSession session = request.getSession();</code></p>
+</li>
+<li><p>Session对象功能</p>
+<ul>
+<li>void setAttribute(String name,Object o):存储对象到session域中；</li>
+<li>Object getAttribute(String name)：根据key，获取值；</li>
+<li>void removeAttribute(String name)：根据key，删除该键值对；</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="（2）-Session的原理："><a href="#（2）-Session的原理：" class="headerlink" title="（2） Session的原理："></a>（2） Session的原理：</h3><ul>
+<li>Session是基于Cookie实现的，同一会话内进行<code>request.getSession()</code>后得到的是同一个对象；</li>
+<li>同一会话内，首次获取Session对象时，生成一个SessionID，在响应时存入响应头<code>set-cookie:JSESSIONIDE=xxx</code>，之后的每一次请求的请求头内，携带sessionID(<code>cookie:JSESSIONID = xxx</code>)，服务端据此寻找是否有该ID的session对象，如果有就直接拿来用，以此保证拿到的session对象为同一个。</li>
+</ul>
+<h3 id="（3）-Session的使用细节："><a href="#（3）-Session的使用细节：" class="headerlink" title="（3） Session的使用细节："></a>（3） Session的使用细节：</h3><ul>
+<li><p>Session钝化、活化：</p>
+<ul>
+<li><p>服务器重启后，session中的数据是否还在？</p>
+<p>不会丢失，前提为服务器是正常启动停止的。</p>
+<ul>
+<li>钝化：在服务器正常关闭后，Tomcat会自动将Session数据写入硬盘的文件中；</li>
+<li>活化：再次启动服务器后，从文件中加载数据到Session中；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Session销毁：</p>
+<ul>
+<li><p>默认情况下，无操作，30分钟自动销毁；</p>
+</li>
+<li><p>调用Session对象的invalidate()方法；</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="（三）小结"><a href="#（三）小结" class="headerlink" title="（三）小结"></a>（三）小结</h2><ul>
+<li>Cookie和Session都是来完成一次会话内多次请求间<strong>数据共享</strong>的</li>
+<li>区别：<ul>
+<li>存储位置：Cookie是将数据存储在客户端，Session将数据存储在服务端；</li>
+<li>安全性：Cookie不安全，Session安全；</li>
+<li>数据大小：Cookie最大3KB，Session无大小限制；</li>
+<li>存储时间：Cookie可以长期存储，Session默认30分钟；</li>
+<li>服务器性能：Cookie不占用服务器资源，Session占用服务器资源；</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2022/08/29/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -269,7 +824,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/test1/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
