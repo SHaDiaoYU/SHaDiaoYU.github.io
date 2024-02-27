@@ -20,19 +20,19 @@
     var CONFIG = {"hostname":"gitee.com","root":"/test1/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="SpringMVC请求中文参数乱码的问题讲解：尚硅谷SpringMVC P32 get请求不会发生乱码，get请求的乱码是由tomcat造成的，解决需要修改tomcat&#x2F;conf&#x2F;server.xml，可以一次性解决。 使用post方式时如果出现乱码，在控制器具体方法内使用characterEndocing设置请求编码无法解决问题，因为获取请求参数先发生，在请求方法里设置编码是">
+  <meta name="description" content="java优先级队列 and 比较器(1) 比较器Comparator： Comparator接口定义如下： 123456public interface Comparator&lt;T&gt; &amp;#123;     int compare(T o1, T o2);     boolean equals(Object obj);&amp;#125;  如果一个类需要实现Comparator接口，它一定要实现">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SpringMVC请求参数中文乱码问题">
-<meta property="og:url" content="https://gitee.com/SHaDiaoYU/2022/11/19/SpringMVC%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:title" content="刷题笔记">
+<meta property="og:url" content="https://gitee.com/SHaDiaoYU/2023/10/23/%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="沙雕鱼罐头">
-<meta property="og:description" content="SpringMVC请求中文参数乱码的问题讲解：尚硅谷SpringMVC P32 get请求不会发生乱码，get请求的乱码是由tomcat造成的，解决需要修改tomcat&#x2F;conf&#x2F;server.xml，可以一次性解决。 使用post方式时如果出现乱码，在控制器具体方法内使用characterEndocing设置请求编码无法解决问题，因为获取请求参数先发生，在请求方法里设置编码是">
+<meta property="og:description" content="java优先级队列 and 比较器(1) 比较器Comparator： Comparator接口定义如下： 123456public interface Comparator&lt;T&gt; &amp;#123;     int compare(T o1, T o2);     boolean equals(Object obj);&amp;#125;  如果一个类需要实现Comparator接口，它一定要实现">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-11-19T04:57:26.000Z">
-<meta property="article:modified_time" content="2022-11-19T04:58:32.094Z">
+<meta property="article:published_time" content="2023-10-23T06:44:21.000Z">
+<meta property="article:modified_time" content="2023-10-23T08:33:09.445Z">
 <meta property="article:author" content="jiawei">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://gitee.com/SHaDiaoYU/2022/11/19/SpringMVC%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/">
+<link rel="canonical" href="https://gitee.com/SHaDiaoYU/2023/10/23/%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/">
 
 
 <script id="page-configurations">
@@ -45,7 +45,7 @@
   };
 </script>
 
-  <title>SpringMVC请求参数中文乱码问题 | 沙雕鱼罐头</title>
+  <title>刷题笔记 | 沙雕鱼罐头</title>
   
 
 
@@ -150,7 +150,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2022/11/19/SpringMVC%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/10/23/%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/test1/images/avatar.gif">
@@ -163,7 +163,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          SpringMVC请求参数中文乱码问题
+          刷题笔记
         </h1>
 
         <div class="post-meta">
@@ -174,7 +174,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-11-19 12:57:26 / 修改时间：12:58:32" itemprop="dateCreated datePublished" datetime="2022-11-19T12:57:26+08:00">2022-11-19</time>
+              <time title="创建时间：2023-10-23 14:44:21 / 修改时间：16:33:09" itemprop="dateCreated datePublished" datetime="2023-10-23T14:44:21+08:00">2023-10-23</time>
             </span>
 
           
@@ -188,23 +188,35 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="SpringMVC请求中文参数乱码的问题"><a href="#SpringMVC请求中文参数乱码的问题" class="headerlink" title="SpringMVC请求中文参数乱码的问题"></a>SpringMVC请求中文参数乱码的问题</h1><h2 id="讲解：尚硅谷SpringMVC-P32"><a href="#讲解：尚硅谷SpringMVC-P32" class="headerlink" title="讲解：尚硅谷SpringMVC P32"></a>讲解：尚硅谷SpringMVC P32</h2><ul>
-<li>get请求不会发生乱码，get请求的乱码是由tomcat造成的，解决需要修改tomcat&#x2F;conf&#x2F;server.xml，可以一次性解决。</li>
-<li>使用post方式时如果出现乱码，在控制器具体方法内使用characterEndocing设置请求编码无法解决问题，因为获取请求参数先发生，在请求方法里设置编码是无效的。</li>
-</ul>
-<h3 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h3><ul>
-<li><p>在servlet执行之前完成参数的编码。（）</p>
-</li>
-<li><p>联想服务器中三大组件：监听器、过滤器、servlet。其中servletContextListener加载时间最早，其次是过滤器、最后是servlet。</p>
-</li>
-<li><p>对于监听器servletContextListener，由于其在整个生命周期内只执行一次，所以用来解决多个请求的编码是不合适的。</p>
-</li>
-<li><p>对于过滤器，只要满足请求路径，就会对请求进行过滤，因此考虑使用过滤器解决编码问题。</p>
-</li>
-<li><p>修改web.xml，添加过滤器：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;encoding&lt;/param-name&gt;</span><br><span class="line">      &lt;param-value&gt;utf-<span class="number">8</span>&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">  &lt;/filter&gt;</span><br><span class="line">  &lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;<span class="comment">/*&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="comment">  &lt;/filter-mapping&gt;</span></span><br></pre></td></tr></table></figure>
+        <h3 id="java优先级队列-and-比较器"><a href="#java优先级队列-and-比较器" class="headerlink" title="java优先级队列 and 比较器"></a>java优先级队列 and 比较器</h3><p>(1) 比较器Comparator：</p>
+<p>Comparator接口定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Comparator</span>&lt;T&gt; &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="type">int</span> <span class="title function_">compare</span><span class="params">(T o1, T o2)</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object obj)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>注：SpringMVC中处理编码的过滤器一定要配置到其他过滤器之前，否则无效。</p>
+<p>如果一个类需要实现Comparator接口，它一定要实现compareTo(T o1,T o2) 函数，但可以不实现equals(Object object) 函数。</p>
+<p>当第一个参数小于、等于、或大于第二个参数时，compareTo函数返回负值、零值或正值。</p>
+<p>可以使用Lambda表达式实现匿名内部类的方法来定义比较器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Comparator&lt;<span class="type">int</span>[]&gt; comparator = (arr1, arr2) -&gt; arr1[<span class="number">0</span>] - arr2[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>(2) 优先级队列PriorityQueue</p>
+<p><strong>优先级队列默认使用小根堆，升序排列（1的优先级最高，234…优先级依次减少）。</strong></p>
+<p>Java集合框架中提供了<strong>PriorityQueue</strong>和<strong>PriorityBlockingQueue</strong>两种类型的优先级队列，PriorityQueue是<strong>线程不安全</strong>的，PriorityBlockingQueue是<strong>线程安全</strong>的</p>
+<p>PriorityQueue的几种常见构造方式：</p>
+<ul>
+<li>PriorityQueue() : 创建一个空的优先级队列，默认容量是11；</li>
+<li>PriorityQueue(int initialCapacity) ：创建一个初始容量为initialCapacity的优先级队列，注意：值小于1会爆出IllegalArgumentException 异常；</li>
+<li>PriorityQueue(Collection &lt;? extends E&gt; c)：用一个集合来创建优先级队列；</li>
+<li>PriorityQueue(Comparator&lt;? super E&gt; comparator) ：创建具有初始容量的优先级队列，并根据指定的比较器对元素进行排序；</li>
+</ul>
+<p><strong>使用比较器comparator构造优先级队列priorityQueue:</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PriorityQueue&lt;Integer&gt; heap = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((n1,n2) -&gt; n1-n2); <span class="comment">// 默认的顺序也是如此</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PriorityQueue&lt;Integer&gt; heap = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((n1,n2) -&gt; n2-n1); <span class="comment">// 降序排列（4优先级最高，321优先级依次降低）</span></span><br></pre></td></tr></table></figure>
+
+<p>优先级内部依据比较器返回结果进行处理。</p>
+<ul>
+<li><p>在比较n1和n2的时候，如果结果大于0（n1-n2&gt;0）那么将n1下沉（大的数进行下沉，即小根堆的操作）；</p>
+</li>
+<li><p>当比较器返回值修改为n2-n1的时候，如果结果大于0（n2-n1&gt;0）,还是n1下沉（也就是说，无论n1大还是n2大，都会将n1下沉，但是现在这种情况相当于将小的数进行下沉，即大根堆的操作，此时应该是降序排列了）。</p>
 </li>
 </ul>
 
@@ -222,13 +234,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/test1/2022/11/16/Cookie-Session/" rel="prev" title="Cookie & Session">
-      <i class="fa fa-chevron-left"></i> Cookie & Session
+    <a href="/test1/2023/10/16/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="prev" title="SpringCloud学习笔记">
+      <i class="fa fa-chevron-left"></i> SpringCloud学习笔记
     </a></div>
-      <div class="post-nav-item">
-    <a href="/test1/2022/11/19/%E8%AF%B7%E6%B1%82%E8%BD%AC%E5%8F%91%E4%B8%8E%E9%87%8D%E5%AE%9A%E5%90%91/" rel="next" title="请求转发与重定向">
-      请求转发与重定向 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -287,7 +296,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringMVC%E8%AF%B7%E6%B1%82%E4%B8%AD%E6%96%87%E5%8F%82%E6%95%B0%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">SpringMVC请求中文参数乱码的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%B2%E8%A7%A3%EF%BC%9A%E5%B0%9A%E7%A1%85%E8%B0%B7SpringMVC-P32"><span class="nav-number">1.1.</span> <span class="nav-text">讲解：尚硅谷SpringMVC P32</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95%EF%BC%9A"><span class="nav-number">1.1.1.</span> <span class="nav-text">解决办法：</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#java%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97-and-%E6%AF%94%E8%BE%83%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">java优先级队列 and 比较器</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

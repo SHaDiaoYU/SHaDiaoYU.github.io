@@ -145,6 +145,381 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/10/23/%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2023/10/23/%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">刷题笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-23 14:44:21 / 修改时间：16:33:09" itemprop="dateCreated datePublished" datetime="2023-10-23T14:44:21+08:00">2023-10-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="java优先级队列-and-比较器"><a href="#java优先级队列-and-比较器" class="headerlink" title="java优先级队列 and 比较器"></a>java优先级队列 and 比较器</h3><p>(1) 比较器Comparator：</p>
+<p>Comparator接口定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Comparator</span>&lt;T&gt; &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="type">int</span> <span class="title function_">compare</span><span class="params">(T o1, T o2)</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object obj)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果一个类需要实现Comparator接口，它一定要实现compareTo(T o1,T o2) 函数，但可以不实现equals(Object object) 函数。</p>
+<p>当第一个参数小于、等于、或大于第二个参数时，compareTo函数返回负值、零值或正值。</p>
+<p>可以使用Lambda表达式实现匿名内部类的方法来定义比较器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Comparator&lt;<span class="type">int</span>[]&gt; comparator = (arr1, arr2) -&gt; arr1[<span class="number">0</span>] - arr2[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>(2) 优先级队列PriorityQueue</p>
+<p><strong>优先级队列默认使用小根堆，升序排列（1的优先级最高，234…优先级依次减少）。</strong></p>
+<p>Java集合框架中提供了<strong>PriorityQueue</strong>和<strong>PriorityBlockingQueue</strong>两种类型的优先级队列，PriorityQueue是<strong>线程不安全</strong>的，PriorityBlockingQueue是<strong>线程安全</strong>的</p>
+<p>PriorityQueue的几种常见构造方式：</p>
+<ul>
+<li>PriorityQueue() : 创建一个空的优先级队列，默认容量是11；</li>
+<li>PriorityQueue(int initialCapacity) ：创建一个初始容量为initialCapacity的优先级队列，注意：值小于1会爆出IllegalArgumentException 异常；</li>
+<li>PriorityQueue(Collection &lt;? extends E&gt; c)：用一个集合来创建优先级队列；</li>
+<li>PriorityQueue(Comparator&lt;? super E&gt; comparator) ：创建具有初始容量的优先级队列，并根据指定的比较器对元素进行排序；</li>
+</ul>
+<p><strong>使用比较器comparator构造优先级队列priorityQueue:</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PriorityQueue&lt;Integer&gt; heap = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((n1,n2) -&gt; n1-n2); <span class="comment">// 默认的顺序也是如此</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PriorityQueue&lt;Integer&gt; heap = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((n1,n2) -&gt; n2-n1); <span class="comment">// 降序排列（4优先级最高，321优先级依次降低）</span></span><br></pre></td></tr></table></figure>
+
+<p>优先级内部依据比较器返回结果进行处理。</p>
+<ul>
+<li><p>在比较n1和n2的时候，如果结果大于0（n1-n2&gt;0）那么将n1下沉（大的数进行下沉，即小根堆的操作）；</p>
+</li>
+<li><p>当比较器返回值修改为n2-n1的时候，如果结果大于0（n2-n1&gt;0）,还是n1下沉（也就是说，无论n1大还是n2大，都会将n1下沉，但是现在这种情况相当于将小的数进行下沉，即大根堆的操作，此时应该是降序排列了）。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/10/16/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2023/10/16/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">SpringCloud学习笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-10-16 15:27:59" itemprop="dateCreated datePublished" datetime="2023-10-16T15:27:59+08:00">2023-10-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-21 21:12:06" itemprop="dateModified" datetime="2023-10-21T21:12:06+08:00">2023-10-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="1-Feign与Gateway中的负载均衡："><a href="#1-Feign与Gateway中的负载均衡：" class="headerlink" title="1. Feign与Gateway中的负载均衡："></a>1. Feign与Gateway中的负载均衡：</h3><ul>
+<li>Feign中的负载均衡是指微服务的实例和实例之间互相调用时进行负载均衡（内部）；</li>
+<li>Gateway中的负载均衡是指对用户请求进行负载均衡（外部）；</li>
+</ul>
+<h3 id="2-Docker命令"><a href="#2-Docker命令" class="headerlink" title="2. Docker命令"></a>2. Docker命令</h3><h4 id="（1）Docker镜像命令："><a href="#（1）Docker镜像命令：" class="headerlink" title="（1）Docker镜像命令："></a>（1）Docker镜像命令：</h4><ul>
+<li><p>查看镜像：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>拉取镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>输出镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save -o [outputFile] [imageName]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi [imageName]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从文件加载镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load -i [xxx.tar(镜像文件)]</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="（2）Docker容器命令："><a href="#（2）Docker容器命令：" class="headerlink" title="（2）Docker容器命令："></a>（2）Docker容器命令：</h4><ul>
+<li><p>运行容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name [containerName] -p [80]:[80] -d [imageName]</span><br></pre></td></tr></table></figure>
+
+<p>命令解读：</p>
+<ul>
+<li>docker run: 创建并运行一个容器；</li>
+<li>–name: 给容器起一个名字；</li>
+<li>-p: 将宿主机端口与容器端口映射，冒号左侧是宿主机端口，右侧是容器端口；</li>
+<li>-d: 后台运行容器；</li>
+<li>【imageName】: 镜像名称；</li>
+</ul>
+</li>
+<li><p>暂停容器（运行态到暂停状态）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pause</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>停止暂停（暂停状态到运行状态）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker unpause</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>终止容器（运行态到终止态）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动容器（终止态到运行态）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入容器执行命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it [containerName] bash</span><br></pre></td></tr></table></figure>
+
+<p>命令解读：</p>
+<ul>
+<li>docker exec：进入容器内部，执行一个命令；</li>
+<li>-it：给当前进入的容器创建一个标准输入、输出终端，允许我们与容器进行交互；</li>
+<li>mn：要进入的容器的名称；</li>
+<li>bash：进入 容器后执行的命令，bash是一个linux终端的交互命令；</li>
+</ul>
+</li>
+<li><p>查看容器运行日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看所有运行的容器及状态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除指定容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="（3）Docker数据卷命令"><a href="#（3）Docker数据卷命令" class="headerlink" title="（3）Docker数据卷命令"></a>（3）Docker数据卷命令</h4><ul>
+<li><p>数据卷操作的基本语法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker volume [COMMAND]</span><br></pre></td></tr></table></figure>
+
+<p>docker volume命令是数据卷操作，根据命令后跟随的command来确定下一步的操作：</p>
+<ul>
+<li>create：创建一个volume;</li>
+<li>inspect：显示一个或多个volume的信息；</li>
+<li>ls：列出所有volume;</li>
+<li>prune：删除未使用的volume;</li>
+<li>rm：删除一个或多个指定的volume;</li>
+</ul>
+</li>
+<li><p>例子：创建一个nginx容器，并挂载数据卷到容器内的html目录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name myNginx -v html:/usr/share/nginx/html -p 80:80 -d nginx</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="3-Docker自定义镜像"><a href="#3-Docker自定义镜像" class="headerlink" title="3. Docker自定义镜像"></a>3. Docker自定义镜像</h3><h4 id="镜像结构："><a href="#镜像结构：" class="headerlink" title="镜像结构："></a>镜像结构：</h4><ul>
+<li>镜像是将应用程序及其所需要的系统函数库、环境、配置、依赖打包而成。</li>
+</ul>
+<h4 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile:"></a>DockerFile:</h4><p>DockerFile就是一个文本文件，其中包含 一个个的<strong>指令（Instruction）</strong>，用指令说明要执行什么操作来构建镜像。每一个指令都会形成一层layer。</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20231021202201010.png" alt="image-20231021202201010"></p>
+<p>根据dockerFile创建镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t [repository:tag] [dockFilePath]</span><br></pre></td></tr></table></figure>
+
+<p>例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t javaweb:1.0 ../dockerfile/</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DockerFile的本质是一个文件，通过指令描述镜像的构建过程。</li>
+<li>DockerFile的第一行必须是FROM，从一个基础镜像来构建</li>
+<li>基础镜像可以是基本操作系统，如Ubuntu。也可以是其他人制作好的镜像，例如java8-alpine。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/10/09/JUC%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2023/10/09/JUC%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">JUC学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-09 19:48:37 / 修改时间：19:52:56" itemprop="dateCreated datePublished" datetime="2023-10-09T19:48:37+08:00">2023-10-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="1-Synchroize的使用"><a href="#1-Synchroize的使用" class="headerlink" title="1. Synchroize的使用"></a>1. Synchroize的使用</h3><ul>
+<li>synchronized在方法上使用时，锁住的是this对象；</li>
+<li>synchronized在<strong>静态</strong>方法上使用时，锁住的是当前类；</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/06/30/Java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/test1/images/avatar.gif">
+      <meta itemprop="name" content="jiawei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="沙雕鱼罐头">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/test1/2023/06/30/Java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">Java动态代理知识学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-06-30 15:30:10 / 修改时间：16:01:00" itemprop="dateCreated datePublished" datetime="2023-06-30T15:30:10+08:00">2023-06-30</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h1><h4 id="程序为什么需要代理？代理长什么样？"><a href="#程序为什么需要代理？代理长什么样？" class="headerlink" title="程序为什么需要代理？代理长什么样？"></a>程序为什么需要代理？代理长什么样？</h4><ul>
+<li>对象如果嫌自己身上干的事情太多的话，可以通过代理来转移部分职责。</li>
+<li>对象有什么方法想被代理，代理就一定要有对应的方法。</li>
+<li>中介通过实现接口来知道使用哪个样子的代理。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/06/06/SpringBoot%E5%AD%A6%E4%B9%A0-%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -176,7 +551,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-06-07 20:35:45" itemprop="dateModified" datetime="2023-06-07T20:35:45+08:00">2023-06-07</time>
+                <time title="修改时间：2023-06-13 15:21:48" itemprop="dateModified" datetime="2023-06-13T15:21:48+08:00">2023-06-13</time>
               </span>
 
           
@@ -246,6 +621,86 @@
 
 <p>完成这些步骤后，在postman中进行测试即可。</p>
 </li>
+</ul>
+<h4 id="3-jetcache缓存方案"><a href="#3-jetcache缓存方案" class="headerlink" title="3. jetcache缓存方案"></a>3. jetcache缓存方案</h4><p>jetcache缓存方案包括 远程缓存方案 和 本地缓存方案 两种。</p>
+<p><strong>（1）jetcache远程缓存方案：</strong></p>
+<ul>
+<li>首先，在pom文件中添加jetcache的坐标。然后，在application.yml中配置jetcache远程方案默认类型为redis，设置主机地址，端口（注意，poolconfig这一项必须配置，至少配置一条，否则初始化的时候会报错。）:</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alicp.jetcache<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jetcache-starter-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jetcache:</span></span><br><span class="line">  <span class="attr">remote:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">redis</span></span><br><span class="line">      <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.153</span><span class="number">.137</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">      <span class="attr">poolconfig:</span></span><br><span class="line">        <span class="attr">maxTotal:</span> <span class="number">50</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第二步，在启动类中添加<code>@EnableCreateCacheAnnotation</code>注解，这个注解是jetcache启动缓存的主开关。</li>
+<li>定义Cache&lt;K,V&gt;对象，并添加注解@CreateCache，告诉jetcache这是用于进行缓存的对象。name属性定义缓存空间名称，expire属性定义存活时间（默认单位为秒）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CreateCache(name = &quot;smsCache&quot;,expire = 3600)</span></span><br><span class="line">   <span class="keyword">private</span> Cache&lt;String,String &gt; jetCache;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用put和get方法即可进行缓存存取值：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">sendCodeToSMS</span><span class="params">(String tele)</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> codeUtils.generator(tele);</span><br><span class="line">      jetCache.put(tele,code);</span><br><span class="line">      <span class="keyword">return</span> code;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">check</span><span class="params">(SMSCode smsCode)</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> smsCode.getCode();</span><br><span class="line">      <span class="type">String</span> <span class="variable">cacheCode</span> <span class="operator">=</span> jetCache.get(smsCode.getTele());</span><br><span class="line">        <span class="keyword">return</span> code.equals(cacheCode);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230609143218491.png" alt="image-20230609143218491"></p>
+<ul>
+<li>在redis客户端进行查看，可以看到新添加的缓存。可以看到我们设置的name跟key连到一块了。所以在设置name时最好在后面加上分隔符，比如“smsCode_”，这样可以更好地做区分。</li>
+</ul>
+<p><strong>（2）jetcache本地缓存方案</strong></p>
+<ul>
+<li>首先，添加jetcache本地缓存配置：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jetcache:</span></span><br><span class="line">  <span class="attr">local:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">linkedhashmap</span></span><br><span class="line">      <span class="attr">keyConverter:</span> <span class="string">fastjson</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>然后，设置缓存类型为local（其中有三种类型可选，BOTH代表本地和远程同时缓存；LOCAL代表使用本地缓存；REMOTE代表使用远程缓存）</li>
+</ul>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230609154601714.png" alt="image-20230609154601714"></p>
+<p><strong>（3）jetcache方法缓存</strong></p>
+<p>这里的方法缓存是指在方法上添加注解使其具有缓存的功能，具体流程如下：</p>
+<ul>
+<li><p>首先，在启动类上添加<code>@EnableMehodCache</code>注解，并配置路径，使用缓存的类必须存在该路径内。同时，该注解必须与@EnableCacheAnnotation 注解配合使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="comment">// jetcache启用缓存的主开关</span></span><br><span class="line"><span class="meta">@EnableCreateCacheAnnotation</span></span><br><span class="line"><span class="comment">// 启用方法缓存</span></span><br><span class="line"><span class="meta">@EnableMethodCache(basePackages = &quot;com.jiawei.boot&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BootApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(BootApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二步，在方法上添加<code>@Cached</code>注解，指明缓存空间名称，关键字，存放时间：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Cached(name=&quot;book_&quot;,key=&quot;#id&quot;,expire = 3600)</span></span><br><span class="line"><span class="keyword">public</span> Book <span class="title function_">getById</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">       <span class="keyword">return</span> bookMapper.selectById(id);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这之后运行会报一个空指针的异常，这个异常是由于默认使用的方案，而我们没有配置keyConverter引起的。添加该项配置即可：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jetcache:</span></span><br><span class="line">  <span class="attr">remote:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">redis</span></span><br><span class="line">      <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.153</span><span class="number">.137</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">      <span class="attr">keyConverter:</span> <span class="string">fastjson</span></span><br><span class="line">      <span class="attr">poolconfig:</span></span><br><span class="line">        <span class="attr">maxTotal:</span> <span class="number">50</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再然后，会爆出一个未序列化的异常，这个异常是由于redis没有存储对象的功能，所以我们需要进行序列化对象进行存储。添加Book对象的序列化配置过程如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Book</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置中添加：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jetcache:</span></span><br><span class="line">  <span class="attr">remote:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">redis</span></span><br><span class="line">      <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.153</span><span class="number">.137</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">      <span class="attr">keyConverter:</span> <span class="string">fastjson</span></span><br><span class="line">      <span class="attr">valueEncode:</span> <span class="string">java</span></span><br><span class="line">      <span class="attr">valueDecode:</span> <span class="string">java</span></span><br><span class="line">      <span class="attr">poolconfig:</span></span><br><span class="line">        <span class="attr">maxTotal:</span> <span class="number">50</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>至此问题解决，但是也存在着当数据库进行更新以及删除操作时，缓存的数据需要进行同步的问题，我们为更新和删除操作添加注解，每当进行更新或删除操作时就更新缓存内容：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 更新方法</span></span><br><span class="line"><span class="meta">@CacheUpdate(name=&quot;book_&quot;,key=&quot;#book.id&quot;,value=&quot;#book&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">update</span><span class="params">(Book book)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> bookMapper.update(book)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 删除方法</span></span><br><span class="line"><span class="meta">@CacheInvalidate(name=&quot;book_&quot;,key=&quot;#id&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">deleteBook</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> bookMapper.deleteById(id)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设定缓存刷新（单位为秒）使用<code>@CacheRefresh（refresh = 5）</code>注解，此操作请谨慎使用。</li>
+</ul>
+<h4 id="4-J2cache缓存框架"><a href="#4-J2cache缓存框架" class="headerlink" title="4. J2cache缓存框架"></a>4. J2cache缓存框架</h4><p><strong>（1）整合ehcache:</strong></p>
+<ul>
+<li><p>第一步，导入j2cache、ehcache依赖，注意j2cache需要导入两处依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.oschina.j2cache<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>j2cache-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6.0-release<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.oschina.j2cache<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>j2cache-spring-boot2-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.7.5-release<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sf.ehcache<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>ehcache<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二步，application.yml中添加配置，指定j2cache配置文件路径：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">j2cache:</span></span><br><span class="line">  <span class="attr">config-location:</span> <span class="string">j2cache.properties</span></span><br></pre></td></tr></table></figure>
+
+<p>添加ehcache的配置文件ehcache.xml：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ehcache</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:noNamespaceSchemaLocation</span>=<span class="string">&quot;http://ehcache.org/ehcache.xsd&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">updateCheck</span>=<span class="string">&quot;false&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">defaultCache</span></span></span><br><span class="line"><span class="tag">            <span class="attr">eternal</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">maxElementsInMemory</span>=<span class="string">&quot;1000&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">overflowToDisk</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">diskPersistent</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">timeToIdleSeconds</span>=<span class="string">&quot;60&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">timeToLiveSeconds</span>=<span class="string">&quot;60&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">memoryStoreEvictionPolicy</span>=<span class="string">&quot;LRU&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">ehcache</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>创建j2cache.properties配置文件，这里我们配置一级缓存(ehcache)和二级缓存(redis)，配置内容如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1级缓存</span></span><br><span class="line"><span class="attr">j2cache.L1.provider_class</span> = <span class="string">ehcache</span></span><br><span class="line"><span class="attr">ehcache.configXml</span> = <span class="string">ehcache.xml</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 2级缓存</span></span><br><span class="line"><span class="attr">j2cache.L2.provider_class</span> =<span class="string">net.oschina.j2cache.cache.support.redis.SpringRedisProvider</span></span><br><span class="line"><span class="attr">j2cache.L2.config_section</span> = <span class="string">redis</span></span><br><span class="line"><span class="attr">redis.hosts</span> = <span class="string">192.168.153.127:6379</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 1级缓存中的数据如何到达2及缓存</span></span><br><span class="line"><span class="attr">j2cache.broadcast</span> = <span class="string">net.oschina.j2cache.cache.support.redis.SpringRedisPubSubPolicy</span></span><br></pre></td></tr></table></figure>
+
+<p>SpringRedisProvider的位置，（SpringRedisPubSubPolicy在同一级）：</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230613144723962.png" alt="image-20230613144723962" style="zoom:67%;" />
+</li>
+<li><p>使用：创建CacheChannel对象，进行set和get：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SMSCodeServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">SMSCodeService</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CodeUtils codeUtils;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CacheChannel cacheChannel;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sendCodeToSMS</span><span class="params">(String tele)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> codeUtils.generator(tele);</span><br><span class="line">        cacheChannel.set(<span class="string">&quot;sms&quot;</span>,tele,code);</span><br><span class="line">        <span class="comment">//jetCache.put(tele,code);</span></span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">check</span><span class="params">(SMSCode smsCode)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> smsCode.getCode();</span><br><span class="line">        <span class="type">String</span> <span class="variable">cacheCode</span> <span class="operator">=</span> cacheChannel.get(<span class="string">&quot;sms&quot;</span>,smsCode.getTele()).asString();</span><br><span class="line">          <span class="keyword">return</span> code.equals(cacheCode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 
       
@@ -424,10 +879,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-30 19:27:51 / 修改时间：22:13:28" itemprop="dateCreated datePublished" datetime="2023-05-30T19:27:51+08:00">2023-05-30</time>
+              <time title="创建时间：2023-05-30 19:27:51" itemprop="dateCreated datePublished" datetime="2023-05-30T19:27:51+08:00">2023-05-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-08 21:29:44" itemprop="dateModified" datetime="2023-06-08T21:29:44+08:00">2023-06-08</time>
+              </span>
 
           
 
@@ -441,11 +902,16 @@
 
       
           <h4 id="NoSQL解决方案（本篇内容只适合快速入门）"><a href="#NoSQL解决方案（本篇内容只适合快速入门）" class="headerlink" title="NoSQL解决方案（本篇内容只适合快速入门）"></a>NoSQL解决方案（本篇内容只适合快速入门）</h4><ul>
-<li>市面上常用的NoSQL解决方案：<ul>
+<li><p>市面上常用的NoSQL解决方案：</p>
+<ul>
 <li>Redis</li>
 <li>Mongo</li>
 <li>ES</li>
 </ul>
+</li>
+<li><p>redis启动：</p>
+<p>在redis安装目录下运行<code>redis-server redis.confg</code></p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230608211351939.png" alt="image-20230608211351939"></p>
 </li>
 </ul>
 
@@ -837,496 +1303,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/27/SpringBoot%E5%AD%A6%E4%B9%A0-%E6%97%A5%E5%BF%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/test1/images/avatar.gif">
-      <meta itemprop="name" content="jiawei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="沙雕鱼罐头">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/test1/2023/04/27/SpringBoot%E5%AD%A6%E4%B9%A0-%E6%97%A5%E5%BF%97/" class="post-title-link" itemprop="url">SpringBoot学习-日志</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-04-27 19:25:33 / 修改时间：20:51:03" itemprop="dateCreated datePublished" datetime="2023-04-27T19:25:33+08:00">2023-04-27</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="一、日志的作用"><a href="#一、日志的作用" class="headerlink" title="一、日志的作用"></a>一、日志的作用</h4><ul>
-<li>编程期调试代码</li>
-<li>运营期记录信息<ul>
-<li>记录日常运营重要信息（峰值流量、平均响应时长。。。）</li>
-<li>记录应用报错信息（错误堆栈）</li>
-<li>记录运维过程数据（扩容、宕机、报警。。。）</li>
-</ul>
-</li>
-</ul>
-<h4 id="二、使用日志"><a href="#二、使用日志" class="headerlink" title="二、使用日志"></a>二、使用日志</h4><p>日志的使用分为两部分：(1) 创建记录日志的对象、(2) 手工的记录日志</p>
-<ul>
-<li>创建记录日志的对象：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1、创建记录日志的对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(UserController.class);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>手工记录日志</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/users&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">getAllUser</span><span class="params">()</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;the information&quot;</span>);</span><br><span class="line">        log.error(<span class="string">&quot;the error&quot;</span>);</span><br><span class="line">        log.debug(<span class="string">&quot;debug...&quot;</span>);</span><br><span class="line">        log.warn(<span class="string">&quot;the warning&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> service.list();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>日志级别： error &gt; warning &gt; info &gt;debug</strong></p>
-<p><strong>开启debug模式</strong></p>
-<p>项目启动后，默认显示的日志内容为info及以上级别的，如果需要显示debug日志，则需要手动开启debug模式</p>
-<p>方式1：在program arguments 内部添加 <code>--debug</code>;</p>
-<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230427194247750.png" alt="image-20230427194247750" style="zoom:67%;" />
-
-<p>方式2： 在配置文件application.yml中添加属性<code>debug: true</code>（以上两种方式不推荐使用）</p>
-<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230427194523699.png" alt="image-20230427194523699" style="zoom:67%;" />
-
-<p>方式3： 在配置文件application.yml中，进行配置，这种方式的好处就是可以定义显示的日志级别：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line">  <span class="attr">level:</span></span><br><span class="line">    <span class="attr">root:</span> <span class="string">debug</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="三、设置日志级别"><a href="#三、设置日志级别" class="headerlink" title="三、设置日志级别"></a>三、设置日志级别</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line">  <span class="comment"># 设置分组</span></span><br><span class="line">  <span class="attr">group:</span></span><br><span class="line">   <span class="attr">ebank:</span> <span class="string">com.jiawei.boot.service,com.jiawei.boot.controller</span></span><br><span class="line">   <span class="attr">iservice:</span> <span class="string">com.alibaba</span></span><br><span class="line">  <span class="attr">level:</span></span><br><span class="line">    <span class="attr">root:</span> <span class="string">info</span></span><br><span class="line">    <span class="comment"># 1. 设置某个包的日志级别(不推荐，很低效)</span></span><br><span class="line">    <span class="attr">com.jiawei.boot.service:</span> <span class="string">debug</span></span><br><span class="line">    <span class="comment"># 2. 设置分组，对某个分组设置日志级别</span></span><br><span class="line">    <span class="attr">ebank:</span> <span class="string">warn</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="四、快速创建日志对象"><a href="#四、快速创建日志对象" class="headerlink" title="四、快速创建日志对象"></a>四、快速创建日志对象</h4><p>在每个类上创建记录日志的对象，很冗余。下面介绍快速创建日志对象的方式：</p>
-<p>方法1：使用继承类，创建一个Basement.java，在使用的类上继承Basement即可。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Basement</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Class clazz;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Logger log;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Basement</span><span class="params">()</span> &#123;</span><br><span class="line">        clazz = <span class="built_in">this</span>.getClass();</span><br><span class="line">        log = LoggerFactory.getLogger(clazz);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>方法2：使用<code>@Slf4j</code>注解，注释在类上，使用<code>log.info(xxx)</code>使用；</p>
-<h4 id="五、日志输出格式控制"><a href="#五、日志输出格式控制" class="headerlink" title="五、日志输出格式控制"></a>五、日志输出格式控制</h4><p><strong>日志输出格式</strong></p>
-<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230427202254834.png" alt="image-20230427202254834"></p>
-<ul>
-<li>PID： 进程ID，用于表明当前操作所属的进程，当多服务同时记录日志时，该值课用于协助程序员调试程序。</li>
-<li>所属类&#x2F;接口名： 当前显示信息为SpringBoot重写后的信息，名称过长时，简化包名书写为首字母，甚至直接删除。</li>
-</ul>
-<p><strong>日志输出格式控制</strong></p>
-<p>在配置文件中设置日志输出格式：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line"> <span class="attr">group:</span></span><br><span class="line"> <span class="attr">pattern:</span></span><br><span class="line">  <span class="comment"># 自定义的日志输出格式 %d:日期，%p:级别，%m:消息，%n:换行</span></span><br><span class="line">  <span class="attr">console:</span> <span class="string">&quot;%d %5p - %m %n&quot;</span></span><br><span class="line">  <span class="comment"># 自定义颜色，以及输出展位控制.5p意味着该信息占据5个空格,%t代表线程名,%c代表类名,-40.40c意味着左对齐40个字符的位置</span></span><br><span class="line">  <span class="attr">console:</span> <span class="string">&quot;%d %clr(%5p) --- [%16t] %clr(%-40.40c)&#123;color&#125; : %m %n&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="六、文件记录日志"><a href="#六、文件记录日志" class="headerlink" title="六、文件记录日志"></a>六、文件记录日志</h4><ul>
-<li>使用文件记录日志信息，在配置文件中进行配置即可:</li>
-</ul>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line"> <span class="attr">file:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">server.log</span></span><br></pre></td></tr></table></figure>
-
-<p>日志文件server.log位于工程目录下。</p>
-<ul>
-<li>设置日志文件记录日志大小，超出这个大小就会创建新的日志文件。</li>
-</ul>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line"> <span class="attr">logback:</span></span><br><span class="line">  <span class="attr">rollingpolicy:</span></span><br><span class="line">   <span class="comment"># 设置日志文件大小限制</span></span><br><span class="line">   <span class="attr">max-file-size:</span> <span class="string">4KB</span></span><br><span class="line">   <span class="comment">#设置日志文件名称格式( %d即date,%i即index )：下面格式的示例为：server.2020-01-01.0.log </span></span><br><span class="line">   <span class="attr">file-name-pattern:</span> <span class="string">server.%d&#123;yyyy-MM-dd&#125;.%i.log</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/27/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91-%E6%8E%A7%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/test1/images/avatar.gif">
-      <meta itemprop="name" content="jiawei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="沙雕鱼罐头">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/test1/2023/04/27/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91-%E6%8E%A7%E5%88%B6/" class="post-title-link" itemprop="url">SpringBoot学习-多环境开发控制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-04-27 15:39:44 / 修改时间：17:04:06" itemprop="dateCreated datePublished" datetime="2023-04-27T15:39:44+08:00">2023-04-27</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h4><p>现在maven和spring都有多环境的开发控制（profile），假设现在是这样的情景：maven中设置的是生产环境，springboot中设置的是开发环境。究竟哪一个有效呢？或者说如果发生冲突了，谁生效？</p>
-<h4 id="二、多环境开发控制"><a href="#二、多环境开发控制" class="headerlink" title="二、多环境开发控制"></a>二、多环境开发控制</h4><p>springboot是依赖maven坐标的配置进行工作的，没有maven，spring就无法工作了，所以maven一定是先于spring在运行。如果现在双方都有配置，一定是以maven配置为主，springboot的配置为辅。下面说明如何通过maven的配置来进行多环境开发控制。</p>
-<p><strong>操作：</strong></p>
-<ul>
-<li>在pom.xml 中设置多环境，其中通过设置<code>&lt;activeByDefault&gt;</code>是否为真，来决定默认启用哪个环境。</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--    设置多环境--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>env_dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">profile.active</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">profile.active</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>env_pro<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">profile.active</span>&gt;</span>pro<span class="tag">&lt;/<span class="name">profile.active</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>同时springboot中关于多环境的配置也需要修改，使用@符引用pom.xml中的配置profile.active</li>
-</ul>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">@profile.active@</span></span><br><span class="line">  <span class="attr">group:</span></span><br><span class="line">   <span class="attr">&quot;dev&quot;:</span> <span class="string">devDB,devRedis</span></span><br><span class="line">   <span class="attr">&quot;pro&quot;:</span> <span class="string">proDB,proMVC</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong>如果在切换生产环境中发现即使设置了pom.xml<code>&lt;activeByDefault&gt;</code>为真后，环境依然没有切换，此时需要点击maven下的compile进行手动编译方可生效。这是idea的bug。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/22/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/test1/images/avatar.gif">
-      <meta itemprop="name" content="jiawei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="沙雕鱼罐头">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/test1/2023/04/22/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91/" class="post-title-link" itemprop="url">SpringBoot学习-多环境开发</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-04-22 14:06:25" itemprop="dateCreated datePublished" datetime="2023-04-22T14:06:25+08:00">2023-04-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-04-27 15:41:08" itemprop="dateModified" datetime="2023-04-27T15:41:08+08:00">2023-04-27</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="一、引入"><a href="#一、引入" class="headerlink" title="一、引入"></a>一、引入</h4><p>一个项目在开发过程中会经历多个环境，包括开发环境、测试环境、生产环境等等，而在这不同的环境中，对于某些数据的配置又会有所区别。所以需要保证我们在开发的时候是一个环境，部署到线上时又能切换到另外的环境了。</p>
-<h4 id="二、具体操作（yaml版本）"><a href="#二、具体操作（yaml版本）" class="headerlink" title="二、具体操作（yaml版本）"></a>二、具体操作（yaml版本）</h4><p>第一步，设置环境，不同的环境之间用<code>---</code>作分隔：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#应用环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">pro</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">#公共配置</span></span><br><span class="line"></span><br><span class="line"><span class="string">......</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment">#设置环境</span></span><br><span class="line"><span class="comment">#生产环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span> <span class="string">pro</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8081</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment">#开发环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8082</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment">#测试环境(标准格式)</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">config:</span> </span><br><span class="line">   <span class="attr">activate:</span></span><br><span class="line">  	<span class="attr">on-profile:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8083</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：</p>
-<ul>
-<li>在设置环境部分，我们通过为每一个环境指定spring.profiles属性的值来为我们的环境配置命名；</li>
-<li>在应用环境部分，我们通过设置spring.profiles.active属性的值来指定我们使用哪一个环境的配置；</li>
-</ul>
-<p><strong>这种操作的缺陷：</strong></p>
-<p>​	各种环境的配置都放在了一个配置文件内，有暴露配置的风险（比如敏感的数据库密码等等），因此需要一种新的解决方式。</p>
-<p><strong>多文件配置：</strong></p>
-<p>使用多文件配置，将不同环境的配置以及公共配置独立成为不同的文件，并分别进行配置：</p>
-<ol>
-<li>主启动配置文件 application.yml</li>
-</ol>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>环境分类配置文件 application-pro.yml （注意格式：application**-类型**.yml）</li>
-</ol>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line"><span class="string">......</span></span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>环境分类配置文件 application-dev.yml</li>
-</ol>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">8081</span></span><br><span class="line"><span class="string">......</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>环境分类配置文件 application-test.yml</li>
-</ol>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">8082</span></span><br><span class="line"><span class="string">......</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：</p>
-<ul>
-<li>主配置文件中设置公共配置（全局）；</li>
-<li>环境分类配置文件中常用于设置冲突属性（局部）；</li>
-</ul>
-<h4 id="三、具体操作（properties版本）"><a href="#三、具体操作（properties版本）" class="headerlink" title="三、具体操作（properties版本）"></a>三、具体操作（properties版本）</h4><p>使用多文件配置，将不同环境的配置以及公共配置独立成为不同的文件，并分别进行配置：</p>
-<ol>
-<li>主启动配置文件 application.properties</li>
-</ol>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.profiles.active</span>=<span class="string">dev</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>环境分类配置文件 application-pro.properties（注意格式：application**-类型**.yml）</li>
-</ol>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8080</span></span><br><span class="line"><span class="attr">......</span></span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>环境分类配置文件 application-dev.properties</li>
-</ol>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8081</span></span><br><span class="line"><span class="attr">......</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>环境分类配置文件 application-test.properties</li>
-</ol>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8082</span></span><br><span class="line"><span class="attr">......</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="四、信息拆分-amp-独立"><a href="#四、信息拆分-amp-独立" class="headerlink" title="四、信息拆分&amp;独立"></a>四、信息拆分&amp;独立</h4><ul>
-<li><p>根据功能对配置文件中的信息进行拆分，并制作成独立的配置文件，命名规则如下：</p>
-<ul>
-<li><p>application-devDB.yml</p>
-</li>
-<li><p>application-devRedis.yml</p>
-</li>
-<li><p>application-devMVC.yml</p>
-<p>…..</p>
-</li>
-</ul>
-</li>
-</ul>
-<p><strong>方法一：</strong></p>
-<p>使用include属性在激活指定环境的情况下，同时对多个环境进行加载使其生效，多个环境之间用逗号分隔。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">include:</span> <span class="string">devDB,devRedis,devMVC</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：include之中的<strong>顺序</strong>问题，如果涉及相同的配置，则顺序靠后的配置生效。</p>
-<p>缺点：如果需要切换环境，则需要重新写一遍include中的内容，很繁琐。</p>
-<p><strong>方法二：</strong></p>
-<p>使用group属性定义多种主环境与子环境的包含关系，格式如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">group:</span></span><br><span class="line">   <span class="attr">&quot;dev&quot;:</span> <span class="string">devDB,devRedis</span></span><br><span class="line">   <span class="attr">&quot;pro&quot;:</span> <span class="string">proDB,proMVC</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong> </p>
-<ul>
-<li>当主环境dev与其他环境有相同属性时，主环境生效；</li>
-<li>其他环境中有相同属性时，最后加载的环境属性生效；</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gitee.com/SHaDiaoYU/2023/04/22/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91-%E9%85%8D%E7%BD%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/test1/images/avatar.gif">
-      <meta itemprop="name" content="jiawei">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="沙雕鱼罐头">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/test1/2023/04/22/SpringBoot%E5%AD%A6%E4%B9%A0-%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%BC%80%E5%8F%91-%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">SpringBoot学习-多环境开发</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-04-22 14:06:25 / 修改时间：16:32:00" itemprop="dateCreated datePublished" datetime="2023-04-22T14:06:25+08:00">2023-04-22</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="一、引入"><a href="#一、引入" class="headerlink" title="一、引入"></a>一、引入</h4><p>一个项目在开发过程中会经历多个环境，包括开发环境、测试环境、生产环境等等，而在这不同的环境中，对于某些数据的配置又会有所区别。所以需要保证我们在开发的时候是一个环境，部署到线上时又能切换到另外的环境了。</p>
-<h4 id="二、具体操作（yaml版本）"><a href="#二、具体操作（yaml版本）" class="headerlink" title="二、具体操作（yaml版本）"></a>二、具体操作（yaml版本）</h4><p>第一步，设置环境，不同的环境之间用<code>---</code>作分隔：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#应用环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">pro</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">#公共配置</span></span><br><span class="line"></span><br><span class="line"><span class="string">......</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment">#设置环境</span></span><br><span class="line"><span class="comment">#生产环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span> <span class="string">pro</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8081</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment">#开发环境</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8082</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment">#测试环境(标准格式)</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">config:</span> </span><br><span class="line">   <span class="attr">activate:</span></span><br><span class="line">  	<span class="attr">on-profile:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8083</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：</p>
-<ul>
-<li>在设置环境部分，我们通过为每一个环境指定spring.profiles属性的值来为我们的环境配置命名；</li>
-<li>在应用环境部分，我们通过设置spring.profiles.active属性的值来指定我们使用哪一个环境的配置；</li>
-</ul>
-<p><strong>这种操作的缺陷：</strong></p>
-<p>​	各种环境的配置都放在了一个配置文件内，有暴露配置的风险（比如敏感的数据库密码等等），因此需要一种新的解决方式。</p>
-<p><strong>多文件配置：</strong></p>
-<p>使用多文件配置，将不同环境的配置以及公共配置独立成为不同的文件，并分别进行配置：</p>
-<ol>
-<li>主启动配置文件 application.yml</li>
-</ol>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>环境分类配置文件 application-pro.yml （注意格式：application**-类型**.yml）</li>
-</ol>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line"><span class="string">......</span></span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>环境分类配置文件 application-dev.yml</li>
-</ol>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">8081</span></span><br><span class="line"><span class="string">......</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>环境分类配置文件 application-test.yml</li>
-</ol>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"> <span class="attr">port:</span> <span class="number">8082</span></span><br><span class="line"><span class="string">......</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：</p>
-<ul>
-<li>主配置文件中设置公共配置（全局）；</li>
-<li>环境分类配置文件中常用于设置冲突属性（局部）；</li>
-</ul>
-<h4 id="三、具体操作（properties版本）"><a href="#三、具体操作（properties版本）" class="headerlink" title="三、具体操作（properties版本）"></a>三、具体操作（properties版本）</h4><p>使用多文件配置，将不同环境的配置以及公共配置独立成为不同的文件，并分别进行配置：</p>
-<ol>
-<li>主启动配置文件 application.properties</li>
-</ol>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.profiles.active</span>=<span class="string">dev</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>环境分类配置文件 application-pro.properties（注意格式：application**-类型**.yml）</li>
-</ol>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8080</span></span><br><span class="line"><span class="attr">......</span></span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>环境分类配置文件 application-dev.properties</li>
-</ol>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8081</span></span><br><span class="line"><span class="attr">......</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>环境分类配置文件 application-test.properties</li>
-</ol>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8082</span></span><br><span class="line"><span class="attr">......</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="四、信息拆分-amp-独立"><a href="#四、信息拆分-amp-独立" class="headerlink" title="四、信息拆分&amp;独立"></a>四、信息拆分&amp;独立</h4><ul>
-<li><p>根据功能对配置文件中的信息进行拆分，并制作成独立的配置文件，命名规则如下：</p>
-<ul>
-<li><p>application-devDB.yml</p>
-</li>
-<li><p>application-devRedis.yml</p>
-</li>
-<li><p>application-devMVC.yml</p>
-<p>…..</p>
-</li>
-</ul>
-</li>
-</ul>
-<p><strong>方法一：</strong></p>
-<p>使用include属性在激活指定环境的情况下，同时对多个环境进行加载使其生效，多个环境之间用逗号分隔。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">include:</span> <span class="string">devDB,devRedis,devMVC</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：include之中的<strong>顺序</strong>问题，如果涉及相同的配置，则顺序靠后的配置生效。</p>
-<p>缺点：如果需要切换环境，则需要重新写一遍include中的内容，很繁琐。</p>
-<p><strong>方法二：</strong></p>
-<p>使用group属性定义多种主环境与子环境的包含关系，格式如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"> <span class="attr">profiles:</span></span><br><span class="line">  <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">group:</span></span><br><span class="line">   <span class="attr">&quot;dev&quot;:</span> <span class="string">devDB,devRedis</span></span><br><span class="line">   <span class="attr">&quot;pro&quot;:</span> <span class="string">proDB,proMVC</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong> </p>
-<ul>
-<li>当主环境dev与其他环境有相同属性时，主环境生效；</li>
-<li>其他环境中有相同属性时，最后加载的环境属性生效；</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1396,7 +1372,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/test1/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1424,7 +1400,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
