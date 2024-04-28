@@ -28,8 +28,14 @@
 <meta property="og:description" content="1. Feign与Gateway中的负载均衡： Feign中的负载均衡是指微服务的实例和实例之间互相调用时进行负载均衡（内部）； Gateway中的负载均衡是指对用户请求进行负载均衡（外部）；  2. Docker命令（1）Docker镜像命令： 查看镜像： 1docker images  拉取镜像 1docker pull  输出镜像 1docker save -o [outputFile] [">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20231021202201010.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240323202022271.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240323202201453.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326151804916.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326152825654.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326153454835.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326170444055.png">
 <meta property="article:published_time" content="2023-10-16T07:27:59.000Z">
-<meta property="article:modified_time" content="2023-10-21T13:12:06.028Z">
+<meta property="article:modified_time" content="2024-04-03T09:15:23.173Z">
 <meta property="article:author" content="jiawei">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20231021202201010.png">
@@ -182,7 +188,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-21 21:12:06" itemprop="dateModified" datetime="2023-10-21T21:12:06+08:00">2023-10-21</time>
+                <time title="修改时间：2024-04-03 17:15:23" itemprop="dateModified" datetime="2024-04-03T17:15:23+08:00">2024-04-03</time>
               </span>
 
           
@@ -293,6 +299,210 @@
 <li>DockerFile的第一行必须是FROM，从一个基础镜像来构建</li>
 <li>基础镜像可以是基本操作系统，如Ubuntu。也可以是其他人制作好的镜像，例如java8-alpine。</li>
 </ul>
+<h1 id="微服务架构特征"><a href="#微服务架构特征" class="headerlink" title="微服务架构特征"></a>微服务架构特征</h1><ul>
+<li>单一职责：微服务拆分粒度更小，每个业务都对应唯一的业务能力，做到单一职责。</li>
+<li>自治：团队独立，技术独立，数据独立，独立部署和交付。</li>
+<li>面向服务：服务提供统一标准的接口，与语言和技术无关。</li>
+<li>隔离性强：服务调用做好隔离，容错，降级、避免出现级联问题。</li>
+</ul>
+<h2 id="服务拆分原则"><a href="#服务拆分原则" class="headerlink" title="服务拆分原则"></a>服务拆分原则</h2><ul>
+<li>不同微服务，不要重复开发相同的业务</li>
+<li>微服务数据独立，不要访问其它微服务的数据库</li>
+<li>微服务可以将自己的业务暴露为接口，供其他微服务调用</li>
+</ul>
+<h2 id="1-注册中心（Eureka，Nacos）"><a href="#1-注册中心（Eureka，Nacos）" class="headerlink" title="1. 注册中心（Eureka，Nacos）"></a>1. 注册中心（Eureka，Nacos）</h2><h3 id="1-1Eureka"><a href="#1-1Eureka" class="headerlink" title="1.1Eureka"></a>1.1Eureka</h3><ul>
+<li><p>问题1：服务1如何得知服务2的实例地址（服务1 调用 服务2）？</p>
+<p>获取地址信息的流程如下：</p>
+<ul>
+<li><strong>服务注册：</strong>服务2的服务实例启动后，会将自己的信息注册到 Eureka服务端 。这就叫做服务注册。</li>
+<li><strong>服务端保存映射关系：</strong>Eureka服务端保存<code>服务名称</code>到<code>服务实例地址列表</code>的映射关系</li>
+<li><strong>服务发现：</strong>服务1根据服务名称，拉取实力地址列表。这就叫做服务发现</li>
+</ul>
+</li>
+<li><p>问题2：服务1如何从多个服务2的实例中选择一个具体的实例？</p>
+<ul>
+<li>服务1 从实力列表中，利用负载均衡算法，选择一个实例地址</li>
+<li>向该实例地址发起远程调用</li>
+</ul>
+</li>
+<li><p>服务1 如何得知某个 服务2实例是否仍然健康？是不是已经宕机？</p>
+<ul>
+<li>服务2（被调用方）会每隔一段时间（默认30秒），向Eureka服务端报告自己的状态，<strong>称为心跳</strong>。</li>
+<li>超过一定时间没有发送心跳时，Eureka服务端会认为微服务实例故障，将该实例从服务列表中删除。</li>
+<li>服务1（调用方）拉取服务时，就能将故障实例排除了。</li>
+</ul>
+</li>
+<li><p><strong>注意，一个微服务，既可以是服务提供者，也可以是服务调用者，因此Eureka将服务注册，服务发现等功能统一封装到了Eurkea-client端</strong>。</p>
+</li>
+</ul>
+<p>（1）具体实现（orderservice在8080，userservice有两个实例，分别部署在8081和8082）：</p>
+<ol>
+<li><p>服务发现、服务注册都封装在eureka-client依赖，因此两个service都要引入<code>eureka-client</code>依赖。</p>
+</li>
+<li><p><strong>服务注册：</strong>user service是服务提供者，我们需要在这个服务里面修改yaml，添加服务名称、eureka地址。</p>
+<p>eureka.client.service-url 指定服务端的注册地址，这个是客户端使用的，告诉客户端服务的地址，它可以指定多个，有一个默认的defaultZone。</p>
+<pre><code>  3.  **服务发现：**现在将orderService的逻辑修改，向eureka-server拉取user service的信息，实现服务发现。
+</code></pre>
+<ul>
+<li><p>引入依赖，指定注册地址（就是前面的那个）</p>
+</li>
+<li><p>在orderservice 的主程序中，给restTemplate这个bean添加一个@LoadBanlanced注解。（这样就实现了负载均衡）。</p>
+</li>
+<li><p>修改orderservice服务中的orderservice类中的queryOrderById方法。修改访问的url路径，用服务名代替ip、端口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Order <span class="title function_">queryOrderById</span><span class="params">(Long orderId)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.查询订单</span></span><br><span class="line">        <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> orderMapper.findById(orderId);</span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;http://userservice/user/&quot;</span> + order.getUserId();</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> restTemplate.getForObject(url, User.class);</span><br><span class="line">        order.setUser(user);</span><br><span class="line">        <span class="comment">// 4.返回</span></span><br><span class="line">        <span class="keyword">return</span> order;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p> spring 会自动帮助我们从eureka-server端，根据userservice这个服务名称，获取实力列表，而后完成负载均衡。</p>
+<pre><code>  4.  **Ribbon负载均衡**
+</code></pre>
+<p> springCloud其实是使用了一个名为ribbon的组件，来实现负载均衡。</p>
+<p> <img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240323202022271.png" alt="image-20240323202022271"></p>
+<p> springCloudRibbon的底层采用了一个拦截器，拦截了restTemplate发出的请求，对地址做出了修改。</p>
+<p> <img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240323202201453.png" alt="image-20240323202201453"></p>
+<p> <strong>基本流程如下：</strong></p>
+<ul>
+<li>拦截rest Template请求<code>http://userservice/user/1</code></li>
+<li>ribbonLoadBanlancerClient会从请求url中获取服务名称，即user service</li>
+<li>DynamicServerListLoadBalander根据user service到eureka拉取服务列表。</li>
+<li>eureka返回列表，user service拢共两个实例，那么就返回这两个实例的地址。</li>
+<li>IRule利用内置负载均衡规则，从列表中挑选一个服务地址（假设是localhost:8081）。</li>
+<li>RibbonLoadBalancer修改请求地址，用localhost:8081替代user service，得到<a target="_blank" rel="noopener" href="http://localhost:8081/user/1%EF%BC%8C%E5%8F%91%E8%B5%B7%E7%9C%9F%E5%AE%9E%E8%AF%B7%E6%B1%82">http://localhost:8081/user/1，发起真实请求</a></li>
+</ul>
+<p> <strong>Ribbon默认是采用懒加载，即第一次访问时才会去创建loadBalanceClient，请求时间会很长。</strong>而饥饿加载、会在项目启动时创建，降低第一次访问的耗时。通过下面的配置开启饥饿加载：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ribbon:</span><br><span class="line">  eager-load:</span><br><span class="line">    enabled: <span class="literal">true</span> # 开启饥饿加载</span><br><span class="line">    clients:</span><br><span class="line">      - userservice # 指定饥饿加载的服务名称</span><br><span class="line">      - xxxxservice # 如果需要指定多个，需要这么写</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="1-2-Nacos"><a href="#1-2-Nacos" class="headerlink" title="1.2 Nacos"></a>1.2 Nacos</h3><ol>
+<li><p><strong>与eureka的联系：</strong>springCloudAlibaba也遵循spring Cloud中定义的服务注册、服务发现规范。因此使用Nacos和使用Eureka对于微服务来说，并没有太大区别。nacos跟eureka的主要区别在于（1）依赖不同（2）服务地址不同</p>
+</li>
+<li><p><strong>前期准备工作：</strong>安装nacos，<strong>nacos默认运行在8848端口</strong>。进入安装目录下的bin目录，执行<code>startup.cmd -m standalone</code>即可开启nacos服务。</p>
+</li>
+<li><p><strong>引入依赖：</strong></p>
+<ul>
+<li>在父工程的pom文件中引入spring Cloud Alibaba的依赖。</li>
+<li>在两个服务userservice和orderService中的pom文件中引入nacos-discovery依赖。</li>
+</ul>
+</li>
+<li><p><strong>配置nacos地址：</strong>在userservice和orderservice的application.yml中添加nacos地址如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>重启微服务后，登录nacos管理页面，可以看到微服务信息。</strong></p>
+</li>
+<li><p><strong>服务分级存储模型：</strong></p>
+<ul>
+<li><p>一个服务可以有多个实例，假如这些实例分布于全国各地的不同机房，nacos就会将同一机房内的实例划分为一个<strong>集群</strong>。</p>
+</li>
+<li><p>也就是说，一个服务可以有多个集群，这些集群下面就是该服务的多个实例。</p>
+</li>
+<li><p>微服务互相访问时，应该尽可能访问同集群实例，因为本地访问速度更快。当本集群内不可用时，才会访问其他集群。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>给user-service配置集群：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    nacos:</span><br><span class="line">      server-addr: localhost:<span class="number">8848</span></span><br><span class="line">      discovery:</span><br><span class="line">        cluster-name: HZ # 集群名称</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>同集群优先的负载均衡：</strong>默认的ZoneAvoidanceRule并不能</p>
+</li>
+</ol>
+<h2 id="2-消息队列MQ（RabbitMQ-、SpringAMQP）"><a href="#2-消息队列MQ（RabbitMQ-、SpringAMQP）" class="headerlink" title="2. 消息队列MQ（RabbitMQ 、SpringAMQP）"></a>2. 消息队列MQ（RabbitMQ 、SpringAMQP）</h2><ul>
+<li><p><strong>同步调用的问题（微服务间基于Feign的调用就属于同步方式，存在一些问题）：</strong></p>
+<ul>
+<li>（1）耦合导致改动很麻烦：每次加入新的需求，都要修改原来的代码；</li>
+<li>（2）性能与吞吐量的下降：调用者需要等待服务提供者相应，如果调用链过长则响应时间等于调用的时间之和；</li>
+<li>（3）产生了严重的资源浪费：调用链中的每个服务在等待响应过程中，不能释放请求占用的资源，高并发场景下会极度浪费系统资源；</li>
+<li>（4）级联失败：如果服务提供者出现问题，所有调用方都会跟着出问题；</li>
+</ul>
+</li>
+<li><p><strong>异步调用方案：解决了上述的同步调用的问题。引入事件代理Broker，用户服务向broker发布事件，由broker进行通知。</strong></p>
+<ul>
+<li>另一个优势是，可以进行<strong>流量削峰</strong>，broker可以起到一个缓冲的作用，降低服务的压力。</li>
+<li>总结来说，异步通信的优点在于（1）耦合度低（2）吞吐量提升（3）故障隔离（4）流量削峰；异步通信的缺点在于<strong>（1）依赖于Broker的可靠性，安全性以及吞吐能力（2）架构复杂了，业务没有明显的流程线，不好追踪管理</strong>。</li>
+</ul>
+</li>
+<li><p><strong>各个MQ消息队列之间的对比：</strong></p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326151804916.png" alt="image-20240326151804916"></p>
+</li>
+<li><p>RabbitMQ的broker工作流程：</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326152825654.png" alt="image-20240326152825654"></p>
+</li>
+<li><p><strong>Rabbit中的几个概念：</strong></p>
+<ul>
+<li>channel：操作MQ的工具</li>
+<li>exchange：路有消息到队列中</li>
+<li>queue：缓存消息</li>
+<li>virtual host：虚拟主机，是对queue、exchange等资源的逻辑分组。</li>
+</ul>
+</li>
+<li><p><strong>RabbitMQ常见消息模型：</strong></p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326153454835.png" alt="image-20240326153454835"></p>
+</li>
+</ul>
+<h3 id="2-1-springAMQP"><a href="#2-1-springAMQP" class="headerlink" title="2.1 springAMQP"></a>2.1 springAMQP</h3><ul>
+<li><p>AMQP是应用间消息通信的一种协议，与语言和平台无关。</p>
+</li>
+<li><p>springAMQP是基于AMQP协议定义的一套API规范，提供了模板来发送和接收消息。包含两部分，其中spring-amqp是基础抽象，spring-rabbit是底层的默认实现。</p>
+</li>
+<li><p><strong>利用SpringAMQP实现helloworld中的基础消息队列功能</strong></p>
+<ul>
+<li><p>流程如下：</p>
+<ul>
+<li>1.在父工程中引入spring-ampq的依赖。</li>
+<li>2.在publisher服务中利用<strong>RabbitTemplate</strong>发送消息到simple.queue这个队列。</li>
+<li>3.在consumer服务中编写消费逻辑，绑定simple.queue这个队列。</li>
+</ul>
+</li>
+<li><p>首先，配置publisher和consumer的application.yaml:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># <span class="number">1.1</span>.设置连接参数，分别是：主机名、端口号、用户名、密码、vhost</span><br><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    host: <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">    port: <span class="number">5672</span></span><br><span class="line">    username: root</span><br><span class="line">    password: root</span><br><span class="line">    virtual-host: /</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后编写测试类springAmqpTest用于实现消息发送:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> RabbitTemplate rabbitTemplate</span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testSendMessage2SimpleQueue</span> <span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">String</span> <span class="variable">queueName</span> <span class="operator">=</span> <span class="string">&quot;simple.queue&quot;</span>;</span><br><span class="line">    <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    rabbitTemplate.convertAndSend (queueName,message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在consumer中新建一个类,来实现消息的接收：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringRabbitListener</span> &#123;</span><br><span class="line">    <span class="meta">@RabbitListener(queues = &quot;simple.queue&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenSimpleQueueMessage</span><span class="params">(String msg)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;spring消费者接收到消息：&quot;</span> + meg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>总结，SpringAMQP如何接收消息：</strong></p>
+<ul>
+<li>引入amqp的starter依赖</li>
+<li>配置RabbitMQ地址</li>
+<li>定义类，添加@Component注解</li>
+<li>类中声明方法 ，添加@RabbitListener注解，方法参数就是消息。</li>
+</ul>
+<p>注意，消息一旦消费就会从队列中删除，rabbitMQ没有消息回溯功能。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>SpringAMQP消息预取机制</strong></p>
+<ul>
+<li>预取机制就是，当消息进入到消息队列的时候，消费者不管自己的消费能力有多少，轮流预取队列中的消息，随后进行消费，这会导致低消费能力的consumer也有可能处理很多的消息。</li>
+<li><strong>解决办法：</strong>修改application.yaml文件，设置<code>spring-rabbitmq-listener-simple-prefetch</code>属性，可以控制预取消息的上限。</li>
+</ul>
+</li>
+<li><p><strong>发布订阅模型：</strong>发布订阅模式与之前的区别就在于允许将同一消息发送给多个消费者，实现方式是加入了exchange（交换机）（也就是说，同一个消息可以被多个消费者消费）</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326170444055.png" alt="image-20240326170444055"></p>
+</li>
+<li><p><strong>FanoutExchange</strong></p>
+<ul>
+<li>交换机的作用是什么？<ul>
+<li>接收publisher发送的消息</li>
+<li>将消息按照规则路由到与之绑定的队列（fanout是广播，会路由到所有队列）</li>
+<li>不能缓存消息，路由失败，消息会丢失</li>
+<li>FanoutExchange会将消息路由到每个绑定的队列</li>
+</ul>
+</li>
+<li>声明队列、交换机、绑定关系的Bean是什么？<ul>
+<li>Queue</li>
+<li>FanoutExchange</li>
+<li>Binding</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>DirectExhange:</strong> 其会将接收到的消息根据路由规则路由到指定的Queue，因此称为路由模式（router）</p>
+<ul>
+<li>每一个Queue都与Exchange设置一个BindingKey</li>
+<li>发布者发布消息时，指定消息的RoutingKey</li>
+<li>Exchange将消息路由到BindingKey与消息RoutingKey一致的队列</li>
+</ul>
+</li>
+</ul>
 
     </div>
 
@@ -373,7 +583,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Feign%E4%B8%8EGateway%E4%B8%AD%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">1. Feign与Gateway中的负载均衡：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Docker%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">2. Docker命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89Docker%E9%95%9C%E5%83%8F%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">（1）Docker镜像命令：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89Docker%E5%AE%B9%E5%99%A8%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">（2）Docker容器命令：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89Docker%E6%95%B0%E6%8D%AE%E5%8D%B7%E5%91%BD%E4%BB%A4"><span class="nav-number">2.3.</span> <span class="nav-text">（3）Docker数据卷命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Docker%E8%87%AA%E5%AE%9A%E4%B9%89%E9%95%9C%E5%83%8F"><span class="nav-number">3.</span> <span class="nav-text">3. Docker自定义镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">镜像结构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DockerFile"><span class="nav-number">3.2.</span> <span class="nav-text">DockerFile:</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Feign%E4%B8%8EGateway%E4%B8%AD%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">1. Feign与Gateway中的负载均衡：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Docker%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">2. Docker命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89Docker%E9%95%9C%E5%83%8F%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">（1）Docker镜像命令：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89Docker%E5%AE%B9%E5%99%A8%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">（2）Docker容器命令：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89Docker%E6%95%B0%E6%8D%AE%E5%8D%B7%E5%91%BD%E4%BB%A4"><span class="nav-number">2.3.</span> <span class="nav-text">（3）Docker数据卷命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Docker%E8%87%AA%E5%AE%9A%E4%B9%89%E9%95%9C%E5%83%8F"><span class="nav-number">3.</span> <span class="nav-text">3. Docker自定义镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">镜像结构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DockerFile"><span class="nav-number">3.2.</span> <span class="nav-text">DockerFile:</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%89%B9%E5%BE%81"><span class="nav-number"></span> <span class="nav-text">微服务架构特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%8B%86%E5%88%86%E5%8E%9F%E5%88%99"><span class="nav-number"></span> <span class="nav-text">服务拆分原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%EF%BC%88Eureka%EF%BC%8CNacos%EF%BC%89"><span class="nav-number"></span> <span class="nav-text">1. 注册中心（Eureka，Nacos）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1Eureka"><span class="nav-number">1.</span> <span class="nav-text">1.1Eureka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Nacos"><span class="nav-number">2.</span> <span class="nav-text">1.2 Nacos</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97MQ%EF%BC%88RabbitMQ-%E3%80%81SpringAMQP%EF%BC%89"><span class="nav-number"></span> <span class="nav-text">2. 消息队列MQ（RabbitMQ 、SpringAMQP）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-springAMQP"><span class="nav-number">1.</span> <span class="nav-text">2.1 springAMQP</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -387,9 +597,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/test1/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
       </div>
   </nav>
 </div>
