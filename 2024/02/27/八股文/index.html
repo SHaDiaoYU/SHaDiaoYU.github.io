@@ -20,18 +20,22 @@
     var CONFIG = {"hostname":"gitee.com","root":"/test1/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="一、java基础1. 8种基本数据类型byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false）  包装类型的常量池技术Byte、Short、Integer、L">
+  <meta name="description" content="一、java基础8种基本数据类型byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false） 包装类型的常量池技术Byte、Short、Integer、Long这">
 <meta property="og:type" content="article">
 <meta property="og:title" content="八股文">
 <meta property="og:url" content="https://gitee.com/SHaDiaoYU/2024/02/27/%E5%85%AB%E8%82%A1%E6%96%87/index.html">
 <meta property="og:site_name" content="沙雕鱼罐头">
-<meta property="og:description" content="一、java基础1. 8种基本数据类型byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false）  包装类型的常量池技术Byte、Short、Integer、L">
+<meta property="og:description" content="一、java基础8种基本数据类型byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false） 包装类型的常量池技术Byte、Short、Integer、Long这">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228203224835.png">
 <meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228203836711.png">
 <meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228210012986.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240507210723973.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240507210744195.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240429195215797.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240430153508438.png">
 <meta property="article:published_time" content="2024-02-27T11:16:58.000Z">
-<meta property="article:modified_time" content="2024-04-28T13:39:21.909Z">
+<meta property="article:modified_time" content="2024-05-09T07:51:36.105Z">
 <meta property="article:author" content="jiawei">
 <meta property="article:tag" content="求职">
 <meta name="twitter:card" content="summary">
@@ -185,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-04-28 21:39:21" itemprop="dateModified" datetime="2024-04-28T21:39:21+08:00">2024-04-28</time>
+                <time title="修改时间：2024-05-09 15:51:36" itemprop="dateModified" datetime="2024-05-09T15:51:36+08:00">2024-05-09</time>
               </span>
 
           
@@ -199,9 +203,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="一、java基础"><a href="#一、java基础" class="headerlink" title="一、java基础"></a>一、java基础</h1><h3 id="1-8种基本数据类型"><a href="#1-8种基本数据类型" class="headerlink" title="1. 8种基本数据类型"></a>1. 8种基本数据类型</h3><p>byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false）</p>
-<ol start="2">
-<li><h3 id="包装类型的常量池技术"><a href="#包装类型的常量池技术" class="headerlink" title="包装类型的常量池技术"></a><strong>包装类型的常量池技术</strong></h3><p>Byte、Short、Integer、Long这 4 种包装类默认创建了数值 [-128，127] 的相应类型的缓存数据。Character 创建了数值在 [0,127] 范围的缓存数据，Boolean直接返回True或False。</p>
+        <h1 id="一、java基础"><a href="#一、java基础" class="headerlink" title="一、java基础"></a>一、java基础</h1><h2 id="8种基本数据类型"><a href="#8种基本数据类型" class="headerlink" title="8种基本数据类型"></a>8种基本数据类型</h2><p>byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false）</p>
+<h2 id="包装类型的常量池技术"><a href="#包装类型的常量池技术" class="headerlink" title="包装类型的常量池技术"></a><strong>包装类型的常量池技术</strong></h2><p>Byte、Short、Integer、Long这 4 种包装类默认创建了数值 [-128，127] 的相应类型的缓存数据。Character 创建了数值在 [0,127] 范围的缓存数据，Boolean直接返回True或False。</p>
 <p><strong>两种浮点类型的包装类Float、Double并没有实现包装类技术。</strong></p>
 <p><strong>所有整型包装类对象之间值的比较，全部使用equals方法进行比较。</strong></p>
 <p>我们以 <code>int与Integer</code> 作为例子，看下”&#x3D;&#x3D;”和”equal()”方法：</p>
@@ -209,23 +212,17 @@
 <p>2）两个Integer类型进行”&#x3D;&#x3D;”比较，如果其值在-128至127，那么返回true，否则返回false, 这跟Integer.valueOf()的缓冲对象有关，后面会说。</p>
 <p>3）两个封装类型进行equals()比较，首先equals()会比较类型，如果类型相同，则继续比较值，如果值也相同，返回true。</p>
 <p>4）基本型封装类型调用equals(),但是参数是基本类型，这时候，先会进行自动装箱，基本型转换为其封装类型，再进行3中的比较。</p>
-</li>
-<li><h3 id="为什么要有包装类型？"><a href="#为什么要有包装类型？" class="headerlink" title="为什么要有包装类型？"></a><strong>为什么要有包装类型？</strong></h3></li>
-</ol>
-<ul>
+<h2 id="为什么要有包装类型？"><a href="#为什么要有包装类型？" class="headerlink" title="为什么要有包装类型？"></a>为什么要有包装类型？</h2><ul>
 <li>Java是一种面向对象编程的语言，它要求所有的东西都是对象。然而，基本数据类型不是对象，它们是原始的数据类型，无法直接参与面向对象中的特性（比如继承、多态等）。因此引入了包装类型，使其能够像其它对象那样参与面向对象。</li>
 <li><strong>泛型的支持</strong>，Java5引入了泛型，但是泛型要求类型参数必须是对象类型，不能是基本数据类型。因此，如果要在集合类中存储基本数据类型，就需要使用对应的包装类型。</li>
 <li><strong>空值的支持</strong>，包装类型可以表示空值（null），而基本数据类型不行。</li>
 <li>包装类型提供了一些额外的方法和功能，使得对基本数据类型的操作更加方便。</li>
 </ul>
-<ol start="4">
-<li><h3 id="什么是自动拆装箱？原理？"><a href="#什么是自动拆装箱？原理？" class="headerlink" title="什么是自动拆装箱？原理？"></a><strong>什么是自动拆装箱？原理？</strong></h3></li>
-<li><h3 id="遇到过自动拆箱引发的NPE（空指针）问题么？"><a href="#遇到过自动拆箱引发的NPE（空指针）问题么？" class="headerlink" title="遇到过自动拆箱引发的NPE（空指针）问题么？"></a><strong>遇到过自动拆箱引发的NPE（空指针）问题么？</strong></h3><ul>
+<h2 id="什么是自动拆装箱？原理？"><a href="#什么是自动拆装箱？原理？" class="headerlink" title="什么是自动拆装箱？原理？"></a><strong>什么是自动拆装箱？原理？</strong></h2><h2 id="遇到过自动拆箱引发的NPE（空指针）问题么？"><a href="#遇到过自动拆箱引发的NPE（空指针）问题么？" class="headerlink" title="遇到过自动拆箱引发的NPE（空指针）问题么？"></a>遇到过自动拆箱引发的NPE（空指针）问题么？</h2><ul>
 <li>数据库的查询结果可能是null，因为自动拆箱，使用基本数据类型进行接受会有NPE风险。</li>
 <li>在三目运算（b?x:y）中，当 x和y的类型不一致时，会发生自动拆箱，将x,y全部转换为基本类型，在自动拆箱的过程中有可能NPE。</li>
 </ul>
-</li>
-<li><h3 id="String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？"><a href="#String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？" class="headerlink" title="String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？"></a><strong>String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？</strong></h3><ul>
+<h2 id="String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？"><a href="#String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？" class="headerlink" title="String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？"></a>String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？</h2><ul>
 <li><p>可变性：String是不可变的，StringBuffer和StringBuilder是可变的；</p>
 </li>
 <li><p>线程安全性：String和StringBuffer是线程安全的，可以被多个线程安全的使用，StringBuilder不是线程安全的</p>
@@ -236,8 +233,8 @@
 <li><p>String实现了serializable接口，可以被序列化。</p>
 </li>
 </ul>
-</li>
-<li><h3 id="重载和重写的区别？"><a href="#重载和重写的区别？" class="headerlink" title="重载和重写的区别？"></a><strong>重载和重写的区别？</strong></h3><ul>
+<p>重载和重写的区别？**</p>
+<ul>
 <li><p>重载指的是在同一个类中，可以定义多个方法具有相同的名称但具有不同的参数列表（参数类型、参数个数、参数顺序）；</p>
 <p>重写指的是子类重新定义（覆盖）了父类中具有相同名称、参数列表和返回类型的方法。</p>
 </li>
@@ -253,8 +250,7 @@
 </li>
 </ul>
 <p><strong>总结：方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的参数列表，有兼容的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求，不能根据返回类型进行区分。</strong></p>
-</li>
-<li><h3 id="“-x3D-x3D-”和“equals-”的区别"><a href="#“-x3D-x3D-”和“equals-”的区别" class="headerlink" title="“&#x3D;&#x3D;”和“equals ()”的区别"></a><strong>“&#x3D;&#x3D;”和“equals ()”的区别</strong></h3><ul>
+<h2 id="“-x3D-x3D-”和“equals-”的区别"><a href="#“-x3D-x3D-”和“equals-”的区别" class="headerlink" title="“&#x3D;&#x3D;”和“equals ()”的区别"></a>“&#x3D;&#x3D;”和“equals ()”的区别</h2><ul>
 <li><p>对于<code>==</code>，比较的是值是否相等</p>
 <ul>
 <li>如果作用于基本数据类型的变量，则直接比较存储的值是否相等</li>
@@ -270,8 +266,7 @@
 </ul>
 </li>
 </ul>
-</li>
-<li><h3 id="Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）"><a href="#Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）" class="headerlink" title="Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）"></a><strong>Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）</strong></h3><ul>
+<h2 id="Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）"><a href="#Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）" class="headerlink" title="Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）"></a>Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）</h2><ul>
 <li>反射机制是在运行时，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意对象，都能调用它的任意一个方法。在Java中，只要给定类的名字，就可以通过反射机制来获得类的所有信息。这种动态获取的信息以及动态调用对象的方法的功能称为java的反射机制。</li>
 <li>反射机制的优缺点：<ul>
 <li>优点：能够运行时动态获取类的实例，提高灵活性和通用性；可以使用反射编写更加通用的代码，减少组件之间的耦合；反射是实现动态代理机制的基础。</li>
@@ -286,8 +281,7 @@
 </ul>
 </li>
 </ul>
-</li>
-<li><h3 id="谈谈对Java注解的理解，解决了什么问题？"><a href="#谈谈对Java注解的理解，解决了什么问题？" class="headerlink" title="谈谈对Java注解的理解，解决了什么问题？"></a><strong>谈谈对Java注解的理解，解决了什么问题？</strong></h3><p>在写程序时，有时候想给一些特殊的地方加上标记，告诉编译器或者其他工具，这些地方有一些特殊的意义。Java注解就是一种在代码中添加特殊标记的方式，这些标记可以帮助编译器、工具或者其他程序理解你的代码，并可以触发一些额外的处理或行为。</p>
+<h2 id="谈谈对Java注解的理解，解决了什么问题？"><a href="#谈谈对Java注解的理解，解决了什么问题？" class="headerlink" title="谈谈对Java注解的理解，解决了什么问题？"></a>谈谈对Java注解的理解，解决了什么问题？</h2><p>在写程序时，有时候想给一些特殊的地方加上标记，告诉编译器或者其他工具，这些地方有一些特殊的意义。Java注解就是一种在代码中添加特殊标记的方式，这些标记可以帮助编译器、工具或者其他程序理解你的代码，并可以触发一些额外的处理或行为。</p>
 <ul>
 <li>注解解决的问题：<ul>
 <li>注解可以用于为代码提供更多的文档化信息，这样做可以增加代码的可读性和可维护性，使得代码更容易理解和使用。</li>
@@ -297,8 +291,7 @@
 </ul>
 </li>
 </ul>
-</li>
-<li><h3 id="Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？"><a href="#Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？" class="headerlink" title="Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？"></a><strong>Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？</strong></h3><ul>
+<h2 id="Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？"><a href="#Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？" class="headerlink" title="Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？"></a>Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？</h2><ul>
 <li>Java 泛型是一种在<strong>编译时</strong>进行类型检查和类型安全的机制，它允许程序员在编写代码时指定类、接口和方法可以支持任意类型（包括类、接口和原始类型）。Java 泛型提供了参数化类型的概念，使得代码可以更加通用和类型安全（可读性更好，更安全）。</li>
 <li>Java 泛型的主要目的是<strong>在编译时捕获类型错误</strong>，并在编译时发现这些错误，从而避免在运行时抛出类型转换异常。它提供了编译时类型安全检查，使得代码更加健壮、可读性更高，并且减少了强制类型转换的需要。</li>
 <li>Java 中的泛型是通过类型擦除实现的，这意味着在编译时会将泛型信息擦除掉，以确保与旧版 Java 代码的兼容性。这也导致了一些泛型相关的限制和局限性。（在运行时无法获取泛型类型的信息，在运行时，数组的元素类型必须是具体的非泛型类型）。</li>
@@ -314,7 +307,7 @@
 </ul>
 </li>
 </ul>
-</li>
+<ol start="12">
 <li><h3 id="内部类了解么？匿名内部类了解么？"><a href="#内部类了解么？匿名内部类了解么？" class="headerlink" title="内部类了解么？匿名内部类了解么？"></a>内部类了解么？匿名内部类了解么？</h3><ul>
 <li><p>内部类：如果A类需要直接访问B类中的成员，而B类又需要建立A类的对象，这时为了方便设计和访问，直接将A类定义在B类中就可以了。A类就称为内部类。</p>
 </li>
@@ -372,6 +365,50 @@
 </ul>
 </li>
 </ol>
+<h1 id="Java集合"><a href="#Java集合" class="headerlink" title="Java集合"></a>Java集合</h1><h2 id="几种集合的数据结构："><a href="#几种集合的数据结构：" class="headerlink" title="几种集合的数据结构："></a>几种集合的数据结构：</h2><ul>
+<li>HashMap：哈希表 + 链表 ，无序，允许键和值为null，线程不安全</li>
+<li>LinkedHashMap： 哈希表 + 双向链表，保持插入顺序或访问顺序。</li>
+<li>TreeMap： 基于红黑树实现的有序Map</li>
+<li>Hashtable：基于哈希表实现的map，线程安全</li>
+<li>concurrentHashMap：基于哈希表实现的线程安全的 Map，支持高并发操作。</li>
+</ul>
+<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="volatile关键字："><a href="#volatile关键字：" class="headerlink" title="volatile关键字："></a>volatile关键字：</h2><p>volatile关键字保证了 <strong>可见性（一个线程对共享变量进行修改后，其他线程能立即看到这个修改）</strong> 和 <strong>有序性（程序执行的顺序与代码的顺序一致）</strong></p>
+<p><strong>volatile如何保证可见性：</strong></p>
+<ul>
+<li>一个变量被声明为volatile时，<strong>线程在写入变量时</strong>， 不会立即把值缓存到寄存器或其他地方，而是<strong>会把值刷新回主内存。</strong></li>
+<li>当其他线程<strong>读取到该共享变量</strong>，<strong>会从主存中获取最新值</strong>，而不是使用当前线程的本地内存中的值。</li>
+</ul>
+<p><strong>volatile如何保证有序性：</strong></p>
+<ul>
+<li><p>volatile通过<strong>限制指令重排序</strong>（编译器重排序 和 处理器重排序 这两种重排序）来保证有序性的。</p>
+</li>
+<li><p><strong>写操作</strong> 加的屏障是 阻止<strong>上方</strong>其它写操作越过屏障<strong>排到 volatile变量写之下</strong>；</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240507210723973.png" alt="image-20240507210723973"></p>
+</li>
+<li><p><strong>读操作</strong> 加的屏障是阻止 下方其它读操作越过屏障<strong>排到 volatile变量读之上</strong>；</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240507210744195.png" alt="image-20240507210744195"></p>
+</li>
+</ul>
+<h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2><p><strong>（1）synchronized的三种用法：</strong></p>
+<ul>
+<li>修饰实例方法：这种方式相当于 synchronized（this对象），进入同步代码块之前需要获得 当前对象实例的锁；</li>
+<li>修饰静态方法：这种用法会作用于类的所有对象实例，进入同步块之前要获得当前 class的锁；</li>
+<li>修饰代码块： synchronized(类.class) 表示进⼊同步 代码前要获得 当前 class 的锁；</li>
+</ul>
+<p><strong>（2）synchronized 怎么保持可见性的：</strong></p>
+<ul>
+<li>线程枷锁前，清空工作内存中共享变量的值，从而从主存中读取最新的共享变量值；</li>
+<li>线程加锁后，其他线程无法获取主存中的共享变量；</li>
+<li>线程解锁前，会将最新的共享变量值刷新到主存中。</li>
+</ul>
+<p><strong>（3）synchronized 怎么保持有序性的：</strong></p>
+<ul>
+<li>synchronized同步的代码块，一次只能被一个线程拥有，所以synchronized保证<strong>同一时刻，代码是单线程执行的。</strong> <strong>因为as-if-serial语义的存在，单线程的程序能保证最终结果是有序的，但是不保证不 会指令重排。</strong></li>
+</ul>
+<p><strong>（4）synchronized怎么实现可重入的：</strong></p>
+<ul>
+<li>synchronized锁对象的时候有一个<strong>锁计数器，它会记录下线程获取锁的次数，在执行完代码块后，计数器 -1，直到计数器清零，就释放锁了。</strong></li>
+</ul>
 <h1 id="二、Spring框架"><a href="#二、Spring框架" class="headerlink" title="二、Spring框架"></a>二、Spring框架</h1><h2 id="1-Bean生命周期"><a href="#1-Bean生命周期" class="headerlink" title="1.Bean生命周期"></a>1.Bean生命周期</h2><p>大致可分为四个阶段： <strong>实例化 -&gt; 属性赋值 -&gt; 初始化 -&gt; 销毁</strong></p>
 <ul>
 <li><strong>（实例化）</strong>首先，在Bean容器中找到SpringBean的定义BeanDefination。</li>
@@ -403,6 +440,35 @@
 <li>二级缓存：earlySingletonObjects<strong>早期曝光对象</strong>，用于保存实例化完成的bean实例</li>
 <li>三级缓存：singletonFactories<strong>早期曝光对象工厂</strong>，用于保存Bean创建工厂，以便于后面扩展有机会创建代理对象。</li>
 </ul>
+<h2 id="3-Spring事务"><a href="#3-Spring事务" class="headerlink" title="3. Spring事务"></a>3. Spring事务</h2><h3 id="spring事务隔离级别："><a href="#spring事务隔离级别：" class="headerlink" title="spring事务隔离级别："></a>spring事务隔离级别：</h3><ul>
+<li><strong>ISOLATION_DEFAULT： 使用后端数据库的默认隔离级别</strong>，mysql默认 可重复读 级别</li>
+<li>ISOLATION_READ_UNCOMMITTED：即读未提交，最低的隔离级别，不能解决脏读，幻读，不可重复读</li>
+<li>ISOLATION_READ_COMMITTED：即 读已提交，可以解决脏读，不能解决不可重复读 以及 幻读；</li>
+<li>.ISOLATION_REPEATABLE_READ：即 可重复读，可解决脏读，不可重复读，不能解决幻读；</li>
+<li>ISOLATION_SERIALIZABLE： 串行化，完全服从ACID，但是会严重影响性能。</li>
+</ul>
+<h3 id="Spring事务传播行为："><a href="#Spring事务传播行为：" class="headerlink" title="Spring事务传播行为："></a>Spring事务传播行为：</h3><p>事务传播行为是为了解决<strong>service层方法之间互相调用</strong>的事务问题（一个事务方法被另一个事务方法调用时，需要指定事务如何传播）。</p>
+<p><strong>事务传播行为包括如下：</strong></p>
+<ul>
+<li>REQUIRED： 默认的事务传播行为，required表示当前方法必须在一个事务中运行，如果当前存在事务，则加入该事务；如果当前没有事务，则创建一个新的事务；</li>
+<li>SUPPORTS：当前方法支持在一个事务中运行，如果当前存在事务，则加入该事务；如果当前没有事务，则以非事务的方式执行；</li>
+<li>MANDATORY：当前方法必须在一个事务中运行，如果当前存在事务，则加入该事务，如果当前没有事务，则抛出异常；</li>
+<li>REQUIRES_NEW：当前方法必须在一个新的事务中运行，如果当前存在事务，就挂起该事务，并创建一个新的事务。</li>
+<li>NOT_SUPPORTED：当前方法不应该在事务中运行，如果当前存在事务，就挂起该事务，以非事务的方式执行。</li>
+<li>NEVER：表示当前方法不应在事务中运行，如果当前存在事务，则抛出异常。</li>
+<li>NESTED：表示当前方法必须在一个嵌套的事务中运行，如果当前存在事务，则该在事务的嵌套事务中运行；如果当前没有事务，则创建一个新的嵌套事务。</li>
+</ul>
+<h3 id="事务失效场景"><a href="#事务失效场景" class="headerlink" title="事务失效场景"></a>事务失效场景</h3><ul>
+<li><strong>@Transactional 应用在非 public 修饰的方法上</strong>：spring要求被代理方法必须是public的。在<code>AbstractFallbackTransactionAttributeSource</code>类的<code>computeTransactionAttribute</code>方法中有个判断，如果目标方法不是 public，则<code>TransactionAttribute</code>返回 null，即不支持事务。</li>
+<li><strong>方法用 final修饰：</strong>如果将事务方法定义为final，这样会导致事务失效。原因是spring事务底层使用了aop，也就是通过jdk动态代理或者cglib，帮我们生成了代理类，在代理类中实现事务的功能。<strong>如果某个方法被final修饰了，那么在它的代理类中，就无法重写该方法，而添加事务功能</strong>。 同样的，如果某个<strong>方法是static的</strong>，同样<strong>无法</strong>通过动态代理，<strong>变成事务方法</strong>。</li>
+<li><strong>同一个类中方法调用，导致事务失效：</strong>方法A调用本地的方法B，但<strong>A没有声明注解事务，但是B声明了</strong>，在<strong>外部调用方法A后，B的事务是不会起作用</strong>的。这还是由于SpringAOP代理造成的，因为只有当<strong>事务方法被当前类以外的代码调用的时候，才会由spring生成的代理对象</strong>来管理。</li>
+<li><strong>方法所在的类没有被Spring管理：</strong>用spring事务的前提是，对象要被spring管理。</li>
+</ul>
+<h3 id="事务不回滚场景："><a href="#事务不回滚场景：" class="headerlink" title="事务不回滚场景："></a>事务不回滚场景：</h3><ul>
+<li><strong>设置了错误的传播特性 propagation；</strong></li>
+<li><strong>自己吞了异常：</strong>在事务方法中手动try catch了异常，这种情况下事务不会正常回滚。</li>
+<li><strong>手动抛出了别的异常：</strong>即使开发者没有手动捕获异常，但是抛的异常不正确，spring事务也不会回滚。spring事务，默认情况下只会回滚 runtimeException和 error，对于普通的Exception（非运行时异常），它不会回滚。</li>
+</ul>
 <h1 id="三、计算机网络"><a href="#三、计算机网络" class="headerlink" title="三、计算机网络"></a>三、计算机网络</h1><h2 id="1-TCP三次握手-amp-四次挥手"><a href="#1-TCP三次握手-amp-四次挥手" class="headerlink" title="1. TCP三次握手 &amp; 四次挥手"></a>1. TCP三次握手 &amp; 四次挥手</h2><p><strong>三次握手建立连接</strong>。从client的视角来看：</p>
 <ul>
 <li><strong>第一次握手</strong>： client发送一个带有<code>syn（seq = x）</code>标志的数据包到server端，然后标识自己的状态为<strong>syn_send</strong>已发送状态；</li>
@@ -424,9 +490,9 @@
 <li><strong>第三次挥手</strong>：server发送一个<code>FIN （seq = y）</code>的数据包到client，请求关闭连接，随后server进入<strong>LAST-ACK</strong>状态；</li>
 <li><strong>第四次挥手</strong>：client发送一个<code>ACK (ack=y+1)</code> 的数据包到server，然后client进入到<strong>TIME-Wait</strong>状态，server端在接收到这个数据包后进入<strong>CLOSE</strong>状态。此时如果client等待 <strong>2*MSL</strong>（一个片段在网络中的最大存活时间）没有收到回复，说明server已经正常关闭，随后client也可以关闭连接了。</li>
 </ul>
-<h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="1-JVM内存"><a href="#1-JVM内存" class="headerlink" title="1. JVM内存"></a>1. JVM内存</h2><h3 id="jvm内存组成："><a href="#jvm内存组成：" class="headerlink" title="jvm内存组成："></a>jvm内存组成：</h3><ul>
+<h1 id="四、JVM"><a href="#四、JVM" class="headerlink" title="四、JVM"></a>四、JVM</h1><h2 id="1-JVM内存"><a href="#1-JVM内存" class="headerlink" title="1. JVM内存"></a>1. JVM内存</h2><h3 id="jvm内存组成："><a href="#jvm内存组成：" class="headerlink" title="jvm内存组成："></a>jvm内存组成：</h3><ul>
 <li><strong>方法区</strong>（线程共享区）<ul>
-<li>也成为永久代，JDK8后改为<strong>元空间</strong>；</li>
+<li>也称为永久代，JDK8后改为<strong>元空间</strong>；</li>
 <li>存储<strong>已加载的类</strong>的类信息、常量、静态变量、即时编译器编译后的代码等；</li>
 </ul>
 </li>
@@ -452,7 +518,7 @@
 </li>
 </ul>
 <h3 id="对象创建过程："><a href="#对象创建过程：" class="headerlink" title="对象创建过程："></a>对象创建过程：</h3><ul>
-<li>遇到new指令的时候，检查指令的参数能否找到一个类的符号引用</li>
+<li>遇到new字节码指令的时候，检查指令的参数能否找到一个类的符号引用</li>
 <li>如果这个符号引用对应的类还没有被加载、解析、初始化过，那么先执行类加载过程。</li>
 <li>类加载完成后，为新对象分配内存，分配内存的方法包括<strong>指针碰撞、空闲列表</strong>方法。</li>
 <li>分配完内存，对分配好的内存（除了对象头）进行初始化工作，都初始化为0值。</li>
@@ -557,7 +623,15 @@
 <li>自定义类加载器： 可以重写LoadClass方法，实现自己的类加载逻辑，不再委托给父类加载器。但是自定义类加载器需要遵循一定的类加载规则，以确保类加载的一致性和正确性。</li>
 <li>使用Thread.currentThread.setContextClassLoader方法：通过该方法设置当前线程的上下文类加载器，将类加载的委派顺序改变，这样可以绕过双亲委派机制，直接指定类加载器进行加载。</li>
 </ul>
-<h1 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h1><h2 id="1-索引"><a href="#1-索引" class="headerlink" title="1. 索引"></a>1. 索引</h2><h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类:"></a>索引分类:</h3><ul>
+<h1 id="五、MySQL"><a href="#五、MySQL" class="headerlink" title="五、MySQL"></a>五、MySQL</h1><h2 id="0-基础"><a href="#0-基础" class="headerlink" title="0.基础"></a>0.基础</h2><h3 id="一条SQL执行的步骤："><a href="#一条SQL执行的步骤：" class="headerlink" title="一条SQL执行的步骤："></a>一条SQL执行的步骤：</h3><ul>
+<li><strong>权限检查：</strong>检查用户是否有执行该语句的权限。</li>
+<li><strong>查询缓存（仅适用于8.0版本之前）：</strong>如果缓存中有该语句的结果，就从缓存中返回结果。</li>
+<li><strong>语法分析和语义检查：</strong>由MySQL<strong>解析器</strong>验证语句的合法性。</li>
+<li><strong>查询优化</strong>：MySQL的<strong>查询优化器</strong>根据查询的复杂度、索引情况、统计信息等因素选择最佳的查询计划。</li>
+<li><strong>执行查询计划：</strong>涉及表扫描、索引的匹配、数据的过滤和排序等操作。</li>
+<li><strong>数据检索和返回：</strong> <strong>执行器</strong>根据查询计划获取数据，并将结果返回客户端。如果涉及查询大量数据，MySQL可能会使用临时表来存储中间结果，并进行排序和分页操作。</li>
+</ul>
+<h2 id="1-索引"><a href="#1-索引" class="headerlink" title="1. 索引"></a>1. 索引</h2><h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类:"></a>索引分类:</h3><ul>
 <li>按<strong>数据结构</strong>分类：B+树索引、Hash索引、Full-text索引</li>
 <li>按<strong>物理存储</strong>分类：聚簇索引（主键索引）、二级索引</li>
 <li>按<strong>字段特性</strong>分类：主键索引、普通索引、唯一索引、前缀索引</li>
@@ -569,13 +643,292 @@
 <li>叶子节点之间通过双向链表连接。</li>
 <li>对主键索引来说，叶子节点存放的就是实际数据。</li>
 <li>对二级索引来说，叶子节点存放的是主键值，而不是实际数据。<strong>回表就是指</strong>需要查询二级索引树和主键索引树两个B+树才能查到数据。</li>
-<li>当查到的数据在二级索引的叶子节点就能找到时，此时就不用再回表查询了。<strong>这被称为覆盖索引</strong></li>
+<li>当查到的数据在二级索引的叶子节点就能找到时，此时就<strong>不用再回表查询</strong>了。<strong>这被称为覆盖索引</strong></li>
 <li>相比于B树，B+树更适合于范围查询，因为其叶子节点用双向链表相连；而且B树的非叶子节点也要存储数据，B+树单节点数据量更小。</li>
 <li>相比于二叉树，B+树能保证高度始终在3-4层左右，对IO更友好。</li>
 <li>相比于Hash，查询复杂度o(1)优于B+树，但hash不适合范围查询。</li>
 </ul>
 <p><strong>B+树索引的优势</strong>：相比于B树和二叉树来说，最大的优势在于查询效率高，即使在数据量很大的情况下，<strong>磁盘的IO次数依然维持在3-4次</strong>。</p>
-<h3 id="l"><a href="#l" class="headerlink" title="l"></a>l</h3>
+<h3 id="联合索引-amp-索引下推优化"><a href="#联合索引-amp-索引下推优化" class="headerlink" title="联合索引 &amp; 索引下推优化"></a>联合索引 &amp; 索引下推优化</h3><ul>
+<li><strong>联合索引的最左匹配原则：在遇到范围查询（如 &gt;、&lt;）的时候，就会停止匹配，也就是范围查询的字段可以用到联合索引，但是在范围查询字段的后面的字段无法用到联合索引。注意，对于 &gt;&#x3D;、&lt;&#x3D;、BETWEEN、like 前缀匹配的范围查询，并不会停止匹配</strong></li>
+<li><strong>索引下推优化：</strong><ul>
+<li>对于联合索引（a, b），在执行 <code>select * from table where a &gt; 1 and b = 2</code> 语句的时候，只有 a 字段能用到索引，那在联合索引的 B+Tree 找到第一个满足条件的主键值（ID 为 2）后，还需要判断其他条件是否满足（看 b 是否等于 2），那是在联合索引里判断？还是回主键索引去判断呢？</li>
+<li>在 MySQL 5.6 之前，只能从 ID2 （主键值）开始一个个回表，到「主键索引」上找出数据行，再对比 b 字段值。</li>
+<li>而 MySQL 5.6 引入的<strong>索引下推优化</strong>（index condition pushdown)， <strong>可以在联合索引遍历过程中，对联合索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数</strong>。</li>
+</ul>
+</li>
+<li><strong>建立联合索引时，要把区分度大的字段排在前面，这样区分度大的字段越有可能被更多的 SQL 使用到</strong>。</li>
+<li>MySQL 还有一个查询优化器，查询优化器发现某个值出现在表的数据行中的百分比（惯用的百分比界线是”30%”）很高的时候，它一般会忽略索引，进行全表扫描。</li>
+</ul>
+<h3 id="⭐索引失效的情况"><a href="#⭐索引失效的情况" class="headerlink" title="⭐索引失效的情况"></a>⭐索引失效的情况</h3><ul>
+<li>使用<strong>左或者左右模糊匹配</strong>的时候，会造成索引失效；</li>
+<li>当在<strong>查询条件中对索引做了计算、函数、类型转换操作</strong>，这些情况下都会造成索引失效；</li>
+<li>在<strong>联合索引</strong>中，没有遵循<strong>最左匹配原则</strong>，导致索引失效；</li>
+<li>在 <strong>WHERE 子句</strong>中，如果在 <strong>OR 前</strong>的条件列是<strong>索引列</strong>，而在 <strong>OR 后</strong>的条件列<strong>不是索引列</strong>，那么索引会失效。</li>
+<li><strong>使用like “%xxx”,索引一定会失效么？</strong>：<ul>
+<li>如果数据表中的字段<strong>只有主键+二级索引</strong>，那么即使使用了左模糊匹配，也不会走全表扫描，而是<strong>走全扫描二级索引树</strong>。</li>
+<li>我们都知道联合索引要遵循最左匹配才能走索引，但是<strong>如果数据表中的字段都是索引</strong>的话，即使查询过程中，<strong>没有遵循</strong>最左匹配原则，也是会<strong>走全扫描二级索引树</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="优化索引的方法"><a href="#优化索引的方法" class="headerlink" title="优化索引的方法"></a>优化索引的方法</h3><ul>
+<li>前缀索引优化</li>
+<li>覆盖索引优化</li>
+<li>主键索引最好是自增的</li>
+<li>防止索引失效</li>
+</ul>
+<h3 id="索引存储结构"><a href="#索引存储结构" class="headerlink" title="索引存储结构"></a>索引存储结构</h3><ul>
+<li>根据物理存储分类，索引分为<strong>聚簇索引和二级索引</strong>。<ul>
+<li>对于<strong>InnoDB</strong>引擎，聚簇索引的叶子节点存放的是实际数据，而二级节点存放的是主键值，而不是实际数据。</li>
+<li>对于<strong>MyISAM</strong>引擎，聚簇索引的叶子节点存放的是具体数据的地址。</li>
+</ul>
+</li>
+<li>MySQL的<strong>默认存储引擎</strong>是<strong>InnoDB</strong>，它采用<strong>B+树</strong>作为索引数据结构。</li>
+<li><strong>MyISAM 存储引擎</strong>支持多种索引数据结构，比如 B+ 树索引、R 树索引、Full-Text 索引。MyISAM 存储引擎在创建表时，创建的主键索引默认使用的是 <strong>B+ 树索引</strong>。</li>
+<li>虽然，I<strong>nnoDB 和 MyISAM 都支持 B+ 树索引</strong>，但是它们数据的存储结构实现方式<strong>不同</strong>:<ul>
+<li><strong>InnoDB</strong> 存储引擎：B+ 树索引的叶子节点保存<strong>数据本身</strong>；</li>
+<li><strong>MyISAM 存</strong>储引擎：B+ 树索引的叶子节点保存数据的<strong>物理地址；</strong></li>
+</ul>
+</li>
+<li>对聚簇索引的理解：<ul>
+<li>聚簇索引具有唯一性：由于聚簇索引是将索引和数据放在一块，所以一个表仅有一个聚簇索引。</li>
+<li>（1）聚簇索引默认是主键。（2）如果表中没有定义主键，InnoDB会选择第一个唯一的非空索引代替。（3）如果没有这样的索引，InnoDB 会隐式定义一个主键作为聚簇索引。</li>
+</ul>
+</li>
+</ul>
+<h3 id="MySQL-表的物理结构"><a href="#MySQL-表的物理结构" class="headerlink" title="MySQL 表的物理结构"></a>MySQL 表的物理结构</h3><ul>
+<li>MySQL的<strong>表数据</strong>是以<strong>页</strong>的形式存放的，页在磁盘中<strong>不一定是连续的</strong>。</li>
+<li>页空间是16K，并不是所有的空间都是用来存放数据的，会有一些固定的信息，如页头、页尾、页码、校验码等。</li>
+<li>在B+树中，叶子节点和非叶子节点的数据结构是一样的，区别在于，<strong>叶子节点</strong>存放的是<strong>实际的行数据</strong>，而<strong>非叶子节点</strong>存放的是<strong>主键和页号。</strong></li>
+</ul>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240429195215797.png" alt="image-20240429195215797" style="zoom: 67%;" />
+
+
+
+<ul>
+<li>索引结构不会影响单表最大行数，2000W也只是推荐值，<strong>超过了这个值可能会导致B+树层级更高，影响查询性能</strong>。</li>
+</ul>
+<h2 id="2-事务"><a href="#2-事务" class="headerlink" title="2.  事务"></a>2.  事务</h2><h3 id="2-1-事务隔离级别"><a href="#2-1-事务隔离级别" class="headerlink" title="2.1 事务隔离级别"></a>2.1 事务隔离级别</h3><h4 id="四个隔离级别："><a href="#四个隔离级别：" class="headerlink" title="四个隔离级别："></a><strong>四个隔离级别：</strong></h4><ul>
+<li><p>读未提交（啥都解决不了）</p>
+</li>
+<li><p>读已提交 （解决了脏读）</p>
+</li>
+<li><p>可重复读 （解决了脏读，不可重复读，InnoDB默认的隔离级别）</p>
+</li>
+<li><p>串行化 （解决了脏读，不可重复读以及幻读，但是效率最低，不轻易使用。）</p>
+</li>
+<li><p>InnoDB 引擎的<strong>默认隔离级别是 可重复读</strong>，但是它很大程度上避免了幻读现象。解决的方案有两种：</p>
+<ul>
+<li>针对<strong>快照读（普通select）</strong>，是通过<strong>MVCC</strong>方式解决了幻读。因为可重复读隔离级别下，事务执行<strong>过程中看到的数据</strong>，一直<strong>跟</strong>这个<strong>事务启动时看到的数据是一致的</strong>，即使中途有其他事务插入了一条数据，是查询不出来的。</li>
+<li>针对<strong>当前读（select … for update等语句）</strong>，是通过<strong>next-key lock(记录锁 + 间隙锁)<strong>方式解决了幻读。因为当执行 select … for update 语句的时候，会加上 next-key lock，如果有其他事务在 next-key lock 锁范围内插入了一条记录，那么这个插入语句就会被</strong>阻塞</strong>，无法成功插入，所以就很好了避免幻读问题。</li>
+</ul>
+</li>
+<li><p>InnoDB引擎为了解决 <strong>可重复读</strong> 隔离级别使用 <strong>当前读</strong> 而造成的<strong>幻读</strong>问题，引出了<strong>间隙锁</strong>（<strong>即使这样也只是最大程度避免幻读，没有完全解决幻读</strong>）</p>
+<ul>
+<li><p>表中有一个范围 id 为（3，5）间隙锁，那么其他事务就无法插入 id &#x3D; 4 这条记录了，这样就有效的防止幻读现象的发生。</p>
+</li>
+<li><p>事务 A 执行了这面这条锁定读（for update）语句后，就在对表中的记录加上 id 范围为 (2, +∞] 的 next-key lock（next-key lock 是间隙锁+记录锁的组合）。<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240430153508438.png" alt="image-20240430153508438"></p>
+<p>然后，事务 B 在执行插入语句的时候，判断到插入的位置被事务 A 加了 next-key lock，于是<strong>事物 B 会生成一个插入意向锁</strong>，同时<strong>进入等待</strong>状态，<strong>直到</strong>事务 <strong>A 提交了事务</strong>。这就<strong>避免了由于事务 B 插入新记录而导致事务 A 发生幻读</strong>的现象。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="四个隔离级别是如何实现的"><a href="#四个隔离级别是如何实现的" class="headerlink" title="四个隔离级别是如何实现的"></a>四个隔离级别是如何实现的</h4><ul>
+<li>对于 <strong>读未提交</strong> 级别，实现方式相对简单，因为可以读到未提交事务修改的数据，所以<strong>直接读取最新的数据就好</strong>了。</li>
+<li>对于 <strong>读已提交</strong> 和 <strong>可重复读</strong> 级别来说，他们是<strong>通过read view来实现</strong>的，它们的区别在于：<strong>读已提交</strong>是在 <strong>每个语句执行前</strong> 都会重新生成 read view，而<strong>可重复读</strong> 是在 <strong>启动事务时</strong> 生成一个read view，然后整个事务期间都在使用这个read view</li>
+<li>对于 <strong>串行化</strong> 级别，通过添加<strong>读写锁（排他锁）</strong>的方式实现。</li>
+</ul>
+<h2 id="3-MySQL锁"><a href="#3-MySQL锁" class="headerlink" title="3.  MySQL锁"></a>3.  MySQL锁</h2><h3 id="全局锁："><a href="#全局锁：" class="headerlink" title="全局锁："></a><strong>全局锁</strong>：</h3><ul>
+<li><p>使用全局锁后，整个数据库就处于只读状态了。这时其他线程执行以下操作，都会被阻塞：</p>
+<ul>
+<li>对<strong>数据的增删改</strong>操作，比如 insert、delete、update等语句；</li>
+<li>对<strong>表结构的更改</strong>操作，比如 alter table、drop table 等语句。</li>
+</ul>
+</li>
+<li><p>全局锁主要用于做<strong>全库逻辑备份</strong>，这样在备份期间，不会因为数据或表结构的更新，而出现备份文件的数据与预期的不一样。</p>
+</li>
+<li><p>如果备份花费很长时间，在这个时间段内业务只能读数据，造成业务的停滞。</p>
+</li>
+<li><p>如果数据库的引擎支持 <strong>可重复读</strong> 的隔离级别，那么在<strong>备份数据库之前先开启事务</strong>，会先创建read view ,然后整个事务执行期间都在使用这个read view，而且由于MVCC的支持，<strong>备份期间业务依然可以对数据进行更新操作</strong>。（<strong>InnoDB引</strong>擎默认的隔离级别正是可重复读，<strong>因此可采用这种方式备份库</strong>，而 <strong>MyISAM不支持事务</strong>，备份库时就<strong>只能使用全局锁</strong>）</p>
+</li>
+</ul>
+<h3 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h3><p><strong>表级锁有这几种：</strong></p>
+<ul>
+<li>表锁</li>
+<li>元数据锁 （MDL）</li>
+<li>意向锁</li>
+<li>Auto-INC 锁</li>
+</ul>
+<p><strong>（1） 表锁</strong></p>
+<ul>
+<li>表锁除了会限制别的线程读写之外，也<strong>会限制本线程接下来的读写操作</strong>。</li>
+<li>尽量<strong>避免在使用InnoDB 引擎的表使用表锁</strong>，因为表锁的颗粒度太大，影响并发性能，<strong>InnoDB 实现了粒度更细的行级锁，更牛逼。</strong></li>
+</ul>
+<p><strong>（2）元数据锁</strong></p>
+<ul>
+<li><p><strong>不用显式</strong>的使用，因为我们在对数据库表进行操作时，会自动给这个表加上MDL；</p>
+<ul>
+<li>对<strong>表进行crud</strong>的时候，添加的时<strong>MDL读锁；</strong></li>
+<li>对<strong>表结构</strong>进行变更的时候，添加的是<strong>MDL写锁</strong>；</li>
+</ul>
+</li>
+<li><p>MDL在事务提交之后才会释放，这意味着<strong>事务执行期间，MDL是一直持有的。</strong></p>
+</li>
+<li><p>申请MDL锁的操作会形成一个队列，队列中，<strong>写锁的优先级高于读锁</strong>，一旦出现MDL写锁等待，<strong>会阻塞后续该表中所有的CRUD操作</strong>（因为拿不到读锁了）。</p>
+</li>
+</ul>
+<p><strong>（3）意向锁</strong></p>
+<ul>
+<li>在使用 InnoDB 引擎的表里对某些记录加上<strong>「共享锁」</strong>之前，需要先在表级别加上一个「<strong>意向共享锁」</strong>；</li>
+<li>在使用 InnoDB 引擎的表里对某些纪录加上<strong>「独占锁」</strong>之前，需要先在表级别加上一个<strong>「意向独占锁</strong>」；</li>
+</ul>
+<p><strong>意向锁是表级锁</strong>，<strong>不会和行级</strong>的共享锁和独占锁发生<strong>冲突</strong>，而且<strong>意向锁之间也不会发生冲突</strong>，只会和共享<strong>表锁</strong>和独占<strong>表锁</strong>发生冲突</p>
+<p><strong>意向锁的目的是为了快速判断表里是否有记录被加锁，</strong>如果表被上了意向独占锁，表明表内有数据被加了独占锁，这样其他线程就不用再去逐条看是哪一条记录被添加了独占锁。</p>
+<p><strong>（4）Auto-INC 锁</strong></p>
+<ul>
+<li>设置主键自增时，再插入数据时，可以不指定主键的值，数据库会自动给主键赋值递增的值，这主要是<strong>通过Auto_INC锁实现</strong>的。</li>
+<li><strong>auto-inc是一种特殊的表锁机制</strong>，<strong>锁不再是一个事务提交之后才释放，而是在执行完插入语句之后就会立即释放。</strong></li>
+<li>在插入数据时，会添加一个<strong>表级别</strong>的Auto-INC锁，然后给自增的字段赋值，等<strong>插入语句执行完</strong>后，才会把Auto-Inc<strong>释放。</strong></li>
+<li><strong>InnoDB 提供了一个轻量级锁</strong>，插入时，会给自增字段加上轻量级锁，然后给该字段赋值自增，之后就释放了，<strong>不用再等插入语句结束后再释放。</strong></li>
+</ul>
+<h3 id="行级锁（只有InnoDB-支持）"><a href="#行级锁（只有InnoDB-支持）" class="headerlink" title="行级锁（只有InnoDB 支持）"></a>行级锁（只有InnoDB 支持）</h3><p><strong>普通的select语句是不会对记录进行加锁的</strong>，因为它属于快照读。如果要在查询时对记录加锁，可以使用下面这种方式，查询加锁的方式称为<strong>锁定读</strong>：</p>
+<ul>
+<li><code>select ... lock in share mode (加共享锁)</code></li>
+<li><code>select ... for update（加独占锁）</code></li>
+</ul>
+<p><strong>行级锁有四类：</strong></p>
+<ul>
+<li><strong>Record lock</strong>，记录锁，也就是仅锁一条记录。<ul>
+<li>记录锁有 <strong>共享锁</strong> 和 <strong>独占锁</strong> 之分。如果一个事务对当前记录加了共享锁，那么其他事务可以加共享锁但是不能加独占锁；如果是加了独占锁，那么其他事务既不能加独占锁也不能加共享锁。</li>
+</ul>
+</li>
+<li><strong>Gap Lock</strong>， 间隙锁，锁定一个范围，但是不包含记录本身，<strong>只存在于可重复读隔离级别</strong>；目的是为了解决该级别下 <strong>幻读</strong>的现象。<ul>
+<li><strong>间隙锁之间是兼容的，即两个事务可以同时持有包含共同间隙范围的间隙锁，并不存在互斥关系，因为间隙锁的目的是防止插入幻影记录而提出的</strong></li>
+</ul>
+</li>
+<li><strong>Next-Key Lock</strong> , 是上面两种锁的组合，<strong>锁定一个范围，并且锁定记录本身。</strong></li>
+<li><strong>插入意向锁：</strong> 名字虽然有意向锁，但是它并<strong>不是意向锁，它是一种特殊的间隙锁，属于行级锁。</strong><ul>
+<li>当一个事务想插入一条记录，但是发现插入位置有其他事务设置的间隙锁，那么当前插入操作会阻塞，直到拥有这些间隙锁的事务提交为止。</li>
+<li>在此期间，该事务会生成一个插入意向锁，表明有业务向再这个区间插入新纪录，但是现在在等待。</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-日志"><a href="#4-日志" class="headerlink" title="4. 日志"></a>4. 日志</h2><h3 id="MySQL的三个日志："><a href="#MySQL的三个日志：" class="headerlink" title="MySQL的三个日志："></a>MySQL的三个日志：</h3><ul>
+<li>undo log：回滚日志，是InnoDB<strong>存储引擎层</strong>生成的日志，实现事务的<strong>原子性</strong>。主要用于<strong>事务回滚和MVCC</strong>。</li>
+<li>redo log：重做日志，是InnoDB<strong>存储引擎层</strong>生成的日志，实现事务的<strong>持久性</strong>，主要用于<strong>掉电等故障恢复</strong>。</li>
+<li>binlog：二进制日志，是<strong>server层</strong>生成的日志，主要用于<strong>数据备份和主从复制</strong>（可以认为是为了实现事务的<strong>一致性</strong>）。</li>
+</ul>
+<h3 id="关于undo-log"><a href="#关于undo-log" class="headerlink" title="关于undo log:"></a>关于undo log:</h3><ul>
+<li><strong>（作用1）</strong>undo log即回滚日志，用于在事务提交失败的时候进行回滚操作时使用，用于实现<strong>原子性</strong>。</li>
+<li>每当InnoDB引擎对一条记录进行 <strong>增删改</strong> 的时候（这时候会<strong>自动隐式的开启事务</strong>），需要把回滚时需要的信息记录到 undo log 中：<ul>
+<li>插入时，记录插入记录的主键值，回滚时删除就好；</li>
+<li>删除时，记录该记录的所有内容，回滚时插入到表内就好；</li>
+<li>更新时，记录被更新列的旧值，回滚时恢复就好。</li>
+</ul>
+</li>
+<li><strong>（作用2）</strong>undo log的另一个作用是：<strong>通过readview + undo log来实现MVCC</strong>（多版本并发控制）：<ul>
+<li>首先引入<strong>版本链</strong>：每条记录有两个隐藏列 <strong>trx_id（该记录是被哪个事务修改的）</strong> 和 <strong>roll-pointer （一个指针，可以将这些undo log 串成一个链表，这个链表称为版本链）</strong></li>
+<li><strong>读已提交</strong> 和 <strong>可重复读</strong> <strong>两个隔离级别</strong>，他们的<strong>快照读</strong>都是通过read view + undo log来实现的，区别在与<strong>创建readview的时机不同：</strong><ul>
+<li>读已提交是在每个select都会生成一个read view；</li>
+<li>可重复读是在启动事务时生成一个read view，整个事务期间都在使用这个read view;</li>
+</ul>
+</li>
+<li>两个隔离级别是通过 <strong>事务的read view里的字段</strong> 和 <strong>记录中的两个隐藏列</strong> 进行比对，如果不满足可见，就会顺着 undo log版本链找到满足其可见性的记录，从而控制并发事务访问同一个记录的行为。这就叫<strong>MVCC</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="关于buffer-pool"><a href="#关于buffer-pool" class="headerlink" title="关于buffer pool:"></a>关于buffer pool:</h3><p>引入buffer pool是为了提升读写性能，buffer pool中缓存的是数据页（默认16kb）：</p>
+<ul>
+<li>如果读记录时，该记录在缓冲池中，那么就从缓冲池中读，否则去磁盘中读；</li>
+<li>修改记录时，如果记录存在于缓冲池中，那么直接修改该记录在缓冲池中的页，并将其标志为脏页。脏页不会立即写入磁盘，后台线程会挑选一个合适的时机将其写入磁盘。</li>
+</ul>
+<p>MySQL启动的时候，InnoDB会为 buffer pool中申请一片空闲空间，随着程序运行，磁盘上的页会逐渐放进这些空闲空间中。</p>
+<p>当查询一条记录的时候，InnoDB是会把整个页的数据加载到buffer pool中，页加载后，再通过页中的 页目录 去定位到某条具体的记录。</p>
+<h3 id="关于redo-log"><a href="#关于redo-log" class="headerlink" title="关于redo log:"></a>关于redo log:</h3><p>引入redo log，是因为<strong>buffer pool是基于内存</strong>的，在断电重启时，<strong>没来得及落盘的脏页数据会丢失</strong>。为了解决这个问题，<strong>当有一条记录需要修改的时候，InnoDB首先更新内存（标记为脏页），然后将本次对这个页的修改以 redo log的形式记录下来。</strong></p>
+<p>随后，后台线程会在合适的时机将脏页写到磁盘中。</p>
+<ul>
+<li>redo log 是<strong>物理日志</strong>，记录了<strong>某个数据页做了什么修改</strong>，比如<strong>对 XXX 表空间中的 YYY 数据页 ZZZ 偏移量的地方做了AAA 更新</strong>，每当执行一个事务就会产生这样的一条或者多条物理日志。</li>
+<li>事务提交时，只用<strong>先将redo log持久化到磁盘</strong>中就行，（内存中的脏页是在合适的时机进行落盘的）。<strong>哪怕系统崩溃发生内存掉电重启，根据磁盘中redo log中的记录进行恢复即可</strong>。</li>
+</ul>
+<h3 id="redo-log-和-undo-log的区别"><a href="#redo-log-和-undo-log的区别" class="headerlink" title="redo log 和 undo log的区别"></a>redo log 和 undo log的区别</h3><ul>
+<li>这俩日志都是InnoDB引擎的日志；</li>
+<li>redo log是重做日志，记录了此次事务完成后的状态，记录的是更新后的值；</li>
+<li>undo log是回滚日志，记录了此次事务开始前的状态，记录的是更新前的值；</li>
+<li>如果事务提交之前发生崩溃，会通过undo log回滚事务；如果事务提交之后发生崩溃，会通过redo log恢复事务。</li>
+<li>redo log保证了持久性；而undo log保证了原子性；</li>
+</ul>
+<h3 id="bin-log与-redo-log的区别"><a href="#bin-log与-redo-log的区别" class="headerlink" title="bin log与 redo log的区别"></a>bin log与 redo log的区别</h3><ol>
+<li><strong>适用对象不同：</strong></li>
+</ol>
+<ul>
+<li>bin log是<strong>server层</strong>实现的日志，<strong>所有存储引擎都能用</strong>。</li>
+<li>redo log和 undo log都是<strong>InnoDB引擎</strong>实现的日志。</li>
+</ul>
+<ol start="2">
+<li><strong>文件格式不同：</strong></li>
+</ol>
+<ul>
+<li>（<strong>记录逻辑操作</strong>）bin log 有3种格式类型，分别是<strong>statement(默认的格式)、row、mixed</strong>，区别如下：<ul>
+<li>StateMent：每一条修改数据的sql都会记录到bin log中（相当于记下了逻辑操作，可以称为逻辑日志）。主从复制中 slave 根据sql语句重现。但是<strong>有动态函数的问题</strong>，比如UUID或now，在主库中执行的结果并不是从库中执行的结果。<strong>这会导致复制的数据不一致。</strong></li>
+<li>Row： 记录行数据最终被变成什么样了，不会出现动态函数的问题。但它的<strong>缺点是每行数据的变化结果都会被记录</strong>，比如批量执行update , statement模式就只会记录一个update语句，而 row模式下，有多少次update 就产生多少update语句，使得binlog文件过大。</li>
+<li>mixed: 包含了上面的 statement 和 row 模式，他会根据不同的情况自动使用row模式和statement模式。</li>
+</ul>
+</li>
+<li><strong>redo log是物理日志</strong>，记录某个记录在某个数据页做了什么修改。</li>
+</ul>
+<ol start="3">
+<li><strong>写入方式不同</strong>：</li>
+</ol>
+<ul>
+<li><strong>bin log是追加写</strong>，写满一个文件就创建一个新的文件接着写，不会覆盖旧日志，<strong>保留的是全量日志</strong>；</li>
+<li><strong>redo log是循环写</strong>，日志空间大小是固定的，全部写满就从头开始，保<strong>存未被刷入磁盘的脏页日志</strong>；</li>
+</ul>
+<ol start="4">
+<li><strong>用途不同:</strong></li>
+</ol>
+<ul>
+<li>bin log用于备份恢复，主从复制（一致性）；</li>
+<li>redo log用于掉电等故障恢复 （持久性）；</li>
+</ul>
+<ol start="5">
+<li><strong>写入时机不同</strong>：</li>
+</ol>
+<ul>
+<li>bin log在<strong>事务提交之后</strong>才会被写入磁盘，因此可能会有一定的延迟；</li>
+<li>redo log在<strong>事务提交之前</strong>就会被写入磁盘，确保了事务的持久性；</li>
+</ul>
+<p><strong>如果不小心把整个数据库的数据删除了，那么需要使用bin log来进行恢复，因为bin log保留了全量日志，这也是为什么redo log不行。</strong></p>
+<h3 id="主从复制如何实现（依赖bin-log）："><a href="#主从复制如何实现（依赖bin-log）：" class="headerlink" title="主从复制如何实现（依赖bin log）："></a>主从复制如何实现（依赖bin log）：</h3><p>复制的过程就是将<strong>bin log中的数据从主库传输到从库上</strong>。这个过程一般是<strong>异步</strong>的。</p>
+<p><strong>MySQL 集群的主从复制过程</strong>分为三个阶段：</p>
+<ul>
+<li><strong>写入 bin log</strong>： 主库写 bin log，提交事务，并更新本地存储的数据；</li>
+<li><strong>同步 bin log</strong>：把bin log复制到所有从库上，每个从库把bin log写到relay log暂存日志中，返回给主库一个 复制成功 的响应；</li>
+<li><strong>回放 bin log</strong>：回放 bin log，并更新存储引擎中的数据：从库创建一个用于回放 bin log的线程，去读relay log中继日志，然后回放bin log更新数据，最终实现主从的数据一致性。</li>
+</ul>
+<p><strong>主从复制模型</strong>：</p>
+<ul>
+<li>同步复制：很烂，主库要所有从库都完成复制才能返回客户端的结果，性能很差。</li>
+<li><strong>异步复制</strong>：默认的模型，这种模式下，<strong>一旦主库发生宕机，数据就会发生丢失</strong>。</li>
+<li><strong>半同步复制</strong>：5.7版本后增加的一种方式，事务线程不用等待所有从库复制成功响应，只<strong>要一部分复制成功响应回来就行。</strong>这种方式兼顾了同步复制和异步复制的有点，<strong>即使出现主库宕机，至少还有一个从库有最新的数据，不存在数据丢失的风险。</strong></li>
+</ul>
+<h3 id="为什么需要进行两阶段提交？"><a href="#为什么需要进行两阶段提交？" class="headerlink" title="为什么需要进行两阶段提交？"></a>为什么需要进行两阶段提交？</h3><p>在<strong>持久化</strong>redo log和bin log这两份日志的时候，<strong>如果出现半成功的状态</strong>（两个log有一个持久化成功了，一个没成功），就<strong>会造成主从库内容的不一致性。</strong>这是因为<strong>redo log影响主库的内容，bin log影响从库的内容，所以redo log和bin log必须保持一致才能保证主从一致性。</strong></p>
+<p><strong>半成功就是下面两种情况：</strong></p>
+<ul>
+<li><strong>redo log持久化成功了（事务成功提交了），但是bin log没有持久化成功</strong>：这导致主库恢复后根据redo log 有最新的数据，但是bin log会丢失更新，导致主从复制后，从库里保存的也不是最新的数据。</li>
+<li><strong>bin log持久化成功了，但是redo log没有持久化成功（redo log没持久化成功，那么恢复时会认为该事务无效）</strong>：因为恢复后MySQL认为该事务失效，所以恢复后直接回滚，主库保留的还是旧值。但是bin log里有最新的数据，在主从复制后又会导致不一致问题。</li>
+</ul>
+<p><strong>&#x3D;&#x3D;两阶段提交的内容&#x3D;&#x3D;</strong></p>
+<p>两阶段提交把单个事务的提交分为两个阶段： <strong>准备阶段（prepare）和 提交阶段（commit）</strong>阶段：</p>
+<ul>
+<li>在准备阶段，  协调者 询问两个 参与者（也就是这两个日志）有没有准备好。参与者 会做出应答，表示自己准备好了，或者没有准备好。</li>
+<li>在提交阶段，如果都准备好了，那么协调者 就可以执行 两个日志的持久化过程；如果有任何一个参与者没有准备好，协调者会宣布事务失效，执行事务的回滚操作。</li>
+</ul>
+<p><strong>具体内容概括如下：</strong></p>
+<ul>
+<li><strong>准备阶段：将redo log对应的事务提交状态设置为prepare，然后将redo log刷新到硬盘；</strong></li>
+<li><strong>提交阶段：将bin log刷新到磁盘，接着调用引擎的提交事务接口，将redo log状态设置为commit</strong>（将事务设置为commit状态后，把该状态刷入到磁盘 redo log文件）；</li>
+</ul>
+
     </div>
 
     
@@ -658,7 +1011,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81java%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">一、java基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-8%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. 8种基本数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%8A%80%E6%9C%AF"><span class="nav-number">1.0.2.</span> <span class="nav-text">包装类型的常量池技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%EF%BC%9F"><span class="nav-number">1.0.3.</span> <span class="nav-text">为什么要有包装类型？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%87%AA%E5%8A%A8%E6%8B%86%E8%A3%85%E7%AE%B1%EF%BC%9F%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="nav-number">1.0.4.</span> <span class="nav-text">什么是自动拆装箱？原理？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E8%BF%87%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1%E5%BC%95%E5%8F%91%E7%9A%84NPE%EF%BC%88%E7%A9%BA%E6%8C%87%E9%92%88%EF%BC%89%E9%97%AE%E9%A2%98%E4%B9%88%EF%BC%9F"><span class="nav-number">1.0.5.</span> <span class="nav-text">遇到过自动拆箱引发的NPE（空指针）问题么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String%EF%BC%8CStringBuffer%E5%92%8CStringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9FString%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%B6%E4%B8%8D%E5%8F%AF%E5%8F%98%E7%9A%84%EF%BC%9F"><span class="nav-number">1.0.6.</span> <span class="nav-text">String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E8%BD%BD%E5%92%8C%E9%87%8D%E5%86%99%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">1.0.7.</span> <span class="nav-text">重载和重写的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9C-x3D-x3D-%E2%80%9D%E5%92%8C%E2%80%9Cequals-%E2%80%9D%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.0.8.</span> <span class="nav-text">“&#x3D;&#x3D;”和“equals ()”的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E5%8F%8D%E5%B0%84%EF%BC%9F%E5%8F%8D%E5%B0%84%E6%9C%89%E4%BB%80%E4%B9%88%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%9F%E4%BD%A0%E6%98%AF%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E5%8F%8D%E5%B0%84%E7%9A%84%EF%BC%88%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A1%86%E6%9E%B6%E9%9C%80%E8%A6%81%E5%8F%8D%E5%B0%84%EF%BC%9F%EF%BC%89"><span class="nav-number">1.0.9.</span> <span class="nav-text">Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%88%E8%B0%88%E5%AF%B9Java%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%8C%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">1.0.10.</span> <span class="nav-text">谈谈对Java注解的理解，解决了什么问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E6%B3%9B%E5%9E%8B%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E7%B1%BB%E5%9E%8B%E6%93%A6%E9%99%A4%EF%BC%9F%E6%B3%9B%E5%9E%8B%E6%9C%89%E5%93%AA%E4%BA%9B%E9%99%90%E5%88%B6%EF%BC%9F%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8B%E5%B8%B8%E7%94%A8%E7%9A%84%E9%80%9A%E9%85%8D%E7%AC%A6%EF%BC%9F"><span class="nav-number">1.0.11.</span> <span class="nav-text">Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E7%B1%BB%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F"><span class="nav-number">1.0.12.</span> <span class="nav-text">内部类了解么？匿名内部类了解么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BIO%EF%BC%8CNIO%EF%BC%8CAIO%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">1.0.13.</span> <span class="nav-text">BIO，NIO，AIO有什么区别？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Spring%E6%A1%86%E6%9E%B6"><span class="nav-number">2.</span> <span class="nav-text">二、Spring框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.1.</span> <span class="nav-text">1.Bean生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96"><span class="nav-number">2.2.</span> <span class="nav-text">2. Spring循环依赖</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="nav-number">3.</span> <span class="nav-text">三、计算机网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B-amp-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">3.1.</span> <span class="nav-text">1. TCP三次握手 &amp; 四次挥手</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM"><span class="nav-number">4.</span> <span class="nav-text">JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-JVM%E5%86%85%E5%AD%98"><span class="nav-number">4.1.</span> <span class="nav-text">1. JVM内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90%EF%BC%9A"><span class="nav-number">4.1.1.</span> <span class="nav-text">jvm内存组成：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">4.1.2.</span> <span class="nav-text">对象创建过程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="nav-number">4.1.3.</span> <span class="nav-text">对象的内存布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.1.4.</span> <span class="nav-text">对象有哪几种引用类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E5%8C%BA"><span class="nav-number">4.1.5.</span> <span class="nav-text">堆内存分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="nav-number">4.1.6.</span> <span class="nav-text">垃圾回收算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">4.1.7.</span> <span class="nav-text">类生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">4.1.8.</span> <span class="nav-text">类加载过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="nav-number">4.1.9.</span> <span class="nav-text">类加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="nav-number">4.1.10.</span> <span class="nav-text">双亲委派机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">4.1.11.</span> <span class="nav-text">使用双亲委派机制的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%A0%B4%E5%9D%8F%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">4.1.12.</span> <span class="nav-text">如何破坏类加载机制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL"><span class="nav-number">5.</span> <span class="nav-text">MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%B4%A2%E5%BC%95"><span class="nav-number">5.1.</span> <span class="nav-text">1. 索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="nav-number">5.1.1.</span> <span class="nav-text">索引分类:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%A0%91%E7%B4%A2%E5%BC%95%EF%BC%88%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95-or-%E4%BA%8C%E7%BA%A7%E7%B4%A2%E5%BC%95%EF%BC%89"><span class="nav-number">5.1.2.</span> <span class="nav-text">B+树索引（主键索引 or 二级索引）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#l"><span class="nav-number">5.1.3.</span> <span class="nav-text">l</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81java%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">一、java基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">8种基本数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%8A%80%E6%9C%AF"><span class="nav-number">1.2.</span> <span class="nav-text">包装类型的常量池技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%EF%BC%9F"><span class="nav-number">1.3.</span> <span class="nav-text">为什么要有包装类型？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%87%AA%E5%8A%A8%E6%8B%86%E8%A3%85%E7%AE%B1%EF%BC%9F%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="nav-number">1.4.</span> <span class="nav-text">什么是自动拆装箱？原理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E8%BF%87%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1%E5%BC%95%E5%8F%91%E7%9A%84NPE%EF%BC%88%E7%A9%BA%E6%8C%87%E9%92%88%EF%BC%89%E9%97%AE%E9%A2%98%E4%B9%88%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">遇到过自动拆箱引发的NPE（空指针）问题么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String%EF%BC%8CStringBuffer%E5%92%8CStringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9FString%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%B6%E4%B8%8D%E5%8F%AF%E5%8F%98%E7%9A%84%EF%BC%9F"><span class="nav-number">1.6.</span> <span class="nav-text">String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%80%9C-x3D-x3D-%E2%80%9D%E5%92%8C%E2%80%9Cequals-%E2%80%9D%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.7.</span> <span class="nav-text">“&#x3D;&#x3D;”和“equals ()”的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E5%8F%8D%E5%B0%84%EF%BC%9F%E5%8F%8D%E5%B0%84%E6%9C%89%E4%BB%80%E4%B9%88%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%9F%E4%BD%A0%E6%98%AF%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E5%8F%8D%E5%B0%84%E7%9A%84%EF%BC%88%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A1%86%E6%9E%B6%E9%9C%80%E8%A6%81%E5%8F%8D%E5%B0%84%EF%BC%9F%EF%BC%89"><span class="nav-number">1.8.</span> <span class="nav-text">Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%88%E8%B0%88%E5%AF%B9Java%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%8C%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">1.9.</span> <span class="nav-text">谈谈对Java注解的理解，解决了什么问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E6%B3%9B%E5%9E%8B%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E7%B1%BB%E5%9E%8B%E6%93%A6%E9%99%A4%EF%BC%9F%E6%B3%9B%E5%9E%8B%E6%9C%89%E5%93%AA%E4%BA%9B%E9%99%90%E5%88%B6%EF%BC%9F%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8B%E5%B8%B8%E7%94%A8%E7%9A%84%E9%80%9A%E9%85%8D%E7%AC%A6%EF%BC%9F"><span class="nav-number">1.10.</span> <span class="nav-text">Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E7%B1%BB%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F"><span class="nav-number">1.10.1.</span> <span class="nav-text">内部类了解么？匿名内部类了解么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BIO%EF%BC%8CNIO%EF%BC%8CAIO%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">1.10.2.</span> <span class="nav-text">BIO，NIO，AIO有什么区别？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java%E9%9B%86%E5%90%88"><span class="nav-number">2.</span> <span class="nav-text">Java集合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%A0%E7%A7%8D%E9%9B%86%E5%90%88%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">几种集合的数据结构：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JUC"><span class="nav-number">3.</span> <span class="nav-text">JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile%E5%85%B3%E9%94%AE%E5%AD%97%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">volatile关键字：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#synchronized%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">3.2.</span> <span class="nav-text">synchronized关键字</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Spring%E6%A1%86%E6%9E%B6"><span class="nav-number">4.</span> <span class="nav-text">二、Spring框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">4.1.</span> <span class="nav-text">1.Bean生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96"><span class="nav-number">4.2.</span> <span class="nav-text">2. Spring循环依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Spring%E4%BA%8B%E5%8A%A1"><span class="nav-number">4.3.</span> <span class="nav-text">3. Spring事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%EF%BC%9A"><span class="nav-number">4.3.1.</span> <span class="nav-text">spring事务隔离级别：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E8%A1%8C%E4%B8%BA%EF%BC%9A"><span class="nav-number">4.3.2.</span> <span class="nav-text">Spring事务传播行为：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%A4%B1%E6%95%88%E5%9C%BA%E6%99%AF"><span class="nav-number">4.3.3.</span> <span class="nav-text">事务失效场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E4%B8%8D%E5%9B%9E%E6%BB%9A%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="nav-number">4.3.4.</span> <span class="nav-text">事务不回滚场景：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="nav-number">5.</span> <span class="nav-text">三、计算机网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B-amp-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">5.1.</span> <span class="nav-text">1. TCP三次握手 &amp; 四次挥手</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81JVM"><span class="nav-number">6.</span> <span class="nav-text">四、JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-JVM%E5%86%85%E5%AD%98"><span class="nav-number">6.1.</span> <span class="nav-text">1. JVM内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90%EF%BC%9A"><span class="nav-number">6.1.1.</span> <span class="nav-text">jvm内存组成：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">6.1.2.</span> <span class="nav-text">对象创建过程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="nav-number">6.1.3.</span> <span class="nav-text">对象的内存布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">6.1.4.</span> <span class="nav-text">对象有哪几种引用类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E5%8C%BA"><span class="nav-number">6.1.5.</span> <span class="nav-text">堆内存分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="nav-number">6.1.6.</span> <span class="nav-text">垃圾回收算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">6.1.7.</span> <span class="nav-text">类生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">6.1.8.</span> <span class="nav-text">类加载过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="nav-number">6.1.9.</span> <span class="nav-text">类加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="nav-number">6.1.10.</span> <span class="nav-text">双亲委派机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">6.1.11.</span> <span class="nav-text">使用双亲委派机制的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%A0%B4%E5%9D%8F%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">6.1.12.</span> <span class="nav-text">如何破坏类加载机制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81MySQL"><span class="nav-number">7.</span> <span class="nav-text">五、MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E5%9F%BA%E7%A1%80"><span class="nav-number">7.1.</span> <span class="nav-text">0.基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E6%9D%A1SQL%E6%89%A7%E8%A1%8C%E7%9A%84%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="nav-number">7.1.1.</span> <span class="nav-text">一条SQL执行的步骤：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%B4%A2%E5%BC%95"><span class="nav-number">7.2.</span> <span class="nav-text">1. 索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="nav-number">7.2.1.</span> <span class="nav-text">索引分类:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%A0%91%E7%B4%A2%E5%BC%95%EF%BC%88%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95-or-%E4%BA%8C%E7%BA%A7%E7%B4%A2%E5%BC%95%EF%BC%89"><span class="nav-number">7.2.2.</span> <span class="nav-text">B+树索引（主键索引 or 二级索引）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95-amp-%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8%E4%BC%98%E5%8C%96"><span class="nav-number">7.2.3.</span> <span class="nav-text">联合索引 &amp; 索引下推优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%AD%90%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">7.2.4.</span> <span class="nav-text">⭐索引失效的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%B4%A2%E5%BC%95%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">7.2.5.</span> <span class="nav-text">优化索引的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-number">7.2.6.</span> <span class="nav-text">索引存储结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-%E8%A1%A8%E7%9A%84%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84"><span class="nav-number">7.2.7.</span> <span class="nav-text">MySQL 表的物理结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BA%8B%E5%8A%A1"><span class="nav-number">7.3.</span> <span class="nav-text">2.  事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">7.3.1.</span> <span class="nav-text">2.1 事务隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E4%B8%AA%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%EF%BC%9A"><span class="nav-number">7.3.1.1.</span> <span class="nav-text">四个隔离级别：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E4%B8%AA%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">7.3.1.2.</span> <span class="nav-text">四个隔离级别是如何实现的</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-MySQL%E9%94%81"><span class="nav-number">7.4.</span> <span class="nav-text">3.  MySQL锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E9%94%81%EF%BC%9A"><span class="nav-number">7.4.1.</span> <span class="nav-text">全局锁：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E7%BA%A7%E9%94%81"><span class="nav-number">7.4.2.</span> <span class="nav-text">表级锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E7%BA%A7%E9%94%81%EF%BC%88%E5%8F%AA%E6%9C%89InnoDB-%E6%94%AF%E6%8C%81%EF%BC%89"><span class="nav-number">7.4.3.</span> <span class="nav-text">行级锁（只有InnoDB 支持）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%97%A5%E5%BF%97"><span class="nav-number">7.5.</span> <span class="nav-text">4. 日志</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL%E7%9A%84%E4%B8%89%E4%B8%AA%E6%97%A5%E5%BF%97%EF%BC%9A"><span class="nav-number">7.5.1.</span> <span class="nav-text">MySQL的三个日志：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Eundo-log"><span class="nav-number">7.5.2.</span> <span class="nav-text">关于undo log:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Ebuffer-pool"><span class="nav-number">7.5.3.</span> <span class="nav-text">关于buffer pool:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Eredo-log"><span class="nav-number">7.5.4.</span> <span class="nav-text">关于redo log:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redo-log-%E5%92%8C-undo-log%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">7.5.5.</span> <span class="nav-text">redo log 和 undo log的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bin-log%E4%B8%8E-redo-log%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">7.5.6.</span> <span class="nav-text">bin log与 redo log的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%88%E4%BE%9D%E8%B5%96bin-log%EF%BC%89%EF%BC%9A"><span class="nav-number">7.5.7.</span> <span class="nav-text">主从复制如何实现（依赖bin log）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%BF%9B%E8%A1%8C%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%9F"><span class="nav-number">7.5.8.</span> <span class="nav-text">为什么需要进行两阶段提交？</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -672,7 +1025,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/test1/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
