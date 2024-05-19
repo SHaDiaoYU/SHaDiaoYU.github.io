@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"shadiaoyu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、java基础8种基本数据类型byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false） 包装类型的常量池技术Byte、Short、Integer、Long这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="八股文">
+<meta property="og:url" content="http://shadiaoyu.github.io/2024/02/27/%E5%85%AB%E8%82%A1%E6%96%87/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一、java基础8种基本数据类型byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false） 包装类型的常量池技术Byte、Short、Integer、Long这">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228203224835.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228203836711.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228210012986.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240507210723973.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240507210744195.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240518144521730.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240429195215797.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240430153508438.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517145008423.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517145304062.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517145901465.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240516210648052.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240516211658772.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517141414135.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240514155139282.png">
+<meta property="article:published_time" content="2024-02-27T11:16:58.000Z">
+<meta property="article:modified_time" content="2024-05-18T08:28:47.062Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="求职">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228203224835.png">
+
+<link rel="canonical" href="http://shadiaoyu.github.io/2024/02/27/%E5%85%AB%E8%82%A1%E6%96%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>八股文 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2024/02/27/%E5%85%AB%E8%82%A1%E6%96%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          八股文
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-27 19:16:58" itemprop="dateCreated datePublished" datetime="2024-02-27T19:16:58+08:00">2024-02-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-05-18 16:28:47" itemprop="dateModified" datetime="2024-05-18T16:28:47+08:00">2024-05-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="一、java基础"><a href="#一、java基础" class="headerlink" title="一、java基础"></a>一、java基础</h1><h2 id="8种基本数据类型"><a href="#8种基本数据类型" class="headerlink" title="8种基本数据类型"></a>8种基本数据类型</h2><p>byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false）</p>
+<h2 id="包装类型的常量池技术"><a href="#包装类型的常量池技术" class="headerlink" title="包装类型的常量池技术"></a><strong>包装类型的常量池技术</strong></h2><p>Byte、Short、Integer、Long这 4 种包装类默认创建了数值 [-128，127] 的相应类型的缓存数据。Character 创建了数值在 [0,127] 范围的缓存数据，Boolean直接返回True或False。</p>
+<p><strong>两种浮点类型的包装类Float、Double并没有实现包装类技术。</strong></p>
+<p><strong>所有整型包装类对象之间值的比较，全部使用equals方法进行比较。</strong></p>
+<p>我们以 <code>int与Integer</code> 作为例子，看下”&#x3D;&#x3D;”和”equal()”方法：</p>
+<p>1）基本型和封装类型进行”&#x3D;&#x3D;”运算符的比较，封装类型将会自动拆箱变为基本型后再进行比较，因此Integer(0)会自动拆箱为int类型再进行比较。</p>
+<p>2）两个Integer类型进行”&#x3D;&#x3D;”比较，如果其值在-128至127，那么返回true，否则返回false, 这跟Integer.valueOf()的缓冲对象有关，后面会说。</p>
+<p>3）两个封装类型进行equals()比较，首先equals()会比较类型，如果类型相同，则继续比较值，如果值也相同，返回true。</p>
+<p>4）基本型封装类型调用equals(),但是参数是基本类型，这时候，先会进行自动装箱，基本型转换为其封装类型，再进行3中的比较。</p>
+<h2 id="为什么要有包装类型？"><a href="#为什么要有包装类型？" class="headerlink" title="为什么要有包装类型？"></a>为什么要有包装类型？</h2><ul>
+<li>Java是一种面向对象编程的语言，它要求所有的东西都是对象。然而，基本数据类型不是对象，它们是原始的数据类型，无法直接参与面向对象中的特性（比如继承、多态等）。因此引入了包装类型，使其能够像其它对象那样参与面向对象。</li>
+<li><strong>泛型的支持</strong>，Java5引入了泛型，但是泛型要求类型参数必须是对象类型，不能是基本数据类型。因此，如果要在集合类中存储基本数据类型，就需要使用对应的包装类型。</li>
+<li><strong>空值的支持</strong>，包装类型可以表示空值（null），而基本数据类型不行。</li>
+<li>包装类型提供了一些额外的方法和功能，使得对基本数据类型的操作更加方便。</li>
+</ul>
+<h2 id="什么是自动拆装箱？原理？"><a href="#什么是自动拆装箱？原理？" class="headerlink" title="什么是自动拆装箱？原理？"></a><strong>什么是自动拆装箱？原理？</strong></h2><h2 id="遇到过自动拆箱引发的NPE（空指针）问题么？"><a href="#遇到过自动拆箱引发的NPE（空指针）问题么？" class="headerlink" title="遇到过自动拆箱引发的NPE（空指针）问题么？"></a>遇到过自动拆箱引发的NPE（空指针）问题么？</h2><ul>
+<li>数据库的查询结果可能是null，因为自动拆箱，使用基本数据类型进行接受会有NPE风险。</li>
+<li>在三目运算（b?x:y）中，当 x和y的类型不一致时，会发生自动拆箱，将x,y全部转换为基本类型，在自动拆箱的过程中有可能NPE。</li>
+</ul>
+<h2 id="String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？"><a href="#String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？" class="headerlink" title="String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？"></a>String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？</h2><ul>
+<li><p>可变性：String是不可变的，StringBuffer和StringBuilder是可变的；</p>
+</li>
+<li><p>线程安全性：String和StringBuffer是线程安全的，可以被多个线程安全的使用，StringBuilder不是线程安全的</p>
+</li>
+<li><p>StringBuffer的性能相对较低，因为它的所有公共方法都是同步的，这意味着在多线程环境下会有性能开销。</p>
+<p>StringBuilder的性能优于StringBuffer，但因为它的方法都不是同步的，因此在单线程环境下更有效。</p>
+</li>
+<li><p>String实现了serializable接口，可以被序列化。</p>
+</li>
+</ul>
+<p>重载和重写的区别？**</p>
+<ul>
+<li><p>重载指的是在同一个类中，可以定义多个方法具有相同的名称但具有不同的参数列表（参数类型、参数个数、参数顺序）；</p>
+<p>重写指的是子类重新定义（覆盖）了父类中具有相同名称、参数列表和返回类型的方法。</p>
+</li>
+<li><p>重载方法可以有不同的返回类型，但不能仅仅通过返回类型的不同来区分方法。</p>
+</li>
+<li><p>重写方法具有与被重写方法相同的方法签名，包括方法名、参数列表和返回类型。</p>
+</li>
+<li><p>重写方法不能降低访问权限，即子类中重写的方法的访问权限不能比父类中被重写的方法的访问权限更低。</p>
+</li>
+<li><p>重载是编译时多态，重写是运行时多态。</p>
+</li>
+<li><p>重写方法一定不能抛出新的检查异常，或者比被重写方法声明更加宽泛的检查型异常。</p>
+</li>
+</ul>
+<p><strong>总结：方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的参数列表，有兼容的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求，不能根据返回类型进行区分。</strong></p>
+<h2 id="“-x3D-x3D-”和“equals-”的区别"><a href="#“-x3D-x3D-”和“equals-”的区别" class="headerlink" title="“&#x3D;&#x3D;”和“equals ()”的区别"></a>“&#x3D;&#x3D;”和“equals ()”的区别</h2><ul>
+<li><p>对于<code>==</code>，比较的是值是否相等</p>
+<ul>
+<li>如果作用于基本数据类型的变量，则直接比较存储的值是否相等</li>
+<li>如果作用于引用类型的变量，则比较的是所指向的对象的地址是否相等</li>
+</ul>
+<p>（其实&#x3D;&#x3D;比较的不管是基本数据类型还是引用类型，比较的都是值，只是引用类型变量存储的是对象的地址。）</p>
+</li>
+<li><p>对于<code>equals()</code>方法，根据是否重写equals方法，分为两种情况：</p>
+<ul>
+<li><strong>类没有重写equals方法：</strong>和&#x3D;&#x3D;的效果一样，都是比较引用类型的变量所指向的对象的地址。</li>
+<li><strong>类重写了equals方法：</strong>比较两个对象的属性是否相等，如果它们的属性相等，则返回true（即，认为这两个对象相等。）</li>
+<li><strong>特别注意的是，equals()方法不能作用于基本数据类型的变量。</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）"><a href="#Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）" class="headerlink" title="Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）"></a>Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）</h2><ul>
+<li>反射机制是在运行时，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意对象，都能调用它的任意一个方法。在Java中，只要给定类的名字，就可以通过反射机制来获得类的所有信息。这种动态获取的信息以及动态调用对象的方法的功能称为java的反射机制。</li>
+<li>反射机制的优缺点：<ul>
+<li>优点：能够运行时动态获取类的实例，提高灵活性和通用性；可以使用反射编写更加通用的代码，减少组件之间的耦合；反射是实现动态代理机制的基础。</li>
+<li>缺点：使用反射基本是解释执行，对执行速度有影响。</li>
+</ul>
+</li>
+<li>对于反射的理解（为什么框架需要反射）：<ul>
+<li>通过反射，框架可以在不了解具体类结构的情况下，实现对用户代码的调用和管理，从而提高了框架的灵活性和可扩展性。</li>
+<li>依赖注入：在依赖注入中，框架通常需要动态的创建和注入依赖对象，而这些对象的类型通常是在运行时才确定的。通过反射，框架可以实现自动化的依赖注入，无需显式地在代码中指定对象的类型。</li>
+<li>AOP：框架通常使用动态代理和反射机制来实现AOP，以在运行时动态地植入切面逻辑。</li>
+<li>框架通常需要处理大量的配置信息和元数据，以实现各种功能和行为。通过反射，框架可以动态地解析和处理配置文件和元数据，从而实现对各种不同情况的适应性。</li>
+</ul>
+</li>
+</ul>
+<h2 id="谈谈对Java注解的理解，解决了什么问题？"><a href="#谈谈对Java注解的理解，解决了什么问题？" class="headerlink" title="谈谈对Java注解的理解，解决了什么问题？"></a>谈谈对Java注解的理解，解决了什么问题？</h2><p>在写程序时，有时候想给一些特殊的地方加上标记，告诉编译器或者其他工具，这些地方有一些特殊的意义。Java注解就是一种在代码中添加特殊标记的方式，这些标记可以帮助编译器、工具或者其他程序理解你的代码，并可以触发一些额外的处理或行为。</p>
+<ul>
+<li>注解解决的问题：<ul>
+<li>注解可以用于为代码提供更多的文档化信息，这样做可以增加代码的可读性和可维护性，使得代码更容易理解和使用。</li>
+<li>注解可以用于在编译时对程序进行动态检查和验证，从而减少运行时错误。</li>
+<li>注解可以用于驱动代码生成和自动化处理工具，从而减少重复性工作和提高开发效率（如通过编写自定义的注解，可以在编译时根据注解生成代码、配置文件或其他资源）</li>
+<li>注解可以用于配置和扩展框架和库的行为，，使得它们更加灵活和可定制（如在类、方法或字段上添加注解配置框架的行为，以实现依赖注入，AOP等功能）</li>
+</ul>
+</li>
+</ul>
+<h2 id="Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？"><a href="#Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？" class="headerlink" title="Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？"></a>Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？</h2><ul>
+<li>Java 泛型是一种在<strong>编译时</strong>进行类型检查和类型安全的机制，它允许程序员在编写代码时指定类、接口和方法可以支持任意类型（包括类、接口和原始类型）。Java 泛型提供了参数化类型的概念，使得代码可以更加通用和类型安全（可读性更好，更安全）。</li>
+<li>Java 泛型的主要目的是<strong>在编译时捕获类型错误</strong>，并在编译时发现这些错误，从而避免在运行时抛出类型转换异常。它提供了编译时类型安全检查，使得代码更加健壮、可读性更高，并且减少了强制类型转换的需要。</li>
+<li>Java 中的泛型是通过类型擦除实现的，这意味着在编译时会将泛型信息擦除掉，以确保与旧版 Java 代码的兼容性。这也导致了一些泛型相关的限制和局限性。（在运行时无法获取泛型类型的信息，在运行时，数组的元素类型必须是具体的非泛型类型）。</li>
+<li>泛型的限制：<ul>
+<li>类型擦除：这意味着在编译后，泛型信息会被擦除掉，因此在运行时无法获取泛型类型的具体信息，这限制了对泛型类型的操作和反射行为。</li>
+<li>无法创建参数化类型的数组：例如<code>new ArrayList&lt;String&gt;[]  </code> 是非法的。这是因为在运行时无法获取泛型类型的信息。</li>
+<li>在静态上下文（如静态方法或静态初始化块）中无法引用泛型类型的类型参数：因为类型参数是实例化时才确定的，而静态成员在类加载时就已经存在，此时无法确定类型参数的具体值。</li>
+<li>不能使用基本类型作为类型参数。</li>
+<li>无法实例化泛型类型的具体化对象。</li>
+<li>无法创建泛型数组列表。</li>
+<li>不能捕获泛型类型的异常：泛型类型不能用作catch块中的异常类型。</li>
+<li>不能实例化泛型类型的数组。</li>
+</ul>
+</li>
+</ul>
+<ol start="12">
+<li><h3 id="内部类了解么？匿名内部类了解么？"><a href="#内部类了解么？匿名内部类了解么？" class="headerlink" title="内部类了解么？匿名内部类了解么？"></a>内部类了解么？匿名内部类了解么？</h3><ul>
+<li><p>内部类：如果A类需要直接访问B类中的成员，而B类又需要建立A类的对象，这时为了方便设计和访问，直接将A类定义在B类中就可以了。A类就称为内部类。</p>
+</li>
+<li><p>内部类可以直接访问外部类的成员。但是外部类访问内部类时，必须先创建内部类对象。</p>
+</li>
+<li><p>内部类定义在外部类的成员位置上，可以使用一些成员修饰符如private，static。不同的修饰有不同的情况：</p>
+<ul>
+<li>默认修饰符default：直接访问内部类格式：<code>外部类名.内部类名 = 外部类对象.内部类对象(Outer.Inner in = new Outer.Inner())</code>。但这种方式不常见，因为定义内部类就是为了封装。想要获取内部类对象通常都需要通过外部类的方法来获取。这样可以对内部类对象进行控制。</li>
+<li>私有修饰符private：通常内部类被封装，都会被私有化，因为封装性不让其他程序直接访问。</li>
+<li>静态修饰符static：如果内部类被静态修饰，相当于外部类，会出现访问局限性，内部类只能访问外部类中的静态成员。<strong>注意：如果内部类中定义了静态成员，那么该内部类必须是静态的。</strong></li>
+</ul>
+</li>
+<li><p>匿名内部类是内部类的简化写法。一般只使用一次就可以使用这种形式。匿名内部类其实就是一个匿名子类对象。想要定义匿名内部类，前提是<strong>内部类必须继承一个父类或者实现一个接口。</strong></p>
+<p>匿名内部类的格式：<code>new 父类名&amp;接口名&#123;定义子类成员或者覆盖父类方法&#125;.方法</code>。</p>
+</li>
+<li><p>匿名内部类的使用场景：当函数的参数是接口类型引用的时候，如果接口中的方法不超过3个。可以通过匿名内部类来完成参数的传递。（换句话说就是，创建匿名内部类时，该类中封装的方法不要太多，最好两个或者两个以内）</p>
+</li>
+</ul>
+</li>
+<li><h3 id="BIO，NIO，AIO有什么区别？"><a href="#BIO，NIO，AIO有什么区别？" class="headerlink" title="BIO，NIO，AIO有什么区别？"></a>BIO，NIO，AIO有什么区别？</h3><ul>
+<li><p>BIO（Blocking I&#x2F;O）：<strong>同步阻塞</strong>I&#x2F;O模式，数据的读取和写入必须阻塞在同一个线程内等待其完成。</p>
+<ul>
+<li>传统BIO（一请求一应答）：</li>
+</ul>
+  <img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228203224835.png" alt="image-20240228203224835" style="zoom: 67%;" />
+
+<p>  要使该IO模型能够同时处理多个客户端请求，就必须使用多线程，也就是说它在接收到客户端连接请求后为每一个客户端创建一个新的线程进行链路处理，处理完成后，通过输出流返回应答给客户端，线程销毁。<strong>这就是一请求一应答</strong>。但是这个连接如果不做任何事情的话就会造成不必要的线程浪费，这种情况可以通过使用<strong>线程池</strong>技术改善。</p>
+<ul>
+<li><p>伪异步I&#x2F;O：引入了线程池来缓解资源浪费问题，但本质上还是传统BIO同步阻塞那一套。无法从根本上解决问题。</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228203836711.png" alt="image-20240228203836711" style="zoom: 67%;" /></li>
+</ul>
+</li>
+<li><p>NIO（New I&#x2F;O）：NIO是一种<strong>同步非阻塞</strong>的IO模型，NIO中的N可以理解为Non-blocking，不单纯是New。它支持面向缓冲的，基于通道的I&#x2F;O操作方法。 </p>
+<ul>
+<li>NIO提供了与传统BIO模型中的 <code>Socket</code> 和 <code>ServerSocket</code> 相对应的 <code>SocketChannel</code> 和 <code>ServerSocketChannel</code> 两种不同的套接字通道实现,两种通道都支持阻塞和非阻塞两种模式。</li>
+<li>阻塞模式使用就像传统中的支持一样，比较简单，但是性能和可靠性都不好；非阻塞模式正好与之相反。</li>
+<li>对于低负载、低并发的应用程序，可以使用同步阻塞I&#x2F;O来提升开发速率和更好的维护性；对于高负载、高并发的（网络）应用，应使用 NIO 的非阻塞模式来开发。</li>
+</ul>
+</li>
+<li><p>NIO与IO的区别（<strong>阻塞与非阻塞，三大组件</strong>）：</p>
+<ul>
+<li><p>NIO是非阻塞的，IO是阻塞的</p>
+</li>
+<li><p><strong>Buffer</strong>：IO面向IO流（Stream oriented），而NIO面向缓冲区（Buffer oriented）。在面向流的IO中，可以将数据直接写入或者将数据直接读到Stream对象中。虽然Stream也有Buffer开头的扩展类，但是只是流的包装类，还是从流读到缓冲区，而NIO是直接读到Buffer中进行操作。</p>
+<p>在NIO中，所有数据都是用缓冲区处理的，在读取数据时，它直接读缓冲区中的；在写数据时，它从缓冲区中读。任何时候访问NIO中的数据，都是通过缓冲区进行操作。</p>
+</li>
+<li><p><strong>Channel</strong>：NIO通过Channel（通道）进行读写，通道是双向的，可读也可写。而流的读写是单向的。通道只能和Buffer交互。因为Buffer，通道可以异步的读写。</p>
+</li>
+<li><p><strong>Selectors</strong>： NIO有选择器，而IO没有。选择器用于使用单个线程处理多个通道，因此，他需要较少的线程来处理这些通道。线程之间的切换对于操作系统来说是昂贵的。因此，为了提高效率使用选择器是有效的。</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240228210012986.png" alt="image-20240228210012986" style="zoom:50%;" /></li>
+</ul>
+</li>
+<li><p>AIO（Asynchronous I&#x2F;O）：AIO也就是NIO 2。在Java7中引入了NIO 2，它是<strong>异步非阻塞</strong>的。异步IO是基于时间和回调机制实现的。AIO是异步IO的缩写，虽然NIO在网络操作中，提供了非阻塞的方法，但是NIO的IO行为还是同步的。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="Java集合"><a href="#Java集合" class="headerlink" title="Java集合"></a>Java集合</h1><h2 id="几种集合的数据结构："><a href="#几种集合的数据结构：" class="headerlink" title="几种集合的数据结构："></a>几种集合的数据结构：</h2><ul>
+<li>HashMap：哈希表 + 链表 ，无序，允许键和值为null，线程不安全</li>
+<li>LinkedHashMap： 哈希表 + 双向链表，保持插入顺序或访问顺序。</li>
+<li>TreeMap： 基于红黑树实现的有序Map</li>
+<li>Hashtable：基于哈希表实现的map，线程安全</li>
+<li>concurrentHashMap：基于哈希表实现的线程安全的 Map，支持高并发操作。</li>
+</ul>
+<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="volatile关键字："><a href="#volatile关键字：" class="headerlink" title="volatile关键字："></a>volatile关键字：</h2><p>volatile关键字保证了 <strong>可见性（一个线程对共享变量进行修改后，其他线程能立即看到这个修改）</strong> 和 <strong>有序性（程序执行的顺序与代码的顺序一致）</strong></p>
+<p><strong>volatile如何保证可见性：</strong></p>
+<ul>
+<li>一个变量被声明为volatile时，<strong>线程在写入变量时</strong>， 不会立即把值缓存到寄存器或其他地方，而是<strong>会把值刷新回主内存。</strong></li>
+<li>当其他线程<strong>读取到该共享变量</strong>，<strong>会从主存中获取最新值</strong>，而不是使用当前线程的本地内存中的值。</li>
+</ul>
+<p><strong>volatile如何保证有序性：</strong></p>
+<ul>
+<li><p>volatile通过<strong>限制指令重排序</strong>（编译器重排序 和 处理器重排序 这两种重排序）来保证有序性的。</p>
+</li>
+<li><p><strong>写操作</strong> 加的屏障是 阻止<strong>上方</strong>其它写操作越过屏障<strong>排到 volatile变量写之下</strong>；</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240507210723973.png" alt="image-20240507210723973"></p>
+</li>
+<li><p><strong>读操作</strong> 加的屏障是阻止 下方其它读操作越过屏障<strong>排到 volatile变量读之上</strong>；</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240507210744195.png" alt="image-20240507210744195"></p>
+</li>
+</ul>
+<h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2><h3 id="（1）synchronized的三种用法："><a href="#（1）synchronized的三种用法：" class="headerlink" title="（1）synchronized的三种用法："></a><strong>（1）synchronized的三种用法：</strong></h3><ul>
+<li>修饰实例方法：这种方式相当于 synchronized（this对象），进入同步代码块之前需要获得 当前对象实例的锁；</li>
+<li>修饰静态方法：这种用法会作用于类的所有对象实例，进入同步块之前要获得当前 class的锁；</li>
+<li>修饰代码块： synchronized(类.class) 表示进⼊同步 代码前要获得 当前 class 的锁；</li>
+</ul>
+<h3 id="（2）synchronized-怎么保持可见性的："><a href="#（2）synchronized-怎么保持可见性的：" class="headerlink" title="（2）synchronized 怎么保持可见性的："></a><strong>（2）synchronized 怎么保持可见性的：</strong></h3><ul>
+<li>线程加锁前，清空工作内存中共享变量的值，从而从主存中读取最新的共享变量值；</li>
+<li>线程加锁后，其他线程无法获取主存中的共享变量；</li>
+<li>线程解锁前，会将最新的共享变量值刷新到主存中。</li>
+</ul>
+<h3 id="（3）synchronized-怎么保持有序性的："><a href="#（3）synchronized-怎么保持有序性的：" class="headerlink" title="（3）synchronized 怎么保持有序性的："></a><strong>（3）synchronized 怎么保持有序性的：</strong></h3><ul>
+<li>synchronized同步的代码块，一次只能被一个线程拥有，所以synchronized保证<strong>同一时刻，代码是单线程执行的。</strong> <strong>因为as-if-serial语义的存在，单线程的程序能保证最终结果是有序的，但是不保证不 会指令重排。</strong></li>
+</ul>
+<h3 id="（4）synchronized怎么实现可重入的："><a href="#（4）synchronized怎么实现可重入的：" class="headerlink" title="（4）synchronized怎么实现可重入的："></a><strong>（4）synchronized怎么实现可重入的：</strong></h3><ul>
+<li>synchronized锁对象的时候有一个<strong>锁计数器，它会记录下线程获取锁的次数，在执行完代码块后，计数器 -1，直到计数器清零，就释放锁了。</strong></li>
+</ul>
+<h3 id="（5）synchronized的实现原理："><a href="#（5）synchronized的实现原理：" class="headerlink" title="（5）synchronized的实现原理："></a><strong>（5）synchronized的实现原理：</strong></h3><ul>
+<li><p>synchronized<strong>修饰代码块</strong>的时候，JVM<strong>采用 monitor_enter 和 monitor_exit 两个指令来实现同步</strong>，<strong>monitor_enter 指向同步代码块的开始位置，monitor_exit指向同步代码块的结束位置</strong>。</p>
+</li>
+<li><p>synchronized<strong>修饰同步方法</strong>时，JVM<strong>采用 ACC_SYNCHRONIZED标记来实现同步</strong>，这个标识指明了该方法是一个同步方法。</p>
+</li>
+<li><p>monitor_enter、monitor_exit或者ACC_SYNCHRONIZED，其实<strong>都是基于对象的内置锁</strong> （Intrinsic Lock）或称为<strong>监视器锁</strong>（Monitor Lock）。<strong>每个对象都有一个内置锁，当一个线程获取了对象的内置锁时，其他线程必须等待该线程释放锁后才能获取锁</strong>。这样就保证了同一时间只有一个线程才能访问同步代码块或方法。</p>
+</li>
+<li><p>Java虚拟机是基于Monitor对象来实现重量级锁的。在hotspot虚拟机中，monitor是由ObjectMonitor实现的，其源码是C++语言编写的，ObjectMonitor的工作原理如下：</p>
+<ul>
+<li>ObjectMonitor有两个队列： waitset和 entryList。处于wait状态的线程，会被加入到waitSet；处于等待锁block状态的线程，会被加入到entryList中，等待被唤醒。</li>
+<li>owner字段：其指向持有ObjectMonitor对象的线程。</li>
+</ul>
+<p><strong>具体过程如下</strong>：</p>
+</li>
+<li><p>当<strong>多个线程同时访问</strong>同步代码块时，首<strong>先会进入到EntryList中</strong>，然后通过<strong>CAS</strong>的方式尝试<strong>将Monitor中的owner字段设置为当前线程，同时count加一</strong>（锁计数器，获取锁时加1，释放锁时减1）。<strong>若</strong>发现<strong>之前owner的值就是指向当前线程的</strong>，<strong>recursions字段也需要加一</strong>（锁重入次数）。如果CAS尝试获取锁失败，则进入到<strong>EntryList</strong>中。</p>
+</li>
+<li><p>当<strong>获取锁的线程调用wait()<strong>方法，则会将owner设置为null，同时count减一，recursion减一，当前</strong>线程加入到waitSet</strong>中，等待被唤醒。</p>
+</li>
+<li><p>当前线程执行完同步代码块时，会释放锁，count减一，recursion减一。当recursions的值为0时，说明线程已经释放了锁。</p>
+</li>
+</ul>
+<h2 id="锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁"><a href="#锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁" class="headerlink" title="锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)"></a>锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)</h2><p>jdk1.6中，为了减少获取锁和释放锁带来的性能消耗，引入了偏向锁和轻量级锁，锁状态变为了四种。锁的状态会随着竞争激烈程度而升级。并且锁只能升级不能降级（为了提高获取&#x2F;释放锁的效率）。锁升级顺序如下:</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240518144521730.png" alt="image-20240518144521730"></p>
+<h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><p>引入偏向锁的目的：<strong>减少只有一个线程执行同步代码块时的性能消耗</strong>。（没有其他线程竞争，只有1个线程获取到锁）</p>
+<p>⭐一句话总结<strong>偏向锁原理：使用CAS操作将当前线程的ID记录到对象头的mark word中。</strong>具体流程如下：</p>
+<p><strong>偏向锁的获取流程</strong>：</p>
+<ul>
+<li>检查对象头中的<strong>mark word是否为可偏向状态</strong>，如果<strong>不是则升级为轻量级锁</strong>（如果是可偏向状态，那不就说明只有一个线程争抢锁）；</li>
+<li>如果是，<strong>判断mark word中的线程id是否指向当前线程</strong>，如果是，则执行同步代码块（即当前线程是否获得到锁了）；</li>
+<li>如果<strong>不是，则进行CAS操作竞争锁</strong>，如果<strong>竞争到锁了，则将mark word中的线程id设为当前线程id，执行同步代码块；</strong></li>
+<li>如果<strong>竞争失败，则升级为轻量级锁</strong>。</li>
+</ul>
+<p><strong>偏向锁的释放流程</strong>：</p>
+<ul>
+<li><strong>偏向锁的撤销需要到达全局安全点</strong>，全局安全点标识一种状态，<strong>该状态下所有线程都处于暂停状态</strong>（如果存在竞争，就没法安全的撤销偏向锁）。</li>
+<li><strong>判断锁对象是否处于无锁状态</strong>，即获得偏向锁的线程已经退出了临界区。这时<strong>重新竞争的锁的线程会CAS操作替代原来线程的线程ID</strong>（其他线程来获取锁的时候，必须是无锁，因为偏向锁的定义就是只有一个线程竞争锁，如果存在竞争就得进行锁升级）；</li>
+<li><strong>如果获取偏向锁的线程还没退出临界区，此时将偏向锁升级为轻量级锁。</strong></li>
+</ul>
+<h3 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h3><p>引入轻量级锁的目的：<strong>在多线程交替执行同步代码块时（未发生竞争），避免使用互斥量（重量级锁）带来的性能消耗。但多个线程同时进入临界区（发生竞争）则会使得轻量级锁膨胀为重量级锁。</strong></p>
+<p>⭐一句话总结<strong>轻量级锁的原理</strong>：<strong>将对象的mark word复制到当前现成的lock record中，并将对象的mark word变更为指向lock record的指针。</strong></p>
+<p><strong>轻量级锁的获取：</strong></p>
+<ul>
+<li>进行<strong>加锁操作时</strong>，jvm会<strong>判断锁是否已经是重量级锁</strong>。<strong>如果不是</strong>，则会在当前线程栈帧之中<strong>划分出一块空间，作为该锁的锁记录lock record。并且将锁对象的mark word复制到该锁的lock record中；</strong></li>
+<li><strong>复制成功后</strong>，jvm使用<strong>CAS操作</strong>将锁对象头mark word更改为指向lock record的<strong>指针</strong>。并且将<strong>lock record中的owner指针指向锁对象的mark word。</strong><ul>
+<li><strong>如果更新成功，</strong>则当前线程持有该锁，并且锁对象<strong>mark word的锁标志置为“00”</strong>，即<strong>表示此对象正处于轻量级锁的状态。</strong></li>
+<li>如果更新<strong>失败</strong>，需要<strong>判断当前对象的mark word是否指向了当前线程的栈帧</strong>。如果是，则表示该线程已经获取到了当前对象的锁，这是一次<strong>重入</strong>，直接执行同步代码块；如果<strong>不是</strong>，则<strong>表示存在竞争，当前线程通过自旋尝试获取锁，自旋超过一定次数，轻量级锁升级为重量级锁。</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p>如果创建了一个ThreadLocal变量，那么<strong>访问这个变量的每一个线程都会有这个变量的副本</strong>，多个线程操作这个变量的时候，实际是操作自己的本地内存中的变量，从而起到线程隔离的作用。</p>
+<h3 id="Theadlocal的原理"><a href="#Theadlocal的原理" class="headerlink" title="Theadlocal的原理"></a>Theadlocal的原理</h3><p>Thread 类中有一个 <strong>ThreadLocal.ThreadLocalMap</strong> 的成员变量 threadLocals。<strong>ThreadLocalMap内部维护一个Entry&lt;k,v&gt;数组。</strong></p>
+<p><strong>节点类Entry&lt;K,V&gt;<strong>，这个</strong>key不是ThreadLocal对象本身，而是它的一个弱引用</strong>，value就是存放的泛型值。</p>
+<p>每个线程在往ThreadLocal里设置值的时候，都是往自己的ThreadLocalMap中保存，取也是从这里取，从而实现了线程隔离。</p>
+<p><strong>ThreadLocal本身不存储值，它只是作为一个key来让线程往ThreadLocalMap中存取值</strong>。</p>
+<h3 id="ThreadLocal内存泄漏"><a href="#ThreadLocal内存泄漏" class="headerlink" title="ThreadLocal内存泄漏"></a>ThreadLocal内存泄漏</h3><p>因为TheadLocalMap中的<strong>key，是ThreadLocal对象的一个弱引用，而弱引用很容易被回收</strong> （弱引用的回收条件：不管内存够不够，都有可能回收），所以一旦key被jvm回收了，这个<strong>map只有value没有key了，就造成了内存泄露</strong>的问题。</p>
+<p><strong>解决方法就是</strong>：在我们使用完ThreadLocal后，<strong>及时调用remove()方法释放内存空间</strong>。</p>
+<p><strong>为什么key要设计成弱引用</strong>？那就是因为<strong>如果是强引用</strong>，即使线程不再使用某个ThreadLocal对象，该对象也没办法被回收，<strong>还是会造成内存泄漏</strong>。</p>
+<h3 id="ThreadLocalMap的结构"><a href="#ThreadLocalMap的结构" class="headerlink" title="ThreadLocalMap的结构"></a>ThreadLocalMap的结构</h3><p>虽然叫map，但是它没有实现Map接口。ThreadLcoal主要关注两个要素：元素数组 和 散列方法。</p>
+<ul>
+<li>元素数组：是一个table数组，存储Entry类型的元素（就是存放每一个节点），对于每个Entry，key是Thread对象的弱引用，value是存储的object对象。</li>
+<li>散列方法：这里的散列方法就是将 <strong>key映射到 table数组的相应下标</strong>，其使用的是哈希取余法，取出key的threadlocalMapHashCode，然后对数组长度进行取余。<ul>
+<li>没创建一个threadLocal对象，threadlocalMapHashCode就会新增一个 斐波那契数（黄金分割数），它可以让hash分布非常均匀。</li>
+</ul>
+</li>
+</ul>
+<h3 id="ThreadLocalMap如何解决哈希冲突"><a href="#ThreadLocalMap如何解决哈希冲突" class="headerlink" title="ThreadLocalMap如何解决哈希冲突"></a>ThreadLocalMap如何解决哈希冲突</h3><p>其使用 <strong>开放定址法</strong> 来解决哈希冲突，简单来说就是，进行哈希之后，发现当前位置已经存放了一个Entry，那么就<strong>从当前位置开始，向后寻找空闲位置</strong>并放入。</p>
+<p>在查值时，也会先将目标key与当前 key是否一致，不一致就向后寻找直到找到为止。</p>
+<h1 id="二、Spring框架"><a href="#二、Spring框架" class="headerlink" title="二、Spring框架"></a>二、Spring框架</h1><h2 id="1-Bean生命周期"><a href="#1-Bean生命周期" class="headerlink" title="1.Bean生命周期"></a>1.Bean生命周期</h2><p>大致可分为四个阶段： <strong>实例化 -&gt; 属性赋值 -&gt; 初始化 -&gt; 销毁</strong></p>
+<ul>
+<li><strong>（实例化）</strong>首先，在Bean容器中找到SpringBean的定义BeanDefination。</li>
+<li><strong>（实例化）</strong>Bean容器根据Java Reflection API创建一个Bean的实例（调用构造方法实例化bean）。</li>
+<li><strong>（属性赋值）</strong>设置属性（为Bean设置相关属性和依赖、或者说依赖注入）</li>
+<li><strong>（初始化）</strong>初始化Initialization：<ul>
+<li>检查Aware的相关接口并设置相关依赖。如果实现了BeanAware接口，调用setBeanName()方法，传入Bean的名字。</li>
+<li>BeanPostProcessor前置处理；如果实现了 BeanFactoryAware 接⼝，调⽤ setBeanFactory() ⽅法，传⼊ BeanFactory 对 象的实例。 类似，如果实现了其他 *.Aware 接⼝，就调⽤相应的⽅法。</li>
+<li>检查是否实现InitializationBean接口；如果 Bean 实现了 InitializingBean 接⼝，执⾏ afterPropertiesSet() ⽅法。</li>
+<li>检查是否配置自定义的init-method；如果 Bean 在配置⽂件中的定义包含 init-method 属性，执⾏指定的⽅法。</li>
+<li>BeanPostProcessor后置处理</li>
+</ul>
+</li>
+<li>使用中</li>
+<li><strong>（销毁）</strong>销毁<ul>
+<li>是否实现DisposableBean接口</li>
+<li>是否配置自定义的destory-method</li>
+</ul>
+</li>
+<li>结束。</li>
+</ul>
+<h2 id="2-Spring循环依赖"><a href="#2-Spring循环依赖" class="headerlink" title="2. Spring循环依赖"></a>2. Spring循环依赖</h2><ul>
+<li>只有单例Bean才会存在循环依赖。</li>
+<li>当循环依赖的实例都采用setter方法注入，Spring可以解决；都采用构造器方法注入时，spring不可以解决；构造器注入和setter注入同时存在的时候，看天。</li>
+</ul>
+<p><strong>Spring通过三级缓存解决了循环依赖问题：</strong></p>
+<ul>
+<li>一级缓存：singletonObjects<strong>单例池</strong>，用于保存实例化、属性赋值（注入）、初始化完成的bean实例；</li>
+<li>二级缓存：earlySingletonObjects<strong>早期曝光对象</strong>，用于保存实例化完成的bean实例</li>
+<li>三级缓存：singletonFactories<strong>早期曝光对象工厂</strong>，用于保存Bean创建工厂，以便于后面扩展有机会创建代理对象。</li>
+</ul>
+<h2 id="3-Spring事务"><a href="#3-Spring事务" class="headerlink" title="3. Spring事务"></a>3. Spring事务</h2><h3 id="spring事务隔离级别："><a href="#spring事务隔离级别：" class="headerlink" title="spring事务隔离级别："></a>spring事务隔离级别：</h3><ul>
+<li><strong>ISOLATION_DEFAULT： 使用后端数据库的默认隔离级别</strong>，mysql默认 可重复读 级别</li>
+<li>ISOLATION_READ_UNCOMMITTED：即读未提交，最低的隔离级别，不能解决脏读，幻读，不可重复读</li>
+<li>ISOLATION_READ_COMMITTED：即 读已提交，可以解决脏读，不能解决不可重复读 以及 幻读；</li>
+<li>.ISOLATION_REPEATABLE_READ：即 可重复读，可解决脏读，不可重复读，不能解决幻读；</li>
+<li>ISOLATION_SERIALIZABLE： 串行化，完全服从ACID，但是会严重影响性能。</li>
+</ul>
+<h3 id="Spring事务传播行为："><a href="#Spring事务传播行为：" class="headerlink" title="Spring事务传播行为："></a>Spring事务传播行为：</h3><p>事务传播行为是为了解决<strong>service层方法之间互相调用</strong>的事务问题（一个事务方法被另一个事务方法调用时，需要指定事务如何传播）。</p>
+<p><strong>事务传播行为包括如下：</strong></p>
+<ul>
+<li>REQUIRED： 默认的事务传播行为，required表示当前方法必须在一个事务中运行，如果当前存在事务，则加入该事务；如果当前没有事务，则创建一个新的事务；</li>
+<li>SUPPORTS：当前方法支持在一个事务中运行，如果当前存在事务，则加入该事务；如果当前没有事务，则以非事务的方式执行；</li>
+<li>MANDATORY：当前方法必须在一个事务中运行，如果当前存在事务，则加入该事务，如果当前没有事务，则抛出异常；</li>
+<li>REQUIRES_NEW：当前方法必须在一个新的事务中运行，如果当前存在事务，就挂起该事务，并创建一个新的事务。</li>
+<li>NOT_SUPPORTED：当前方法不应该在事务中运行，如果当前存在事务，就挂起该事务，以非事务的方式执行。</li>
+<li>NEVER：表示当前方法不应在事务中运行，如果当前存在事务，则抛出异常。</li>
+<li>NESTED：表示当前方法必须在一个嵌套的事务中运行，如果当前存在事务，则该在事务的嵌套事务中运行；如果当前没有事务，则创建一个新的嵌套事务。</li>
+</ul>
+<h3 id="事务失效场景"><a href="#事务失效场景" class="headerlink" title="事务失效场景"></a>事务失效场景</h3><ul>
+<li><strong>@Transactional 应用在非 public 修饰的方法上</strong>：spring要求被代理方法必须是public的。在<code>AbstractFallbackTransactionAttributeSource</code>类的<code>computeTransactionAttribute</code>方法中有个判断，如果目标方法不是 public，则<code>TransactionAttribute</code>返回 null，即不支持事务。</li>
+<li><strong>方法用 final修饰：</strong>如果将事务方法定义为final，这样会导致事务失效。原因是spring事务底层使用了aop，也就是通过jdk动态代理或者cglib，帮我们生成了代理类，在代理类中实现事务的功能。<strong>如果某个方法被final修饰了，那么在它的代理类中，就无法重写该方法，而添加事务功能</strong>。 同样的，如果某个<strong>方法是static的</strong>，同样<strong>无法</strong>通过动态代理，<strong>变成事务方法</strong>。</li>
+<li><strong>同一个类中方法调用，导致事务失效：</strong>方法A调用本地的方法B，但<strong>A没有声明注解事务，但是B声明了</strong>，在<strong>外部调用方法A后，B的事务是不会起作用</strong>的。这还是由于SpringAOP代理造成的，因为只有当<strong>事务方法被当前类以外的代码调用的时候，才会由spring生成的代理对象</strong>来管理。</li>
+<li><strong>方法所在的类没有被Spring管理：</strong>用spring事务的前提是，对象要被spring管理。</li>
+</ul>
+<h3 id="事务不回滚场景："><a href="#事务不回滚场景：" class="headerlink" title="事务不回滚场景："></a>事务不回滚场景：</h3><ul>
+<li><strong>设置了错误的传播特性 propagation；</strong></li>
+<li><strong>自己吞了异常：</strong>在事务方法中手动try catch了异常，这种情况下事务不会正常回滚。</li>
+<li><strong>手动抛出了别的异常：</strong>即使开发者没有手动捕获异常，但是抛的异常不正确，spring事务也不会回滚。spring事务，默认情况下只会回滚 runtimeException和 error，对于普通的Exception（非运行时异常），它不会回滚。</li>
+</ul>
+<h2 id="4-IOC"><a href="#4-IOC" class="headerlink" title="4. IOC"></a>4. IOC</h2><p><strong>IOC，控制反转</strong>，由容器负责控制对象的生命周期和对象之间的关系，IOC最重要的作用就是 <strong>解耦</strong>。</p>
+<p><strong>DI，依赖注入</strong>，容器在实例化对象的时候把它依赖的类注入给它。DI可以理解为 IOC设计思想的实现。</p>
+<h3 id="ApplicationContext-amp-BeanFactory"><a href="#ApplicationContext-amp-BeanFactory" class="headerlink" title="ApplicationContext &amp; BeanFactory"></a>ApplicationContext &amp; BeanFactory</h3><p><strong>SPring通过 ApplicationContext来设计容器，它是BeanFactory的子类，对它进行了补充实现。</strong></p>
+<p><strong>BeanFactory</strong>可以理解为HashMap ,一般只有get，put两个功能，所以被称为 <strong>低级容器</strong>。</p>
+<p>但是ApplicationContext多了很多功能，它继承了多个接口，那为何要定义这个多接口呢，其实每个接口都有他使用的场合，它主要是为了区分 spring内部在操作过程中对象的传递和转化的过程中，对对象的数据访问所做的限制：</p>
+<ul>
+<li>ListableBeanFactory 接口：表示这些 Bean 是可列表的。</li>
+<li>HierarchicalBeanFactory 接口：表示的是这些 Bean 是有继承关系的，也就是每个Bean 有可能有父 Bean。</li>
+<li>AutowireCapableBeanFactory 接口：定义 Bean 的自动装配规则。</li>
+</ul>
+<p><strong>这三个接口共同定义了 Bean 的集合、Bean 之间的关系、以及 Bean 行为。</strong></p>
+<h3 id="BeanDefination"><a href="#BeanDefination" class="headerlink" title="BeanDefination"></a>BeanDefination</h3><p>在BeanFactory容器中，每个注入对象都对应一个BeanDefinition对象，该实例对象负责保存注入对象的所有必要信息，包括其所属的class类名，是否是抽象类，构造方法以及其他属性等。</p>
+<p>当客户端向BeanFactory请求相应对象的时候，BeanFactory会通过这些信息向客户端返回一个完备可用的对象实例，BeanDefinition实例的信息是通过读取xml文件得到的。</p>
+<h3 id="DI"><a href="#DI" class="headerlink" title="DI"></a>DI</h3><p>如果我们使用的是@Autowired 注入的时候，在单例池中查找，先byType进行查找，如果有多个结果不知道该注入哪个，就继续byName再做查找，如果byName还是找不到，如果我们声明了这个依赖是一个强制依赖，则会报错；否则不报错。</p>
+<p>同样的，如果byType的时候，从单例池中只有一个bean，那么就使用该bean进行注入，不管beanName对不对的上。</p>
+<p>如果我们使用的是@Resource注解（没有指定name），那么直接byName进行查找，如果查找不到就会byType查找。</p>
+<p>如果我们使用的是@Resource注解（指定了name），那么直接byName进行查找，如果查找不到就直接报错。</p>
+<h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>什么是AOP？有没有用过AOP？</p>
+<p>AOP称为面向切面编程，用于将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块，这个模块被命名为”切面“Aspect，减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。</p>
+<p>AOP常见使用场景：</p>
+<ul>
+<li>记录操作日志</li>
+<li>缓存数据</li>
+<li>Spring事务</li>
+</ul>
+<h1 id="三、计算机网络"><a href="#三、计算机网络" class="headerlink" title="三、计算机网络"></a>三、计算机网络</h1><h2 id="1-TCP三次握手-amp-四次挥手"><a href="#1-TCP三次握手-amp-四次挥手" class="headerlink" title="1. TCP三次握手 &amp; 四次挥手"></a>1. TCP三次握手 &amp; 四次挥手</h2><p><strong>三次握手建立连接</strong>。从client的视角来看：</p>
+<ul>
+<li><strong>第一次握手</strong>： client发送一个带有<code>syn（seq = x）</code>标志的数据包到server端，然后标识自己的状态为<strong>syn_send</strong>已发送状态；</li>
+<li><strong>第二次握手</strong>：server收到了client发来的消息，于是向client发送 <code>syn (seq = y) + ack（ack=x+1） </code>确认信息。client接收到确认信息后，这时候client知道自己的发送和接收都能正常进行，对方的发送和接收都正常；server知道自己能正常接收，对方能正常发送（<strong>但不知道对方能否正常接收，自己能不能正常发送</strong>）；在server发送确认信息后表示自己状态为<strong>syn_recv</strong>已接收状态。</li>
+<li><strong>第三次握手</strong>：client发送一个<code>ack (ack = y+1)</code>标志的数据包，然后client和server端都进入 <strong>establish</strong>链接建立状态。完成三次握手。</li>
+</ul>
+<p><strong>三次握手最重要的目的就是双方确认自己与对方的发送与接收都是正常的。</strong></p>
+<ul>
+<li><strong>第一次握手</strong>：Client 什么都不能确认；Server 确认了对方发送正常，自己接收正常</li>
+<li><strong>第二次握手</strong>：Client 确认了：自己发送、接收正常，对方发送、接收正常；Server 确认了：对方发送正常，自己接收正常</li>
+<li><strong>第三次握手</strong>：Client 确认了：自己发送、接收正常，对方发送、接收正常；Server 确认了：自己发送、接收正常，对方发送、接收正常</li>
+</ul>
+<p><strong>第二次握手传回了ack，为什么 还要传回syn?</strong></p>
+<p>传回发送端所发送的 ACK 是为了告诉客户端：“我接收到的信息确实就是你所发送的信号了”，这表明从客户端到服务端的通信是正常的。回传 SYN 则是为了建立并确认从服务端到客户端的通信。</p>
+<p><strong>四次挥手断开连接</strong>：</p>
+<ul>
+<li><strong>第一次挥手：</strong> client发送一个<code>FIN（seq = x）</code>的数据包到服务端，用来关闭客户端到服务端的数据传送，然后client进入<strong>FIN-Wait-1</strong>状态；</li>
+<li><strong>第二次挥手</strong>：server收到这个<code>FIN（seq=x）</code>的数据包，然后发送一个<code>ACK（ack = x+1）</code>的数据包到client，随后server进入<strong>Close-wait</strong>状态，client收到这个数据包后进入<strong>FIN-Wait-2</strong>状态；</li>
+<li><strong>第三次挥手</strong>：server发送一个<code>FIN （seq = y）</code>的数据包到client，请求关闭连接，随后server进入<strong>LAST-ACK</strong>状态；</li>
+<li><strong>第四次挥手</strong>：client发送一个<code>ACK (ack=y+1)</code> 的数据包到server，然后client进入到<strong>TIME-Wait</strong>状态，server端在接收到这个数据包后进入<strong>CLOSE</strong>状态。此时如果client等待 <strong>2*MSL</strong>（一个片段在网络中的最大存活时间）没有收到回复，说明server已经正常关闭，随后client也可以关闭连接了。</li>
+</ul>
+<h2 id="TCP与UDP的区别："><a href="#TCP与UDP的区别：" class="headerlink" title="TCP与UDP的区别："></a>TCP与UDP的区别：</h2><ul>
+<li><strong>是否面向连接：</strong> TCP是面向连接的，传送数据前必须先建立连接，结束后释放连接；UDP传送数据前不需要建立连接。</li>
+<li><strong>是否可靠传输</strong>：UDP不是可靠传输，不保证数据不丢失、不保证数据按顺序到达；TCP是可靠传输，有一系列的机制，包括创建连接时三次握手，传递时有消息确认、滑动窗口、超时重传、拥塞控制，取消连接时有四次挥手。保证有序、不丢失、不重复。</li>
+<li><strong>是否有状态</strong>：TCP是有状态的，TCP会记录自己发送消息的状态。而UDP是无状态的，消息发出去就不管了。</li>
+<li><strong>传输效率：</strong>UDP的效率高，因为它发出去啥都不管了。TCP效率低。</li>
+<li><strong>传输形式：</strong>TCP是面向字节流的，UDP是面向报文的。</li>
+<li><strong>首部开销：</strong>TCP首部（20~60字节），UDP首部（8字节）。</li>
+<li><strong>是否提供广播或多播：</strong>UDP能广播或多播，TCP只支持点对点通信。</li>
+</ul>
+<h2 id="浏览器输入URL到显示主页的过程："><a href="#浏览器输入URL到显示主页的过程：" class="headerlink" title="浏览器输入URL到显示主页的过程："></a>浏览器输入URL到显示主页的过程：</h2><ul>
+<li><strong>DNS解析：</strong>将域名解析为对应的IP地址。<ul>
+<li>DNS解析过程：（1）首先查看浏览器缓存，看看是否能找到<a target="_blank" rel="noopener" href="http://www.xxx.com域名对应的ip地址,找到就直接返回.否则进行下一步.(2)将请求发给本地dns服务器,如果能查到则返回,否则进行下一步.(3)本地dns服务器向/">www.XXX.com域名对应的IP地址，找到就直接返回。否则进行下一步。（2）将请求发给本地DNS服务器，如果能查到则返回，否则进行下一步。（3）本地DNS服务器向</a> 根域名服务器发送请求，根域名服务器负责返回com的顶级域名服务器的IP地址列表。（4）本地DNS服务器向IP地址列表中负责com的顶级域名服务器发送请求，返回一个xxx.com的权限域名服务器。（5）本地DNS服务器再向这个负责xxx.com的权限域名服务器发送请求，返回<a target="_blank" rel="noopener" href="http://www.xxx.com对应的ip地址./">www.xxx.com对应的IP地址。</a></li>
+</ul>
+</li>
+<li><strong>TCP连接：</strong>经过三次握手，与服务器建立TCP连接。</li>
+<li><strong>向服务器发送HTTP请求。</strong></li>
+<li><strong>服务器处理请求，并返回HTTP响应。</strong></li>
+<li><strong>浏览器解析并渲染页面。</strong></li>
+<li><strong>断开连接</strong>：四次挥手，连接结束。</li>
+</ul>
+<h2 id="HTTP-和HTTPS-有什么区别："><a href="#HTTP-和HTTPS-有什么区别：" class="headerlink" title="HTTP 和HTTPS 有什么区别："></a>HTTP 和HTTPS 有什么区别：</h2><ul>
+<li>安全性：HTTP是明文传输协议，数据传输过程中不加密；HTTPS通过SSL 或者 TSL 协议对数据进行加密，确保传输的数据在网络是安全的。</li>
+<li>加密方式：HTTP没有加密，明文传输；HTTPS使用SSL 或TSL协议加密传输的数据，使用公钥加密和私钥解密的方式确保机密性和完整性。</li>
+<li>端口号：HTTP默认80端口；HTTPS默认443端口。</li>
+<li>证书：HTTP不需要证书验证；HTTPS需要使用SSL证书，由可信的第三方机构签发。</li>
+</ul>
+<h1 id="四、JVM"><a href="#四、JVM" class="headerlink" title="四、JVM"></a>四、JVM</h1><h2 id="1-JVM内存"><a href="#1-JVM内存" class="headerlink" title="1. JVM内存"></a>1. JVM内存</h2><h3 id="jvm内存组成："><a href="#jvm内存组成：" class="headerlink" title="jvm内存组成："></a>jvm内存组成：</h3><ul>
+<li><strong>方法区</strong>（线程共享区）<ul>
+<li>也称为永久代，JDK8后改为<strong>元空间</strong>；</li>
+<li>存储<strong>已加载的类</strong>的类信息、常量、静态变量、即时编译器编译后的代码等；</li>
+</ul>
+</li>
+<li><strong>堆</strong>（线程共享区）<ul>
+<li>存储<strong>对象实例</strong>和<strong>数组</strong>；</li>
+<li>JVM管理的最大一块内存区域（垃圾回收）</li>
+<li>在JVM启动时被创建，并且在运 行时进行动态扩展或收缩；</li>
+</ul>
+</li>
+<li><strong>本地方法栈</strong>（线程私有区）<ul>
+<li>与虚拟机栈类似，但它是为了<strong>本地方法</strong>服务</li>
+<li>本地方法使用其他语言写的一些方法，需要特殊的栈支持。</li>
+</ul>
+</li>
+<li><strong>虚拟机栈（</strong>线程私有区）<ul>
+<li>每个线程在执行Java方法时，都会创建一个对应的<strong>栈帧</strong></li>
+<li><strong>栈帧</strong>用来存储<strong>局部变量、方法参数、操作数栈、动态链接</strong>等信息</li>
+</ul>
+</li>
+<li><strong>程序计数器</strong>（线程私有区）<ul>
+<li>每个线程都有自己的程序计数器，用来记录当前线程执行的位置。</li>
+</ul>
+</li>
+</ul>
+<h3 id="对象创建过程："><a href="#对象创建过程：" class="headerlink" title="对象创建过程："></a>对象创建过程：</h3><ul>
+<li>遇到new字节码指令的时候，检查指令的参数能否找到一个类的符号引用</li>
+<li>如果这个符号引用对应的类还没有被加载、解析、初始化过，那么先执行类加载过程。</li>
+<li>类加载完成后，为新对象分配内存，分配内存的方法包括<strong>指针碰撞、空闲列表</strong>方法。</li>
+<li>分配完内存，对分配好的内存（除了对象头）进行初始化工作，都初始化为0值。</li>
+<li>接下来设置对象头，对象头包括所属的类、哈希码、GC分代年龄等。</li>
+<li>最后，JVM执行对象的构造函数，对对象的实例变量进行初始化或其他必要操作。</li>
+</ul>
+<h3 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h3><ul>
+<li>对象头<ul>
+<li>对象运行时数据：<ul>
+<li>哈希码</li>
+<li>GC分代年龄</li>
+<li>锁状态标识</li>
+<li>线程持有的锁</li>
+<li>偏向线程ID</li>
+<li>偏向时间戳</li>
+</ul>
+</li>
+<li>类型指针（自己代表哪个类）。</li>
+<li>如果是数组，还有一个保存自己长度信息的数据</li>
+</ul>
+</li>
+<li>实例化数据，存储对象真正的有效信息。</li>
+<li>对齐填充padding，无实际意义。</li>
+</ul>
+<h3 id="对象有哪几种引用类型"><a href="#对象有哪几种引用类型" class="headerlink" title="对象有哪几种引用类型"></a>对象有哪几种引用类型</h3><ul>
+<li>强引用<ul>
+<li>当一个对象被强引用时，不会被垃圾回收</li>
+<li>没有任何强引用指向一个对象时，可以被垃圾回收</li>
+</ul>
+</li>
+<li>软引用<ul>
+<li>相对弱化的强引用，当内存不足时，可能会回收软引用关联的对象</li>
+</ul>
+</li>
+<li>弱引用<ul>
+<li>相对弱化的强引用，无论内存是否充足，都会回收被弱引用关联的对象</li>
+</ul>
+</li>
+<li>虚引用<ul>
+<li>最弱化的强引用，任何时候都可能会被回收，不会通过虚引用获取到对象实例。</li>
+</ul>
+</li>
+</ul>
+<h3 id="堆内存分区"><a href="#堆内存分区" class="headerlink" title="堆内存分区"></a>堆内存分区</h3><ul>
+<li>新生代<ul>
+<li>Eden区（较大）</li>
+<li>survivor区 （较小）<ul>
+<li>from区</li>
+<li>to区</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>老年代</li>
+</ul>
+<p>对象被创建时，会被放至Eden区，垃圾回收后，Eden中的存活对象会被转入survivor区，经过多次垃圾回收后会转入老年代。老年代的回收频率较低。</p>
+<p>每次分配内存只是用Eden和其中一块survivor，发生垃圾收集时，eden和survivor中存活的对象一次性复制到另一块survivor上。然后直接清理掉 Eden和已用过的那块Survivor空间。</p>
+<h3 id="怎么判断一个对象是不是垃圾："><a href="#怎么判断一个对象是不是垃圾：" class="headerlink" title="怎么判断一个对象是不是垃圾："></a>怎么判断一个对象是不是垃圾：</h3><ul>
+<li><strong>引用计数法</strong>：早期的方法，一个对象被引用了计数器就加一，否则减一。如果为0就可以进行回收，<strong>缺点是无法回收相互引用的对象</strong>，造成内存泄漏。</li>
+<li><strong>根可达算法</strong>：在内存中，<strong>从引用根对象向下一直寻找引用</strong>，如果找不到的对象就是垃圾。<strong>GCRoot包括 栈（虚拟机栈、方法栈）、Class类、运行时常量池、静态变量。</strong></li>
+</ul>
+<h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><ul>
+<li><strong>标记-清除法（MarkSweep）</strong>：标记出要回收的对象，然后回收所有被标记的对象。<ul>
+<li>缺点：执行效率不稳定，标记和清除两个过程的执行效率都随对象数量增长而降低；并且会造成内存空间的碎片化问题</li>
+</ul>
+</li>
+<li><strong>标记-复制法（copying）</strong>：划分为大小相等的两块，每次只用一块，当这一块的内存用完了，将存活的内存复制到另一块，这一块的内存直接回收<ul>
+<li>缺点：始终有一半的内存是空闲的，造成了空间的浪费</li>
+<li>所以新生代垃圾回收一般使用这个方法，因为新生代<strong>存活对象</strong>较少</li>
+</ul>
+</li>
+<li><strong>标记-整理法（Mark Compack）</strong>： 让所有存活的对象都向内存空间一端移动，然后直接清理掉边界之外的内存。<ul>
+<li>缺点：移动存活对象是个极为负重的工作，并且还要stop the word</li>
+<li>因此老年代主要用这种方法。</li>
+</ul>
+</li>
+</ul>
+<h3 id="什么是STW-（stop-the-world）："><a href="#什么是STW-（stop-the-world）：" class="headerlink" title="什么是STW （stop the world）："></a>什么是STW （stop the world）：</h3><p><strong>STW：</strong> stop the world。是<strong>在垃圾回收算法执行过程中，需要将JVM内存冻结的一种状态</strong>。</p>
+<p><strong>在STW状态下，JAVA的所有线程都是停止执行的 （GC线程除外）</strong>，native方法可以执行，但是不能与JVM交互。</p>
+<p>GC各种算法优化的重点，就是减少STW，</p>
+<h3 id="JVM垃圾回收器"><a href="#JVM垃圾回收器" class="headerlink" title="JVM垃圾回收器"></a>JVM垃圾回收器</h3><ul>
+<li><strong>Serial串行</strong>：只有一个线程进行垃圾回收，进行垃圾收集时，必须暂停其他所有工作线程。比较古早。</li>
+<li><strong>Parallel并行</strong>：在串行基础上，使用多个线程进行GC。</li>
+<li>⭐<strong>CMS（concurrent Mark sweep）</strong>：核心思想，就是<strong>将STW打散，让一部分GC线程与用户线程并发执行</strong>。整个GC过程分为四个阶段：<ul>
+<li><strong>初始标记</strong>阶段：进行<strong>短暂的STW</strong>，<strong>只标记出根对象直接引用的对象</strong>。</li>
+<li><strong>并发标记</strong>阶段：继续标记其他对象，从GC Root开始，在整个堆中，<strong>标记所有可达的对象</strong>。与用户线程<strong>并发执行</strong>。</li>
+<li><strong>重新标记</strong>阶段：<strong>短暂的STW</strong>，这一步的目的是，<strong>标记那些在并发标记阶段中产生变动的对象</strong>。</li>
+<li><strong>并发清除</strong>：<strong>并发执行</strong>，将未标记的对象进行清除。清除过程中，应用程序又会产生新的垃圾，这些垃圾叫做<strong>浮动垃圾。浮动垃圾会留到下一次GC过程中被清除</strong>。</li>
+</ul>
+</li>
+<li>⭐<strong>G1（Garbarage First）</strong>：它的内存模型实际上是不分代的（逻辑上分代）。在内存中，不在分为新生代和老年代，而是<strong>划分成一个个的region，每个region可以隶属于不同的分代</strong>。同时<strong>维护一个优先级列表</strong>，跟踪各个region回收的价值，<strong>优先收集价值高的region</strong>。G1回收器回收过程分为下面的阶段：<ul>
+<li><strong>初始标记阶段</strong>：<strong>STW</strong>，标记从GCRoot直接可达的对象；</li>
+<li><strong>并发标记</strong>：和用户并发执行，从GC Root开始对堆中对象进行可达性分析，标记所有可达的对象。</li>
+<li><strong>筛选回收</strong>：<strong>STW</strong>，选择多个region作为回收集，把回收集中region中的存活对象移动至空的region中，再清理掉旧Region中的整个空间。</li>
+<li><strong>并发清除</strong>：并发地清除未被标记的对象。不会STW。</li>
+</ul>
+</li>
+</ul>
+<h3 id="类生命周期"><a href="#类生命周期" class="headerlink" title="类生命周期"></a>类生命周期</h3><ol>
+<li>加载： 将类的字节码文件加载到内存中，并创建该类的.Class对象</li>
+<li>验证： 验证字节码文件是否符合JVM规范</li>
+<li>准备： 为类的静态变量分配内存空间，并设置初始值</li>
+<li>解析：这一阶段主要是将符号引用转换为直接引用。</li>
+<li>初始化：执行构造器方法的过程，这一阶段是类主动使用的阶段。</li>
+<li>使用： 在该类被加载和初始化后，就可以使用该类创建对象，调用类的方法。</li>
+<li>卸载：当一个类不再被引用，并且也没有活跃的实例时，JVM会卸载该类。</li>
+</ol>
+<h3 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h3><ol>
+<li>通过类的全限定名 来获取此类的二进制字节流</li>
+<li>将这个字节流代表的 静态数据结构 转变为 方法区的运行时数据结构</li>
+<li>在内存区生成一个 代表这个类的 java.lang.Class 对象，作为 方法区这个类的各种数据的访问入口。</li>
+</ol>
+<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><ul>
+<li><strong>启动类加载器</strong>：又称为根类加载器，是JVM的一部分，负责加载java的核心类库。</li>
+<li><strong>扩展类加载器</strong>：用来加载java的扩展库，JVM的实现会提供一个扩展库目录，该类加载器在该目录里查找并加载扩展类。</li>
+<li><strong>系统类加载器</strong>：根据java应用的类路径来加载类，一般java应用的类都是它加载的。可以通过ClassLoader.getSystemClasssLoader() 来获取</li>
+<li><strong>用户类加载器：</strong>用户可以通过集成java.lang.classLoader的方式自行实现类加载器。</li>
+</ul>
+<h3 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h3><p>当一个类加载器收到加载类的请求时，会首先请求父类加载器进行类加载，如果加载成功则类加载结束。否则由子类类加载器进行加载。</p>
+<h3 id="使用双亲委派机制的好处"><a href="#使用双亲委派机制的好处" class="headerlink" title="使用双亲委派机制的好处"></a>使用双亲委派机制的好处</h3><ul>
+<li><strong>避免类的重复加载</strong>：如果父类加载器已经加载了一个类，那么子类不会再次加载。<strong>节省了内存</strong>。</li>
+<li><strong>确保类的安全性和一致性</strong>：Java核心类库由 启动类加载器 加载，可以<strong>防止恶意代码替换核心类库</strong>，保证核心类库的安全性和一致性。</li>
+<li><strong>防止类的篡改</strong>： 父类加载器加载的类不会被子类加载器替换，防止了类的篡改。</li>
+<li><strong>方便类加载器的扩展和自定义</strong>： 可以通过扩展classLoader类来实现类加载器的自定义，通过双亲委派机制，可以<strong>方便的扩展和自定义类加载器的功能，满足不同的加载需求。</strong></li>
+</ul>
+<h3 id="如何破坏类加载机制"><a href="#如何破坏类加载机制" class="headerlink" title="如何破坏类加载机制"></a>如何破坏类加载机制</h3><ul>
+<li>自定义类加载器： 可以重写LoadClass方法，实现自己的类加载逻辑，不再委托给父类加载器。但是自定义类加载器需要遵循一定的类加载规则，以确保类加载的一致性和正确性。</li>
+<li>使用Thread.currentThread.setContextClassLoader方法：通过该方法设置当前线程的上下文类加载器，将类加载的委派顺序改变，这样可以绕过双亲委派机制，直接指定类加载器进行加载。</li>
+</ul>
+<h1 id="五、MySQL"><a href="#五、MySQL" class="headerlink" title="五、MySQL"></a>五、MySQL</h1><h2 id="0-基础"><a href="#0-基础" class="headerlink" title="0.基础"></a>0.基础</h2><h3 id="一条SQL执行的步骤："><a href="#一条SQL执行的步骤：" class="headerlink" title="一条SQL执行的步骤："></a>一条SQL执行的步骤：</h3><ul>
+<li><strong>权限检查：</strong>检查用户是否有执行该语句的权限。</li>
+<li><strong>查询缓存（仅适用于8.0版本之前）：</strong>如果缓存中有该语句的结果，就从缓存中返回结果。</li>
+<li><strong>语法分析和语义检查：</strong>由MySQL<strong>解析器</strong>验证语句的合法性。</li>
+<li><strong>查询优化</strong>：MySQL的<strong>查询优化器</strong>根据查询的复杂度、索引情况、统计信息等因素选择最佳的查询计划。</li>
+<li><strong>执行查询计划：</strong>涉及表扫描、索引的匹配、数据的过滤和排序等操作。</li>
+<li><strong>数据检索和返回：</strong> <strong>执行器</strong>根据查询计划获取数据，并将结果返回客户端。如果涉及查询大量数据，MySQL可能会使用临时表来存储中间结果，并进行排序和分页操作。</li>
+</ul>
+<h2 id="1-索引"><a href="#1-索引" class="headerlink" title="1. 索引"></a>1. 索引</h2><h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类:"></a>索引分类:</h3><ul>
+<li>按<strong>数据结构</strong>分类：B+树索引、Hash索引、Full-text索引</li>
+<li>按<strong>物理存储</strong>分类：聚簇索引（主键索引）、二级索引</li>
+<li>按<strong>字段特性</strong>分类：主键索引、普通索引、唯一索引、前缀索引</li>
+<li>按<strong>字段个数</strong>分类：唯一索引、联合索引。</li>
+</ul>
+<h3 id="B-树索引（主键索引-or-二级索引）"><a href="#B-树索引（主键索引-or-二级索引）" class="headerlink" title="B+树索引（主键索引 or 二级索引）"></a>B+树索引（主键索引 or 二级索引）</h3><ul>
+<li>多叉树、叶子节点才存放数据、非叶子节点只存放索引</li>
+<li>每个节点中的数据是按照主键顺序存放的。</li>
+<li>叶子节点之间通过双向链表连接。</li>
+<li>对主键索引来说，叶子节点存放的就是实际数据。</li>
+<li>对二级索引来说，叶子节点存放的是主键值，而不是实际数据。<strong>回表就是指</strong>需要查询二级索引树和主键索引树两个B+树才能查到数据。</li>
+<li>当查到的数据在二级索引的叶子节点就能找到时，此时就<strong>不用再回表查询</strong>了。<strong>这被称为覆盖索引</strong></li>
+<li>相比于B树，B+树更适合于范围查询，因为其叶子节点用双向链表相连；而且B树的非叶子节点也要存储数据，B+树单节点数据量更小。</li>
+<li>相比于二叉树，B+树能保证高度始终在3-4层左右，对IO更友好。</li>
+<li>相比于Hash，查询复杂度o(1)优于B+树，但hash不适合范围查询。</li>
+</ul>
+<p><strong>B+树索引的优势</strong>：相比于B树和二叉树来说，最大的优势在于查询效率高，即使在数据量很大的情况下，<strong>磁盘的IO次数依然维持在3-4次</strong>。</p>
+<h3 id="联合索引-amp-索引下推优化"><a href="#联合索引-amp-索引下推优化" class="headerlink" title="联合索引 &amp; 索引下推优化"></a>联合索引 &amp; 索引下推优化</h3><ul>
+<li><strong>联合索引的最左匹配原则：在遇到范围查询（如 &gt;、&lt;）的时候，就会停止匹配，也就是范围查询的字段可以用到联合索引，但是在范围查询字段的后面的字段无法用到联合索引。注意，对于 &gt;&#x3D;、&lt;&#x3D;、BETWEEN、like 前缀匹配的范围查询，并不会停止匹配</strong></li>
+<li><strong>索引下推优化：</strong><ul>
+<li>对于联合索引（a, b），在执行 <code>select * from table where a &gt; 1 and b = 2</code> 语句的时候，只有 a 字段能用到索引，那在联合索引的 B+Tree 找到第一个满足条件的主键值（ID 为 2）后，还需要判断其他条件是否满足（看 b 是否等于 2），那是在联合索引里判断？还是回主键索引去判断呢？</li>
+<li>在 MySQL 5.6 之前，只能从 ID2 （主键值）开始一个个回表，到「主键索引」上找出数据行，再对比 b 字段值。</li>
+<li>而 MySQL 5.6 引入的<strong>索引下推优化</strong>（index condition pushdown)， <strong>可以在联合索引遍历过程中，对联合索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数</strong>。</li>
+</ul>
+</li>
+<li><strong>建立联合索引时，要把区分度大的字段排在前面，这样区分度大的字段越有可能被更多的 SQL 使用到</strong>。</li>
+<li>MySQL 还有一个查询优化器，查询优化器发现某个值出现在表的数据行中的百分比（惯用的百分比界线是”30%”）很高的时候，它一般会忽略索引，进行全表扫描。</li>
+</ul>
+<h3 id="⭐索引失效的情况"><a href="#⭐索引失效的情况" class="headerlink" title="⭐索引失效的情况"></a>⭐索引失效的情况</h3><ul>
+<li>使用<strong>左或者左右模糊匹配</strong>的时候，会造成索引失效；</li>
+<li>当在<strong>查询条件中对索引做了计算、函数、类型转换操作</strong>，这些情况下都会造成索引失效；</li>
+<li>在<strong>联合索引</strong>中，没有遵循<strong>最左匹配原则</strong>，导致索引失效；</li>
+<li>在 <strong>WHERE 子句</strong>中，如果在 <strong>OR 前</strong>的条件列是<strong>索引列</strong>，而在 <strong>OR 后</strong>的条件列<strong>不是索引列</strong>，那么索引会失效。</li>
+<li><strong>使用like “%xxx”,索引一定会失效么？</strong>：<ul>
+<li>如果数据表中的字段<strong>只有主键+二级索引</strong>，那么即使使用了左模糊匹配，也不会走全表扫描，而是<strong>走全扫描二级索引树</strong>。</li>
+<li>我们都知道联合索引要遵循最左匹配才能走索引，但是<strong>如果数据表中的字段都是索引</strong>的话，即使查询过程中，<strong>没有遵循</strong>最左匹配原则，也是会<strong>走全扫描二级索引树</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="优化索引的方法"><a href="#优化索引的方法" class="headerlink" title="优化索引的方法"></a>优化索引的方法</h3><ul>
+<li>前缀索引优化</li>
+<li>覆盖索引优化</li>
+<li>主键索引最好是自增的</li>
+<li>防止索引失效</li>
+</ul>
+<h3 id="索引存储结构"><a href="#索引存储结构" class="headerlink" title="索引存储结构"></a>索引存储结构</h3><ul>
+<li>根据物理存储分类，索引分为<strong>聚簇索引和二级索引</strong>。<ul>
+<li>对于<strong>InnoDB</strong>引擎，聚簇索引的叶子节点存放的是实际数据，而二级节点存放的是主键值，而不是实际数据。</li>
+<li>对于<strong>MyISAM</strong>引擎，聚簇索引的叶子节点存放的是具体数据的地址。</li>
+</ul>
+</li>
+<li>MySQL的<strong>默认存储引擎</strong>是<strong>InnoDB</strong>，它采用<strong>B+树</strong>作为索引数据结构。</li>
+<li><strong>MyISAM 存储引擎</strong>支持多种索引数据结构，比如 B+ 树索引、R 树索引、Full-Text 索引。MyISAM 存储引擎在创建表时，创建的主键索引默认使用的是 <strong>B+ 树索引</strong>。</li>
+<li>虽然，I<strong>nnoDB 和 MyISAM 都支持 B+ 树索引</strong>，但是它们数据的存储结构实现方式<strong>不同</strong>:<ul>
+<li><strong>InnoDB</strong> 存储引擎：B+ 树索引的叶子节点保存<strong>数据本身</strong>；</li>
+<li><strong>MyISAM 存</strong>储引擎：B+ 树索引的叶子节点保存数据的<strong>物理地址；</strong></li>
+</ul>
+</li>
+<li>对聚簇索引的理解：<ul>
+<li>聚簇索引具有唯一性：由于聚簇索引是将索引和数据放在一块，所以一个表仅有一个聚簇索引。</li>
+<li>（1）聚簇索引默认是主键。（2）如果表中没有定义主键，InnoDB会选择第一个唯一的非空索引代替。（3）如果没有这样的索引，InnoDB 会隐式定义一个主键作为聚簇索引。</li>
+</ul>
+</li>
+</ul>
+<h3 id="MySQL-表的物理结构"><a href="#MySQL-表的物理结构" class="headerlink" title="MySQL 表的物理结构"></a>MySQL 表的物理结构</h3><ul>
+<li>MySQL的<strong>表数据</strong>是以<strong>页</strong>的形式存放的，页在磁盘中<strong>不一定是连续的</strong>。</li>
+<li>页空间是16K，并不是所有的空间都是用来存放数据的，会有一些固定的信息，如页头、页尾、页码、校验码等。</li>
+<li>在B+树中，叶子节点和非叶子节点的数据结构是一样的，区别在于，<strong>叶子节点</strong>存放的是<strong>实际的行数据</strong>，而<strong>非叶子节点</strong>存放的是<strong>主键和页号。</strong></li>
+</ul>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240429195215797.png" alt="image-20240429195215797" style="zoom: 67%;" />
+
+
+
+<ul>
+<li>索引结构不会影响单表最大行数，2000W也只是推荐值，<strong>超过了这个值可能会导致B+树层级更高，影响查询性能</strong>。</li>
+</ul>
+<h2 id="2-事务"><a href="#2-事务" class="headerlink" title="2.  事务"></a>2.  事务</h2><h3 id="2-1-事务隔离级别"><a href="#2-1-事务隔离级别" class="headerlink" title="2.1 事务隔离级别"></a>2.1 事务隔离级别</h3><h4 id="四个隔离级别："><a href="#四个隔离级别：" class="headerlink" title="四个隔离级别："></a><strong>四个隔离级别：</strong></h4><ul>
+<li><p>读未提交（啥都解决不了）</p>
+</li>
+<li><p>读已提交 （解决了脏读）</p>
+</li>
+<li><p>可重复读 （解决了脏读，不可重复读，InnoDB默认的隔离级别）</p>
+</li>
+<li><p>串行化 （解决了脏读，不可重复读以及幻读，但是效率最低，不轻易使用。）</p>
+</li>
+<li><p>InnoDB 引擎的<strong>默认隔离级别是 可重复读</strong>，但是它很大程度上避免了幻读现象。解决的方案有两种：</p>
+<ul>
+<li>针对<strong>快照读（普通select）</strong>，是通过<strong>MVCC</strong>方式解决了幻读。因为可重复读隔离级别下，事务执行<strong>过程中看到的数据</strong>，一直<strong>跟</strong>这个<strong>事务启动时看到的数据是一致的</strong>，即使中途有其他事务插入了一条数据，是查询不出来的。</li>
+<li>针对<strong>当前读（select … for update等语句）</strong>，是通过<strong>next-key lock(记录锁 + 间隙锁)<strong>方式解决了幻读。因为当执行 select … for update 语句的时候，会加上 next-key lock，如果有其他事务在 next-key lock 锁范围内插入了一条记录，那么这个插入语句就会被</strong>阻塞</strong>，无法成功插入，所以就很好了避免幻读问题。</li>
+</ul>
+</li>
+<li><p>InnoDB引擎为了解决 <strong>可重复读</strong> 隔离级别使用 <strong>当前读</strong> 而造成的<strong>幻读</strong>问题，引出了<strong>间隙锁</strong>（<strong>即使这样也只是最大程度避免幻读，没有完全解决幻读</strong>）</p>
+<ul>
+<li><p>表中有一个范围 id 为（3，5）间隙锁，那么其他事务就无法插入 id &#x3D; 4 这条记录了，这样就有效的防止幻读现象的发生。</p>
+</li>
+<li><p>事务 A 执行了这面这条锁定读（for update）语句后，就在对表中的记录加上 id 范围为 (2, +∞] 的 next-key lock（next-key lock 是间隙锁+记录锁的组合）。<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240430153508438.png" alt="image-20240430153508438"></p>
+<p>然后，事务 B 在执行插入语句的时候，判断到插入的位置被事务 A 加了 next-key lock，于是<strong>事物 B 会生成一个插入意向锁</strong>，同时<strong>进入等待</strong>状态，<strong>直到</strong>事务 <strong>A 提交了事务</strong>。这就<strong>避免了由于事务 B 插入新记录而导致事务 A 发生幻读</strong>的现象。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="四个隔离级别是如何实现的"><a href="#四个隔离级别是如何实现的" class="headerlink" title="四个隔离级别是如何实现的"></a>四个隔离级别是如何实现的</h4><ul>
+<li>对于 <strong>读未提交</strong> 级别，实现方式相对简单，因为可以读到未提交事务修改的数据，所以<strong>直接读取最新的数据就好</strong>了。</li>
+<li>对于 <strong>读已提交</strong> 和 <strong>可重复读</strong> 级别来说，他们是<strong>通过read view来实现</strong>的，它们的区别在于：<strong>读已提交</strong>是在 <strong>每个语句执行前</strong> 都会重新生成 read view，而<strong>可重复读</strong> 是在 <strong>启动事务时</strong> 生成一个read view，然后整个事务期间都在使用这个read view</li>
+<li>对于 <strong>串行化</strong> 级别，通过添加<strong>读写锁（排他锁）</strong>的方式实现。</li>
+</ul>
+<h2 id="3-MySQL锁"><a href="#3-MySQL锁" class="headerlink" title="3.  MySQL锁"></a>3.  MySQL锁</h2><h3 id="全局锁："><a href="#全局锁：" class="headerlink" title="全局锁："></a><strong>全局锁</strong>：</h3><ul>
+<li><p>使用全局锁后，整个数据库就处于只读状态了。这时其他线程执行以下操作，都会被阻塞：</p>
+<ul>
+<li>对<strong>数据的增删改</strong>操作，比如 insert、delete、update等语句；</li>
+<li>对<strong>表结构的更改</strong>操作，比如 alter table、drop table 等语句。</li>
+</ul>
+</li>
+<li><p>全局锁主要用于做<strong>全库逻辑备份</strong>，这样在备份期间，不会因为数据或表结构的更新，而出现备份文件的数据与预期的不一样。</p>
+</li>
+<li><p>如果备份花费很长时间，在这个时间段内业务只能读数据，造成业务的停滞。</p>
+</li>
+<li><p>如果数据库的引擎支持 <strong>可重复读</strong> 的隔离级别，那么在<strong>备份数据库之前先开启事务</strong>，会先创建read view ,然后整个事务执行期间都在使用这个read view，而且由于MVCC的支持，<strong>备份期间业务依然可以对数据进行更新操作</strong>。（<strong>InnoDB引</strong>擎默认的隔离级别正是可重复读，<strong>因此可采用这种方式备份库</strong>，而 <strong>MyISAM不支持事务</strong>，备份库时就<strong>只能使用全局锁</strong>）</p>
+</li>
+</ul>
+<h3 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h3><p><strong>表级锁有这几种：</strong></p>
+<ul>
+<li>表锁</li>
+<li>元数据锁 （MDL）</li>
+<li>意向锁</li>
+<li>Auto-INC 锁</li>
+</ul>
+<p><strong>（1） 表锁</strong></p>
+<ul>
+<li>表锁除了会限制别的线程读写之外，也<strong>会限制本线程接下来的读写操作</strong>。</li>
+<li>尽量<strong>避免在使用InnoDB 引擎的表使用表锁</strong>，因为表锁的颗粒度太大，影响并发性能，<strong>InnoDB 实现了粒度更细的行级锁，更牛逼。</strong></li>
+</ul>
+<p><strong>（2）元数据锁</strong></p>
+<ul>
+<li><p><strong>不用显式</strong>的使用，因为我们在对数据库表进行操作时，会自动给这个表加上MDL；</p>
+<ul>
+<li>对<strong>表进行crud</strong>的时候，添加的时<strong>MDL读锁；</strong></li>
+<li>对<strong>表结构</strong>进行变更的时候，添加的是<strong>MDL写锁</strong>；</li>
+</ul>
+</li>
+<li><p>MDL在事务提交之后才会释放，这意味着<strong>事务执行期间，MDL是一直持有的。</strong></p>
+</li>
+<li><p>申请MDL锁的操作会形成一个队列，队列中，<strong>写锁的优先级高于读锁</strong>，一旦出现MDL写锁等待，<strong>会阻塞后续该表中所有的CRUD操作</strong>（因为拿不到读锁了）。</p>
+</li>
+</ul>
+<p><strong>（3）意向锁</strong></p>
+<ul>
+<li>在使用 InnoDB 引擎的表里对某些记录加上<strong>「共享锁」</strong>之前，需要先在表级别加上一个「<strong>意向共享锁」</strong>；</li>
+<li>在使用 InnoDB 引擎的表里对某些纪录加上<strong>「独占锁」</strong>之前，需要先在表级别加上一个<strong>「意向独占锁</strong>」；</li>
+</ul>
+<p><strong>意向锁是表级锁</strong>，<strong>不会和行级</strong>的共享锁和独占锁发生<strong>冲突</strong>，而且<strong>意向锁之间也不会发生冲突</strong>，只会和共享<strong>表锁</strong>和独占<strong>表锁</strong>发生冲突</p>
+<p><strong>意向锁的目的是为了快速判断表里是否有记录被加锁，</strong>如果表被上了意向独占锁，表明表内有数据被加了独占锁，这样其他线程就不用再去逐条看是哪一条记录被添加了独占锁。</p>
+<p><strong>（4）Auto-INC 锁</strong></p>
+<ul>
+<li>设置主键自增时，再插入数据时，可以不指定主键的值，数据库会自动给主键赋值递增的值，这主要是<strong>通过Auto_INC锁实现</strong>的。</li>
+<li><strong>auto-inc是一种特殊的表锁机制</strong>，<strong>锁不再是一个事务提交之后才释放，而是在执行完插入语句之后就会立即释放。</strong></li>
+<li>在插入数据时，会添加一个<strong>表级别</strong>的Auto-INC锁，然后给自增的字段赋值，等<strong>插入语句执行完</strong>后，才会把Auto-Inc<strong>释放。</strong></li>
+<li><strong>InnoDB 提供了一个轻量级锁</strong>，插入时，会给自增字段加上轻量级锁，然后给该字段赋值自增，之后就释放了，<strong>不用再等插入语句结束后再释放。</strong></li>
+</ul>
+<h3 id="行级锁（只有InnoDB-支持）"><a href="#行级锁（只有InnoDB-支持）" class="headerlink" title="行级锁（只有InnoDB 支持）"></a>行级锁（只有InnoDB 支持）</h3><p><strong>普通的select语句是不会对记录进行加锁的</strong>，因为它属于快照读。如果要在查询时对记录加锁，可以使用下面这种方式，查询加锁的方式称为<strong>锁定读</strong>：</p>
+<ul>
+<li><code>select ... lock in share mode (加共享锁)</code></li>
+<li><code>select ... for update（加独占锁）</code></li>
+</ul>
+<p><strong>行级锁有四类：</strong></p>
+<ul>
+<li><strong>Record lock</strong>，记录锁，也就是仅锁一条记录。<ul>
+<li>记录锁有 <strong>共享锁</strong> 和 <strong>独占锁</strong> 之分。如果一个事务对当前记录加了共享锁，那么其他事务可以加共享锁但是不能加独占锁；如果是加了独占锁，那么其他事务既不能加独占锁也不能加共享锁。</li>
+</ul>
+</li>
+<li><strong>Gap Lock</strong>， 间隙锁，锁定一个范围，但是不包含记录本身，<strong>只存在于可重复读隔离级别</strong>；目的是为了解决该级别下 <strong>幻读</strong>的现象。<ul>
+<li><strong>间隙锁之间是兼容的，即两个事务可以同时持有包含共同间隙范围的间隙锁，并不存在互斥关系，因为间隙锁的目的是防止插入幻影记录而提出的</strong></li>
+</ul>
+</li>
+<li><strong>Next-Key Lock</strong> , 是上面两种锁的组合，<strong>锁定一个范围，并且锁定记录本身。</strong></li>
+<li><strong>插入意向锁：</strong> 名字虽然有意向锁，但是它并<strong>不是意向锁，它是一种特殊的间隙锁，属于行级锁。</strong><ul>
+<li>当一个事务想插入一条记录，但是发现插入位置有其他事务设置的间隙锁，那么当前插入操作会阻塞，直到拥有这些间隙锁的事务提交为止。</li>
+<li>在此期间，该事务会生成一个插入意向锁，表明有业务向再这个区间插入新纪录，但是现在在等待。</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-日志"><a href="#4-日志" class="headerlink" title="4. 日志"></a>4. 日志</h2><h3 id="MySQL的三个日志："><a href="#MySQL的三个日志：" class="headerlink" title="MySQL的三个日志："></a>MySQL的三个日志：</h3><ul>
+<li>undo log：回滚日志，是InnoDB<strong>存储引擎层</strong>生成的日志，实现事务的<strong>原子性</strong>。主要用于<strong>事务回滚和MVCC</strong>。</li>
+<li>redo log：重做日志，是InnoDB<strong>存储引擎层</strong>生成的日志，实现事务的<strong>持久性</strong>，主要用于<strong>掉电等故障恢复</strong>。</li>
+<li>binlog：二进制日志，是<strong>server层</strong>生成的日志，主要用于<strong>数据备份和主从复制</strong>（可以认为是为了实现事务的<strong>一致性</strong>）。</li>
+</ul>
+<h3 id="关于undo-log"><a href="#关于undo-log" class="headerlink" title="关于undo log:"></a>关于undo log:</h3><ul>
+<li><strong>（作用1）</strong>undo log即回滚日志，用于在事务提交失败的时候进行回滚操作时使用，用于实现<strong>原子性</strong>。</li>
+<li>每当InnoDB引擎对一条记录进行 <strong>增删改</strong> 的时候（这时候会<strong>自动隐式的开启事务</strong>），需要把回滚时需要的信息记录到 undo log 中：<ul>
+<li>插入时，记录插入记录的主键值，回滚时删除就好；</li>
+<li>删除时，记录该记录的所有内容，回滚时插入到表内就好；</li>
+<li>更新时，记录被更新列的旧值，回滚时恢复就好。</li>
+</ul>
+</li>
+<li><strong>（作用2）</strong>undo log的另一个作用是：<strong>通过readview + undo log来实现MVCC</strong>（多版本并发控制）：<ul>
+<li>首先引入<strong>版本链</strong>：每条记录有两个隐藏列 <strong>trx_id（该记录是被哪个事务修改的）</strong> 和 <strong>roll-pointer （一个指针，可以将这些undo log 串成一个链表，这个链表称为版本链）</strong></li>
+<li><strong>读已提交</strong> 和 <strong>可重复读</strong> <strong>两个隔离级别</strong>，他们的<strong>快照读</strong>都是通过read view + undo log来实现的，区别在与<strong>创建readview的时机不同：</strong><ul>
+<li>读已提交是在每个select都会生成一个read view；</li>
+<li>可重复读是在启动事务时生成一个read view，整个事务期间都在使用这个read view;</li>
+</ul>
+</li>
+<li>两个隔离级别是通过 <strong>事务的read view里的字段</strong> 和 <strong>记录中的两个隐藏列</strong> 进行比对，如果不满足可见，就会顺着 undo log版本链找到满足其可见性的记录，从而控制并发事务访问同一个记录的行为。这就叫<strong>MVCC</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="关于buffer-pool"><a href="#关于buffer-pool" class="headerlink" title="关于buffer pool:"></a>关于buffer pool:</h3><p>引入buffer pool是为了提升读写性能，buffer pool中缓存的是数据页（默认16kb）：</p>
+<ul>
+<li>如果读记录时，该记录在缓冲池中，那么就从缓冲池中读，否则去磁盘中读；</li>
+<li>修改记录时，如果记录存在于缓冲池中，那么直接修改该记录在缓冲池中的页，并将其标志为脏页。脏页不会立即写入磁盘，后台线程会挑选一个合适的时机将其写入磁盘。</li>
+</ul>
+<p>MySQL启动的时候，InnoDB会为 buffer pool中申请一片空闲空间，随着程序运行，磁盘上的页会逐渐放进这些空闲空间中。</p>
+<p>当查询一条记录的时候，InnoDB是会把整个页的数据加载到buffer pool中，页加载后，再通过页中的 页目录 去定位到某条具体的记录。</p>
+<h3 id="关于redo-log"><a href="#关于redo-log" class="headerlink" title="关于redo log:"></a>关于redo log:</h3><p>引入redo log，是因为<strong>buffer pool是基于内存</strong>的，在断电重启时，<strong>没来得及落盘的脏页数据会丢失</strong>。为了解决这个问题，<strong>当有一条记录需要修改的时候，InnoDB首先更新内存（标记为脏页），然后将本次对这个页的修改以 redo log的形式记录下来。</strong></p>
+<p>随后，后台线程会在合适的时机将脏页写到磁盘中。</p>
+<ul>
+<li>redo log 是<strong>物理日志</strong>，记录了<strong>某个数据页做了什么修改</strong>，比如<strong>对 XXX 表空间中的 YYY 数据页 ZZZ 偏移量的地方做了AAA 更新</strong>，每当执行一个事务就会产生这样的一条或者多条物理日志。</li>
+<li>事务提交时，只用<strong>先将redo log持久化到磁盘</strong>中就行，（内存中的脏页是在合适的时机进行落盘的）。<strong>哪怕系统崩溃发生内存掉电重启，根据磁盘中redo log中的记录进行恢复即可</strong>。</li>
+</ul>
+<h3 id="redo-log-和-undo-log的区别"><a href="#redo-log-和-undo-log的区别" class="headerlink" title="redo log 和 undo log的区别"></a>redo log 和 undo log的区别</h3><ul>
+<li>这俩日志都是InnoDB引擎的日志；</li>
+<li>redo log是重做日志，记录了此次事务完成后的状态，记录的是更新后的值；</li>
+<li>undo log是回滚日志，记录了此次事务开始前的状态，记录的是更新前的值；</li>
+<li>如果事务提交之前发生崩溃，会通过undo log回滚事务；如果事务提交之后发生崩溃，会通过redo log恢复事务。</li>
+<li>redo log保证了持久性；而undo log保证了原子性；</li>
+</ul>
+<h3 id="bin-log与-redo-log的区别"><a href="#bin-log与-redo-log的区别" class="headerlink" title="bin log与 redo log的区别"></a>bin log与 redo log的区别</h3><ol>
+<li><strong>适用对象不同：</strong></li>
+</ol>
+<ul>
+<li>bin log是<strong>server层</strong>实现的日志，<strong>所有存储引擎都能用</strong>。</li>
+<li>redo log和 undo log都是<strong>InnoDB引擎</strong>实现的日志。</li>
+</ul>
+<ol start="2">
+<li><strong>文件格式不同：</strong></li>
+</ol>
+<ul>
+<li>（<strong>记录逻辑操作</strong>）bin log 有3种格式类型，分别是<strong>statement(默认的格式)、row、mixed</strong>，区别如下：<ul>
+<li>StateMent：每一条修改数据的sql都会记录到bin log中（相当于记下了逻辑操作，可以称为逻辑日志）。主从复制中 slave 根据sql语句重现。但是<strong>有动态函数的问题</strong>，比如UUID或now，在主库中执行的结果并不是从库中执行的结果。<strong>这会导致复制的数据不一致。</strong></li>
+<li>Row： 记录行数据最终被变成什么样了，不会出现动态函数的问题。但它的<strong>缺点是每行数据的变化结果都会被记录</strong>，比如批量执行update , statement模式就只会记录一个update语句，而 row模式下，有多少次update 就产生多少update语句，使得binlog文件过大。</li>
+<li>mixed: 包含了上面的 statement 和 row 模式，他会根据不同的情况自动使用row模式和statement模式。</li>
+</ul>
+</li>
+<li><strong>redo log是物理日志</strong>，记录某个记录在某个数据页做了什么修改。</li>
+</ul>
+<ol start="3">
+<li><strong>写入方式不同</strong>：</li>
+</ol>
+<ul>
+<li><strong>bin log是追加写</strong>，写满一个文件就创建一个新的文件接着写，不会覆盖旧日志，<strong>保留的是全量日志</strong>；</li>
+<li><strong>redo log是循环写</strong>，日志空间大小是固定的，全部写满就从头开始，保<strong>存未被刷入磁盘的脏页日志</strong>；</li>
+</ul>
+<ol start="4">
+<li><strong>用途不同:</strong></li>
+</ol>
+<ul>
+<li>bin log用于备份恢复，主从复制（一致性）；</li>
+<li>redo log用于掉电等故障恢复 （持久性）；</li>
+</ul>
+<ol start="5">
+<li><strong>写入时机不同</strong>：</li>
+</ol>
+<ul>
+<li>bin log在<strong>事务提交之后</strong>才会被写入磁盘，因此可能会有一定的延迟；</li>
+<li>redo log在<strong>事务提交之前</strong>就会被写入磁盘，确保了事务的持久性；</li>
+</ul>
+<p><strong>如果不小心把整个数据库的数据删除了，那么需要使用bin log来进行恢复，因为bin log保留了全量日志，这也是为什么redo log不行。</strong></p>
+<h3 id="主从复制如何实现（依赖bin-log）："><a href="#主从复制如何实现（依赖bin-log）：" class="headerlink" title="主从复制如何实现（依赖bin log）："></a>主从复制如何实现（依赖bin log）：</h3><p>复制的过程就是将<strong>bin log中的数据从主库传输到从库上</strong>。这个过程一般是<strong>异步</strong>的。</p>
+<p><strong>MySQL 集群的主从复制过程</strong>分为三个阶段：</p>
+<ul>
+<li><strong>写入 bin log</strong>： 主库写 bin log，提交事务，并更新本地存储的数据；</li>
+<li><strong>同步 bin log</strong>：把bin log复制到所有从库上，每个从库把bin log写到relay log暂存日志中，返回给主库一个 复制成功 的响应；</li>
+<li><strong>回放 bin log</strong>：回放 bin log，并更新存储引擎中的数据：从库创建一个用于回放 bin log的线程，去读relay log中继日志，然后回放bin log更新数据，最终实现主从的数据一致性。</li>
+</ul>
+<p><strong>主从复制模型</strong>：</p>
+<ul>
+<li>同步复制：很烂，主库要所有从库都完成复制才能返回客户端的结果，性能很差。</li>
+<li><strong>异步复制</strong>：默认的模型，这种模式下，<strong>一旦主库发生宕机，数据就会发生丢失</strong>。</li>
+<li><strong>半同步复制</strong>：5.7版本后增加的一种方式，事务线程不用等待所有从库复制成功响应，只<strong>要一部分复制成功响应回来就行。</strong>这种方式兼顾了同步复制和异步复制的有点，<strong>即使出现主库宕机，至少还有一个从库有最新的数据，不存在数据丢失的风险。</strong></li>
+</ul>
+<h3 id="为什么需要进行两阶段提交？"><a href="#为什么需要进行两阶段提交？" class="headerlink" title="为什么需要进行两阶段提交？"></a>为什么需要进行两阶段提交？</h3><p>在<strong>持久化</strong>redo log和bin log这两份日志的时候，<strong>如果出现半成功的状态</strong>（两个log有一个持久化成功了，一个没成功），就<strong>会造成主从库内容的不一致性。</strong>这是因为<strong>redo log影响主库的内容，bin log影响从库的内容，所以redo log和bin log必须保持一致才能保证主从一致性。</strong></p>
+<p><strong>半成功就是下面两种情况：</strong></p>
+<ul>
+<li><strong>redo log持久化成功了（事务成功提交了），但是bin log没有持久化成功</strong>：这导致主库恢复后根据redo log 有最新的数据，但是bin log会丢失更新，导致主从复制后，从库里保存的也不是最新的数据。</li>
+<li><strong>bin log持久化成功了，但是redo log没有持久化成功（redo log没持久化成功，那么恢复时会认为该事务无效）</strong>：因为恢复后MySQL认为该事务失效，所以恢复后直接回滚，主库保留的还是旧值。但是bin log里有最新的数据，在主从复制后又会导致不一致问题。</li>
+</ul>
+<p><strong>&#x3D;&#x3D;两阶段提交的内容&#x3D;&#x3D;</strong></p>
+<p>两阶段提交把单个事务的提交分为两个阶段： <strong>准备阶段（prepare）和 提交阶段（commit）</strong>阶段：</p>
+<ul>
+<li>在准备阶段，  协调者 询问两个 参与者（也就是这两个日志）有没有准备好。参与者 会做出应答，表示自己准备好了，或者没有准备好。</li>
+<li>在提交阶段，如果都准备好了，那么协调者 就可以执行 两个日志的持久化过程；如果有任何一个参与者没有准备好，协调者会宣布事务失效，执行事务的回滚操作。</li>
+</ul>
+<p><strong>具体内容概括如下：</strong></p>
+<ul>
+<li><strong>准备阶段：将redo log对应的事务提交状态设置为prepare，然后将redo log刷新到硬盘；</strong></li>
+<li><strong>提交阶段：将bin log刷新到磁盘，接着调用引擎的提交事务接口，将redo log状态设置为commit</strong>（将事务设置为commit状态后，把该状态刷入到磁盘 redo log文件）；</li>
+</ul>
+<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><h2 id="快表quickList-List的数据结构-："><a href="#快表quickList-List的数据结构-：" class="headerlink" title="快表quickList (List的数据结构)："></a>快表quickList (List的数据结构)：</h2><p>快表其实就是 <strong>双向链表 + 压缩列表</strong> 的组合，<strong>一个快表就是一个链表，链表中的每个节点又是一个压缩列表</strong>。所以要先明白压缩列表是啥样的。</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517145008423.png" alt="image-20240517145008423"></p>
+<h3 id="压缩列表"><a href="#压缩列表" class="headerlink" title="压缩列表"></a>压缩列表</h3><p>压缩列表是为了<strong>减少内存</strong>而开发的。它是由连续内存块组成的顺序型数据结构（类似数组），具体长这样：</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517145304062.png" alt="image-20240517145304062"></p>
+<p>压缩列表<strong>表头有三个字段，表尾有一个字段</strong>：</p>
+<ul>
+<li><em><strong>zlbytes</strong></em>，记录整个压缩列表<strong>占用对内存字节数</strong>；</li>
+<li><em><strong>zltail</strong></em>，记录压缩列表<strong>「尾部」节点距离起始地址有多少字节</strong>，也就是列表尾的偏移量；</li>
+<li><em><strong>zllen</strong></em>，记录压缩列表包含的<strong>节点数量</strong>；</li>
+<li><em><strong>zlend</strong></em>，标记压缩列表的<strong>结束点</strong>，固定值 0xFF（十进制255）。</li>
+</ul>
+<p><strong>如果查表头和表尾</strong>，可以通过表头三个字段直接解决，<strong>复杂度o(1)<strong>；如果</strong>查询中间元素</strong>，复杂度就是<strong>o(N)<strong>了，所以</strong>压缩列表不适合存储过多元素。</strong></p>
+<p><strong>压缩列表的节点构成</strong>如下：</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517145901465.png" alt="image-20240517145901465"></p>
+<ul>
+<li><em><strong>prevlen</strong></em>，<strong>记录了「前一个节点」的长度</strong>，目的是为了实现<strong>从后向前</strong>遍历；</li>
+<li><em><strong>encoding</strong></em>，记录了<strong>当前节点实际数据的「类型和长度」</strong>，类型主要有两种：字符串和整数（由此可知，<strong>节点长度并不固定，这与数组不同</strong>）。</li>
+<li><em><strong>data</strong></em>，记录了<strong>当前节点的实际数据</strong>，类型和长度都由 <code>encoding</code> 决定；</li>
+</ul>
+<p><strong>压缩列表的连锁更新问题：</strong></p>
+<p>压缩列表<strong>新增某个元素或修改某个元素</strong>时，如果<strong>空间不够</strong>，压缩列表<strong>占用的内存空间就需要重新分配</strong>。而当<strong>新插入的元素较大</strong>时，可能会<strong>导致后续元素的prevlen占用空间都发生变化</strong>（多米诺骨牌似的），从而<strong>引起连锁更新</strong>问题，导致<strong>每个元素空间都要重新分配，造成访问压缩列表性能的下降</strong>。</p>
+<ul>
+<li>具体是指，如果前一个节点的长度小于254B，那么prevlen用1B空间来保存长度值；如果前一个节点长度大于254字节，那么prevlen属性需要用5B的空间来保存（没有为什么用5字节而不是其他字节，就是这样子设计的）</li>
+<li>假如压缩列表中有连续的好多250~253B大小的节点，假如头结点后插入一个长度大于254B的新节点，会导致后面节点因为prevLen字节变为5字节导致整体字节大于254字节，而纷纷重新分配内存空间，成了一个多米诺效应。</li>
+</ul>
+<p><strong>连锁更新会导致压缩列表的访问性能急剧下降</strong>。</p>
+<p>回到快表这个数据结构上来。</p>
+<p>向<strong>快表新添加一个元素</strong>的时候，不会像普通的链表那样直接新建一个节点插入，而是<strong>先检查插入位置的压缩列表能不能容纳该元素，如果能容纳就直接保存到压缩列表，否则就新建一个节点完成插入。</strong></p>
+<p><strong>快表会控制节点里压缩列表的长度或元素个数，来规避潜在的连锁更新风险。但是并没有解决连锁更新问题（</strong>压缩列表自己都没解决这个问题，快表就更不会解决了，只会尽可能的减少发生连锁更新的可能性。）</p>
+<h2 id="跳表（ZSet的数据结构）："><a href="#跳表（ZSet的数据结构）：" class="headerlink" title="跳表（ZSet的数据结构）："></a>跳表（ZSet的数据结构）：</h2><p><strong>Zset对象的底层使用了跳表</strong>。跳表的优势在于支持平均**时间复杂度o(log n)**复杂度的节点查找。</p>
+<h3 id="跳表的数据结构"><a href="#跳表的数据结构" class="headerlink" title="跳表的数据结构"></a>跳表的数据结构</h3><p>Zset结构体里面有两个数据结构：跳表 &amp; 哈希表，执行数据插入或者数据更新的时候，会依次在跳表和哈希表中插入或更新相应的数据，从而保证了跳表和哈希表中记录的信息一致。</p>
+<p>那么为什么说<strong>Zset的底层是 跳表 而不是 跳表 + 哈希表</strong> 呢？其实<strong>哈希表只是为了在常数时间内获取score权重</strong>，<strong>大部分操作都是跳表实现的。</strong></p>
+<p>跳表可以理解为使用<strong>链表形式实现的一种二分查找</strong>。为了提升查找效率，对有序链表建立一级级索引，<strong>每两个节点提取一个节点到索引</strong>层。索引层的每个节点都包含两个指针，一个指向下一个节点；</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240516210648052.png" alt="image-20240516210648052"></p>
+<p>与建立一级索引的方式类似，在第一级索引的基础上，每两个节点抽出一个节点到第二级索引，如下：</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240516211658772.png" alt="image-20240516211658772"></p>
+<h3 id="跳表的查询过程"><a href="#跳表的查询过程" class="headerlink" title="跳表的查询过程"></a><strong>跳表的查询过程</strong></h3><p>按照上面建立的跳表，假如我们想查找18对应的这个节点，首先遍历二级索引1、7、14三个节点，然后向一级索引查找14这个节点（14的下一个节点是23，发现18&lt;23，然后就去下一级原始链表中查找）、原始列表14、18两个节点。</p>
+<h3 id="跳表的插入和删除"><a href="#跳表的插入和删除" class="headerlink" title="跳表的插入和删除"></a><strong>跳表的插入和删除</strong></h3><p>跳表支持数据的插入和删除，并且**插入和删除的操作时间复杂度都是o(log n)**。</p>
+<p><strong>插入和删除操作</strong>需要先找到插入位置。得益于多级索引，<strong>o(log n)查找到插入&#x2F;删除位置</strong>。然后进行插入&#x2F;删除。</p>
+<p><strong>删除操作需要用到 删除节点 的 前驱节点</strong>。可以像插入操作一样，通过索引逐层向下遍历到原始链表中要删除的节点，并记录其前驱节点，从而实现删除操作。</p>
+<h3 id="跳表索引动态更新"><a href="#跳表索引动态更新" class="headerlink" title="跳表索引动态更新"></a>跳表索引动态更新</h3><p>当频繁插入数据时，如果插入时不进行索引更新，就有可能导致某2个节点之间的数据非常多，极端情况下会退化成单链表。</p>
+<p>为了避免性能下降，需要在插入、删除的过程中，<strong>动态的更新跳表的索引结构</strong>。而这一操作是借助<strong>随机函数</strong>实现的。</p>
+<p>当向跳表中<strong>插入数据</strong>时，我们选择同时将这个数据插入到部分索引层中。如何决定插入到哪些索引层中呢？<strong>通过一个随机函数来指定</strong>，比如通过 <strong>随机函数得到某个值K，那么就将这个节点添加到第一级到第K级的索引中去</strong>。</p>
+<h3 id="小林coding中关于跳表节点层数设置的内容："><a href="#小林coding中关于跳表节点层数设置的内容：" class="headerlink" title="小林coding中关于跳表节点层数设置的内容："></a>小林coding中关于跳表节点层数设置的内容：</h3><p>小林中将跳表抽象成了如下结构（实际上都是一回事）：</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517141414135.png" alt="image-20240517141414135"></p>
+<ul>
+<li>跳表的<strong>相邻两层的节点数量最理想的比例是2：1</strong>（上面的内容也说了，每两个节点取一个作为索引，意思差不多）。</li>
+<li><strong>如果在新增或删除节点时，调整链表以维持比例的话，会带来额外的开销。</strong>于是Redis在创建节点的时候，<strong>随机生成每个节点的层数</strong>，并没有严格维持相邻两层节点数量比例为2：1的情况（简单来说就是，<strong>抛硬币来决定为新节点创建几个索引</strong>）。<ul>
+<li>具体来说，<strong>跳表在创建节点的时候，会生成一个范围【0-1】的随机数，如果随机数小于0.25，那么层数就增加一层，然后继续生成下一个随机数，直到随机数的结果大于0.25结束，最终确定该节点的层数。</strong>（层数越高，概率越低）</li>
+<li>如果层高最大限制是64，那么<strong>在创建跳表 头结点 的时候，就会直接创建64层高度的头节点</strong>（这里头结点就是上面图里的头结点）</li>
+</ul>
+</li>
+</ul>
+<h3 id="为什么选择使用跳表而不是平衡树-红黑树-？"><a href="#为什么选择使用跳表而不是平衡树-红黑树-？" class="headerlink" title="为什么选择使用跳表而不是平衡树(红黑树)？"></a>为什么选择使用跳表而不是平衡树(红黑树)？</h3><ul>
+<li><strong>从内存占用上来比较，跳表比平衡树更灵活一点。</strong> 平衡树每个节点都有两个指针，而跳表每个节点包含的指针平均数目为1&#x2F;（1-p），具体取决于p（比如上面的p&#x3D;0.25，每四个节点才有有一个节点来建立上层索引）。相比之下跳表有优势。</li>
+<li><strong>做范围查找的时候，跳表比平衡树操作要简单</strong>。在平衡树上，找到指定范围的最小值之后，还需要以中序遍历的方式继续寻找其他不超过大值的节点，讲真这里的中序遍历并不好实现（个人理解，是因为涉及一些剪枝）。而跳表就非常好实现，只要找到最小值，在原始链表上遍历若干步就可以实现。</li>
+<li><strong>从算法实现复杂程度上来说，跳表比平衡树要好实现的多。</strong>平衡树需要顾及各种调整操作，逻辑复杂。而跳表的插入和删除只需要修改相邻结点的指针，简单快速。</li>
+</ul>
+<h2 id="如何保证缓存和数据库的一致性："><a href="#如何保证缓存和数据库的一致性：" class="headerlink" title="如何保证缓存和数据库的一致性："></a>如何保证缓存和数据库的一致性：</h2><p>首先确定一点，在保证可用性和分区容错性的前提下，<strong>无法保证缓存和数据库的绝对一致</strong>。</p>
+<h3 id="产生不一致的两种原因如下："><a href="#产生不一致的两种原因如下：" class="headerlink" title="产生不一致的两种原因如下："></a><strong>产生不一致的两种原因</strong>如下：</h3><ul>
+<li>缓存key删除失败：没删除成功，但是数据库确实更新了，然后就不一致了；</li>
+<li>并发写入了脏数据：如果我们先删除缓存，再更新数据库。那么并发过程中，一部分线程会读到还没更新好的数据库中的旧数据，之后用这个旧数据重建缓存，就导致了缓存和数据库的不一致性。</li>
+</ul>
+<p>关于缓存更新策略，这里选用 删除缓存而不是更新缓存 的方式，因为删除缓存比更新缓存快得多。</p>
+<p>整体的缓存更新策略就是：<strong>先删缓存，再更新数据库。</strong>但是这里除了这两步，还会有其他的策略尽可能保证一致性。</p>
+<h3 id="缓存更新策略："><a href="#缓存更新策略：" class="headerlink" title="缓存更新策略："></a>缓存更新策略：</h3><ol>
+<li><strong>消息队列保证key被删除</strong>：</li>
+</ol>
+<p>通过引入消息队列，<strong>把要删除的key 或者 删除失败的key 丢进消息队列</strong>，<strong>利用消息队列的重试机制，重试删除对应的key</strong>；</p>
+<p>这个方法的缺点在于，对业务代码有一定的侵入性。</p>
+<ol start="2">
+<li><strong>数据库订阅+消息队列保证key被删除：</strong></li>
+</ol>
+<p>可以<strong>用一个服务去监听数据库的 binlog，获取需要操作的数据。然后用一个公共的服务获取订阅程序传来的信息，进行缓存删除</strong>操作。</p>
+<p>这种方式降低了对业务的侵入，但是提升了系统的复杂度。</p>
+<ol start="3">
+<li><strong>⭐延迟双删防止脏数据</strong></li>
+</ol>
+<p>在第二条产生不一致的原因中，缓存可能读到没更新的旧数据然后进行缓存重建，这就导致了脏数据的出现。这种情况的解决方式就是延迟双删。</p>
+<p><strong>先删除缓存 —&gt; 更新数据库 —&gt; 隔一段时间再次删除缓存</strong></p>
+<p>这种方式下，<strong>延时时间需要仔细考量和测试</strong>。</p>
+<ol start="4">
+<li><strong>设置缓存过期时间兜底</strong></li>
+</ol>
+<p>朴素但有用的方法，给缓存设置一个合理的过期时间，即使发生了不一致，也不会永远不一致下去。</p>
+<h2 id="怎么处理热key："><a href="#怎么处理热key：" class="headerlink" title="怎么处理热key："></a>怎么处理热key：</h2><p><strong>热key就是 redis中被频繁访问的key</strong>。当某个key被大量的读取或写入操作访问时，就会导致这个key成为热key。</p>
+<h3 id="如何对热key进行监控："><a href="#如何对热key进行监控：" class="headerlink" title="如何对热key进行监控："></a>如何对热key进行监控：</h3><ul>
+<li><strong>客户端监控</strong>：例如，可以在客户端（指Redis客户端）设置全局字典，每次调用redis命令时，使用这个字典进行记录。</li>
+<li><strong>代理端监控：</strong>像Twemproxy、Codis这些基于代理的redis分布式架构，所有客户端的请求都是通过代理端完成的，可以在代理端进行收集统计。</li>
+<li><strong>Redis服务端监控：</strong>monitor命令可以监控到Redis执行的所有命令，因此可以用这个指令统计热点key。</li>
+</ul>
+<h3 id="热key处理方法："><a href="#热key处理方法：" class="headerlink" title="热key处理方法："></a>热key处理方法：</h3><ul>
+<li><strong>数据分片</strong>：将热key分散到不同的redis节点上，以避免某个节点的负载过高，提高整个系统的性能。</li>
+<li><strong>使用二级缓存：</strong>在热key的处理中，可以引入二级缓存，将热key的数据提前加载到内存中。当redis宕机时，可以直接从内存中查询数据。</li>
+</ul>
+<h3 id="热key重建（联系缓存击穿）："><a href="#热key重建（联系缓存击穿）：" class="headerlink" title="热key重建（联系缓存击穿）："></a>热key重建（联系缓存击穿）：</h3><p>缓存重建需要耗费比较长的时间，可能涉及sql查询、IO、复杂的计算等。<strong>在缓存失效的瞬间，大量线程会同时发起缓存重建的请求，导致后端压力增大甚至崩溃</strong>。</p>
+<p>针对热点key重建问题，采用以下方案来优化：</p>
+<ul>
+<li>使用互斥锁：用锁来保证只有一个线程能够缓存重建，其他线程等待重建缓存的线程执行完毕，再从缓存中读取数据即可。</li>
+<li>设置永不过期：热点key在缓存中不设置过期时间，同时为每个value设置一个逻辑过期时间，当发现逻辑时间过期后，用一个单独的线程来进行重建缓存。这种方式可以在保证一致性的情况下，减少重建缓存的次数。</li>
+</ul>
+<h2 id="过期数据回收策略："><a href="#过期数据回收策略：" class="headerlink" title="过期数据回收策略："></a>过期数据回收策略：</h2><ul>
+<li><strong>惰性删除</strong>：当访问到一个过期的key的时候，redis会立即删除该key。<ul>
+<li>优点：如果过期键经常被访问，能及时删除过期键。</li>
+<li>缺点：如果过期键很少被访问，会占用大量内存。</li>
+</ul>
+</li>
+<li>定时删除： 在设置key的过期时间时，同时创建一个定时事件，当事件到达时，由事件处理器自动执行key的删除操作。</li>
+<li><strong>定期删除</strong>：redis默认每10秒执行一次定时任务，随机抽取一部分键进行检查，删除过期的键。<ul>
+<li>这种策略通过定期删除过期键来释放内存，相比于惰性删除，可以更及时的删除过期键，但也有可能会有一些过期键没被删除。</li>
+</ul>
+</li>
+</ul>
+<h2 id="内存溢出控制-x2F-内存淘汰策略："><a href="#内存溢出控制-x2F-内存淘汰策略：" class="headerlink" title="内存溢出控制&#x2F;内存淘汰策略："></a>内存溢出控制&#x2F;内存淘汰策略：</h2><p>redis所用内存达到<strong>maxmemory</strong>上限时会触发相应的溢出控制策略。</p>
+<h3 id="溢出控制策略："><a href="#溢出控制策略：" class="headerlink" title="溢出控制策略："></a>溢出控制策略：</h3><ol>
+<li><strong>不进行数据淘汰的策略：</strong></li>
+</ol>
+<ul>
+<li>noeviction：当内存不足，不会淘汰任何数据，而是直接报错。<ul>
+<li>适用于对数据丢失要求比较高的场景，但有可能OOM或者redis进程被杀死。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li><p><strong>进行数据淘汰的策略</strong> （又分为 <strong>在设置了过期时间的数据中淘汰</strong> 和 <strong>在所有数据范围内淘汰</strong>）：</p>
+<p>2.1<strong>在设置了过期时间的数据中淘汰的：</strong></p>
+<ul>
+<li>volatile-LRU：淘汰<strong>最近最少使用的、带有过期时间</strong> 的数据。适用于缓存一些热点数据的场景，但可能导致一些长期未使用的数据被误删。</li>
+<li>volatile-random：随机淘汰设置了过期时间的任意键值。</li>
+<li>volatile-ttl：优先淘汰更早过期的值。</li>
+<li>volatile-LFU：淘汰所有设置了过期时间的键值中，最少使用的键。</li>
+</ul>
+<p>2.2<strong>在所有数据范围内进行淘汰的策略：</strong></p>
+<ul>
+<li>allkeys-LRU：淘汰最近最少使用的数据，<strong>不管这些数据是否过期</strong>。会导致有用的数据被误删。</li>
+<li>allkeys-random：随即淘汰任意键值。</li>
+<li>allkeys-LFU：淘汰整个键范围中最少使用的键。</li>
+</ul>
+</li>
+<li><p><strong>LFU 和 LRU的区别：</strong></p>
+<ul>
+<li>LRU是最近最少使用，redis在对象结构体中添加一个额外的字段，用于记录此数据的最后一次访问时间。进行内存淘汰时，redis随机选取5个值，然后淘汰最久未被使用的那个。</li>
+<li>LFU是最近最不常用的意思，LFU会记录数据的访问次数，然后根据访问次数来淘汰数据。</li>
+</ul>
+</li>
+</ol>
+<h2 id="为什么Redis快"><a href="#为什么Redis快" class="headerlink" title="为什么Redis快"></a>为什么Redis快</h2><ul>
+<li><strong>完全基于内存操作</strong>：redis基于内存，能实现更快速的读写。</li>
+<li><strong>单线程操作</strong>：redis单线程处理客户端请求，可以避免多线程之间上下文的切换开销，提高了效率。<ul>
+<li>6.0的<strong>多线程是用来处理数据的读写和协议解析</strong>，但是它<strong>执行命令的时候还是单线程的</strong>。</li>
+</ul>
+</li>
+<li><strong>非阻塞的IO多路复用机制</strong>：这里的IO是网络IO，redis采用了IO多路复用模型，通过一个线程来监听多个客户端连接，当有事件发生时才进行处理，这种机制避免了阻塞和线程切换，提高了并发能力。<ul>
+<li>阻塞IO模型：逐个检查，有一个没完成就得阻塞等待其完成。</li>
+<li>非阻塞IO模型：谁完成了谁就发出通知，老师收到通知后进行处理，然后继续回讲台等。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Redis持久化："><a href="#Redis持久化：" class="headerlink" title="Redis持久化："></a>Redis持久化：</h2><p>因为数据都在内存中，易发生丢失，所以需要持久化机制来将数据保存到磁盘中，在恢复时就能从磁盘进行恢复。</p>
+<p>redis主要有三种持久化方式：</p>
+<ul>
+<li>AOF日志：每执行一次写命令，就把该命令追加到AOF日志里。</li>
+<li>RDB快照：保存某一时刻内存数据的快照。RDB文件是一个二进制压缩文件。</li>
+<li>混合持久化： 4.0新增的方式，集合了上面两种优点。</li>
+</ul>
+<h3 id="AOF日志："><a href="#AOF日志：" class="headerlink" title="AOF日志："></a>AOF日志：</h3><p>每有写操作就追加到AOF日志中，恢复也是从AOF日志中<strong>逐条执行命令</strong>进行恢复</p>
+<p><strong>redis写入AOF日志的流程如下：</strong></p>
+<ul>
+<li>所有的写入命令会追加到<strong>aof缓冲区</strong>中。</li>
+<li>通过<strong>write系统调用</strong>，将aof缓冲区的数据写入AOF文件，此时<strong>数据并没有写入硬盘，而是拷贝到了内核缓冲区</strong>，等待内核将数据写回硬盘。内核缓冲区的数据何时将内容写入硬盘，由写盘策略决定。<strong>写盘策略</strong>有以下几种：<ul>
+<li><strong>always：</strong>每次写操作执行后，就把AOF同步到硬盘。</li>
+<li><strong>EverySec：</strong>写入命令先放到<strong>内核缓冲区</strong>内，然后<strong>每隔1秒将内核缓冲区内的内容写到硬盘</strong>。<strong>宕机恢复会丢失1秒的数据。</strong></li>
+<li><strong>No：</strong>写入命令放到内核缓冲区内，但是<strong>写回硬盘的时机由系统控制</strong>，因此<strong>宕机恢复可能丢失很多数据。</strong></li>
+</ul>
+</li>
+<li>随着AOF文件越来越大，<strong>需要定期对AOF文件进行重写</strong>，以此来压缩AOF文件大小。<ul>
+<li><strong>AOF压缩过程</strong>简单来说，就是压缩时会读取所有键值对，把每一个键值对变成记录，保存到新的AOF文件并进行替换。（<strong>相当于剔除了历史记录，只保留最新的结果</strong>）</li>
+<li><strong>AOF重写过程是由后台子进程来进行的</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="RDB快照："><a href="#RDB快照：" class="headerlink" title="RDB快照："></a>RDB快照：</h3><p>rdb快照就是把当前数据生成快照（<strong>全量快照</strong>）保存在硬盘中。出发RDB持久化的过程分为 <strong>手动触发 和 自动触发</strong>。</p>
+<ul>
+<li><strong>手动触发分为save和bgsave</strong>：save会阻塞当前线程，bgsave是fork一个子线程来持久化，fork的时候会阻塞当前线程。</li>
+<li><strong>自动触发</strong>是，我们可以设置save条件，比如它XX秒内执行了超过XXX条修改，就<strong>进行bgsave</strong>来持久化。当然，还有其他条件会自动触发RDB持久化：<ul>
+<li><strong>从节点进行全量复制</strong>（涉及主从复制问题）：从节点第一次复制内容，会请求获取主节点的所有信息，这个时候主节点自动会生成一个RDB发给从节点。</li>
+<li>执行<strong>debug reload命令</strong>重新加载Redis时，也会自动触发save。</li>
+</ul>
+</li>
+</ul>
+<h3 id="RDB与AOF的优缺点对比："><a href="#RDB与AOF的优缺点对比：" class="headerlink" title="RDB与AOF的优缺点对比："></a>RDB与AOF的优缺点对比：</h3><ul>
+<li>RDB是全量快照，但他是压缩的二进制文件；而AOF记录了所有的写记录，就空间占用情况来说，AOF &gt; RDB；</li>
+<li>RDB恢复速度比AOF快。</li>
+<li>RDB实时性低，它是每隔一段时间进行持久化，故障恢复后数据会丢失；AOF实时性高（当然也要看是哪种写盘策略，如果是Always，实时性就很高）。</li>
+<li>RDB容灾性好，可以把RDB文件拷贝到远程机器或者文件系统，用于容灾恢复。</li>
+</ul>
+<h3 id="混合持久化："><a href="#混合持久化：" class="headerlink" title="混合持久化："></a>混合持久化：</h3><p><strong>RDB优点是恢复快，缺点是会丢失数据；AOF优点是丢失数据少，缺点是恢复速度不快。</strong>混合持久化结合了二者的优点。</p>
+<p>混合持久化<strong>在AOF重写阶段进行</strong>（上面说了，AOF文件大小达到一定的阈值，就会触发AOF重写）。</p>
+<p>在该阶段，<strong>首先进行RDB持久化，然后将RDB文件的内容 和 AOF日志文件</strong>放在一起，这里的<strong>AOF日志</strong>不再是全量的日志，而<strong>是RDB持久化开始到RDB持久化结束期间产生的AOF</strong>（这部分AOF通常很小）。</p>
+<p><strong>优点就是</strong>：在提升恢复速度的同时，大大减少了数据丢失的风险。</p>
+<p><strong>缺点很明显：</strong>可读性差，并且混合日志老版本的redis用不了。</p>
+<h2 id="Redis集群"><a href="#Redis集群" class="headerlink" title="Redis集群"></a>Redis集群</h2><h3 id="如何实现服务高可用："><a href="#如何实现服务高可用：" class="headerlink" title="如何实现服务高可用："></a>如何实现服务高可用：</h3><p>如果说<strong>高可用</strong>，那么必须得<strong>使用集群</strong>，并且进行<strong>读写分离</strong>。如果使用了集群，就涉及<strong>主从复制、哨兵模式、切片集群</strong>等问题。</p>
+<h4 id="高可用之主从复制："><a href="#高可用之主从复制：" class="headerlink" title="高可用之主从复制："></a>高可用之主从复制：</h4><p><strong>主从复制是redis高可用的最基本保证</strong>，并且主从服务器之间进行读写分离。<strong>主服务器可以进行读写操作</strong>，当发生写操作的时候，自动将写操作同步给 从服务器。<strong>从服务器一般是 只读</strong>，并接收主服务器同步过来的写命令。</p>
+<p><strong>⭐主从第一次同步⭐（第一次同步的时候，主服务器有数据，从服务器空荡荡，所以第一次是全量复制</strong>），主从第一次同步可以包括以下几个阶段：</p>
+<ul>
+<li><strong>第一阶段：建立连接、协商同步。</strong><ul>
+<li>从服务器与主服务器建立连接后，<strong>从服务器发送一个PSYNC命令</strong>，该命令包括自己的服务器标识，以及一个值为-1的offset偏移量（-1表示从服务器是第一次复制，offset表示当前复制进度）。</li>
+<li>主服务器收到从服务器发来的消息后，会返回一个FULLRESYNC响应，这个响应用来表示<strong>主服务器</strong>会采用<strong>全量复制</strong>的方式把数据 传送给从服务器。</li>
+</ul>
+</li>
+<li><strong>第二阶段：主服务器同步数据给从服务器。</strong><ul>
+<li>主服务器执行bgsave生成RDB快照，然后把这个快照发给从服务器。</li>
+<li>从服务器收到RDB快照后，先清空自己的所有数据，然后载入RDB快照。</li>
+<li>由于是bgsave，主服务器不会阻塞，因此<strong>主服务器在这三个阶段中收到的写命令会存到 replication buffer缓冲区里</strong>：<ul>
+<li>主服务器生成RDB快照期间；</li>
+<li>RDB快照传送到从服务器期间；</li>
+<li>从服务器加载RDB快照期间；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>第三阶段：主服务器发送新写命令给从服务器。</strong><ul>
+<li>从服务器加载完RDB快照后会发送一个确认给主服务器。</li>
+<li>主服务器将replication buffer缓冲区中的操作命令发给从服务器，从服务器进行执行，然后主从服务器的数据就一致了。</li>
+</ul>
+</li>
+</ul>
+<p><strong>⭐命令传播⭐</strong></p>
+<p><strong>主从服务器完成第一次同步后，双方之间就会维护一个TCP链接</strong>。</p>
+<p>后续主服务器可以通过这个连接继续将写操作命令传播给从服务器，然后从服务器执行该命令，使得主从数据一致。</p>
+<p><strong>这个TCP连接是长连接的</strong>，这意味着不用频繁的TCP连接带来不必要的开销。因此这个过程也成为<strong>基于长连接的命令传播。</strong></p>
+<p><strong>⭐增量复制⭐</strong></p>
+<p>主从第一次同步后，就会基于长连接进行命令传播。如果主从服务器在命令同步时发生了断开又恢复的情况，主从服务器会采用增量复制的方式进行同步。主要有三个步骤：</p>
+<ul>
+<li>从服务器回复网络后，会发送<strong>psync命令</strong>给主服务器，此时psync里面的offset不是-1；</li>
+<li>主服务器接收到该命令后，会发送一个响应，告诉从服务器接下来将会以 <strong>增量复制</strong> 的方式进行同步；</li>
+<li>然后，主服务器将主从断线期间，主服务器接收到的写命令发送给从服务器，然后从服务器执行这些命令。</li>
+</ul>
+<p><strong>Redis是异步复制，主节点每次收到写命令后，先写到内部的缓冲区，然后异步发送给从节点。</strong></p>
+<p><strong>⭐关于replication_buffer⭐</strong></p>
+<p>replication_buffer是一个<strong>环形缓冲区</strong>，用于主从服务器断开连接后，从中找到差异的数据。</p>
+<p>它有两个偏移量：<strong>master_repl_offset是主服务器用来记录自己写到的位置；slave_repl_offset是从服务器用来记录自己读到的位置。</strong></p>
+<p>一般来说，master_repl_offset是大于等于slave_offset的。这个时候直接把差值中的数据<strong>增量复制</strong>给从服务器；如果小于的话，只能采用<strong>全量复制</strong>了。</p>
+<h5 id="如何判断Redis某个节点是否正常工作"><a href="#如何判断Redis某个节点是否正常工作" class="headerlink" title="如何判断Redis某个节点是否正常工作"></a>如何判断Redis某个节点是否正常工作</h5><p>节点之间，通过互相检测心跳来判断节点是否正常工作。如果有一半以上的节点没有收到一个节点的心跳，集群就认为该节点挂了。会断开与该节点的连接。</p>
+<p>Redis主从节点之间发送的心跳频率是不一样的，而且作用也有区别：</p>
+<ul>
+<li>Redis主节点每10秒向从节点发送一次 ping指令，用于判断从节点的存活状态。</li>
+<li>从节点每1秒就向主节点汇报一次，汇报的内容就是自己同步的偏移量offset。汇报的目的有两个：<ul>
+<li>检测主节点状态。</li>
+<li>上报偏移量用来检查从节点数据有没有丢失，如果从节点数据丢失，再从主节点的复制缓冲区中拉取丢失数据。</li>
+</ul>
+</li>
+</ul>
+<h5 id="如何应对主从数据的不一致性："><a href="#如何应对主从数据的不一致性：" class="headerlink" title="如何应对主从数据的不一致性："></a>如何应对主从数据的不一致性：</h5><p>主从数据不一致因为主从数据同步是异步进行的，无法实现强一致性。</p>
+<ul>
+<li>保证主从节点之间网络通信良好，避免主从节点在不同的机房。</li>
+<li>INFO replication 命令可以查看主节点写的偏移量 master_repl_offset和从节点的偏移量 slave_repl_offset。因此可以开发一个程序监控二者的差值，以进行主从复制进度的监控。如果两个偏移量的差值大于我们设定的阈值，可以不让客户端从这个节点读取，这样可以减少读到不一致数据的情况。</li>
+</ul>
+<h5 id="如何应对主从切换导致的数据丢失："><a href="#如何应对主从切换导致的数据丢失：" class="headerlink" title="如何应对主从切换导致的数据丢失："></a>如何应对主从切换导致的数据丢失：</h5><p><strong>异步复制导致的数据丢失：</strong></p>
+<ul>
+<li>从节点还没来得及同步主节点，主节点就挂了。这种情况会导致数据的丢失。</li>
+<li>redis有一个配置参数 min-slaves-max-lag，表示一旦所有的从节点数据复制和同步的延迟都超过了 定义的值，那么主节点就会拒绝接受任何请求。</li>
+<li>假设我们给min-slave-max-lag 设置为10s，根据目前主从复制的速度，如果数据同步完成所需要的时间超过10s，就会认为master未来宕机损失的数据要更多，那么master就会拒绝写请求。</li>
+</ul>
+<p><strong>集群脑裂带来的数据丢失：</strong></p>
+<p>1.<strong>脑裂是怎么一回事？</strong></p>
+<ul>
+<li>在<strong>一主多从</strong>的集群中，主节点负责写操作，从节点负责读。假如这时候，<strong>主节点与所有从节点都失联了，但是客户端与主节点连接没事</strong>（等于客户端不知道这回事，继续往主节点里写数据）。显然从节点们要选举出一个新的主节点，选举完成后，现在的集群中相当于出现了两个主节点（一个原来的，一个新选举出来的），这就是脑裂。</li>
+<li>假设过了一段时间，原来的主节点恢复连接了，但由于新主节点已经选出来了，所以<strong>原主节点要降级为 从节点（</strong>即使它有最新的数据），并且向新的主节点发送同步请求，而第一次复制 是全量复制，所以<strong>全量复制后，发生了数据丢失</strong>。</li>
+</ul>
+<p>2.<strong>那么如何减少脑裂带来的数据丢失？</strong></p>
+<p>当<strong>主节点</strong>发现 <strong>从节点下线的数量太多</strong>，或者<strong>网络延迟太大</strong>的时候，那么<strong>主节点会禁止写操作</strong>，直到把错误返回给客户端。</p>
+<p>Redis中有两个参数可以配置：</p>
+<ul>
+<li>min-slaves-to-write x：主节点必须要有至少x个从节点连接，否则禁止写入主节点。</li>
+<li>min-slave-max-lag x：主从复制的延迟不能超过x秒，否则禁止写入主节点。</li>
+</ul>
+<p>这两个配置配合使用的效果就是：<strong>与主节点连接的从节点个数必须大于N个，并且主从之间同步的延迟不能超过Y秒。否则主节点不接受客户端的写请求了。</strong></p>
+<p><strong>等到新主节点上线时，就只有新主节点能够接受和处理客户端请求，此时，新的数据会写入新主节点。而原主节点会被哨兵降级为从节点，即使它的数据被清空了，也不会有新的数据丢失。</strong></p>
+<h4 id="高可用之哨兵机制："><a href="#高可用之哨兵机制：" class="headerlink" title="高可用之哨兵机制："></a>高可用之哨兵机制：</h4><p>哨兵机制的主要作用就是<strong>实现主从节点故障转移</strong>。哨兵节点主要负责<strong>三件事情：监控、选主、通知</strong>。</p>
+<h5 id="如何判断主节点真的故障了（主管下线-amp-客观下线）："><a href="#如何判断主节点真的故障了（主管下线-amp-客观下线）：" class="headerlink" title="如何判断主节点真的故障了（主管下线&amp;客观下线）："></a>如何判断主节点真的故障了（主管下线&amp;客观下线）：</h5><ul>
+<li><strong>哨兵每隔一秒ping主节点和从节点</strong>，以确定主节点和从节点能正常运行。<strong>如果主从节点没有在规定时间内响应哨兵</strong>，哨兵就会将他们标记为 <strong>主观下线</strong>。</li>
+<li><strong>客观下线只适用于主节点。</strong>当一个哨兵判断主节点为 主管下线后，会向其他哨兵发起命令，其他哨兵收到这个命令后，就会根据自身和主节点的连接状况，做出赞成投票 和 反对投票。</li>
+<li>一旦这个哨兵的赞成票数大于 <strong>哨兵配置文件的 <quorum> 配置设定的值</strong>后，这时主节点就会被该哨兵（指第一个主观下线主节点的哨兵）标记为 <strong>客观下线</strong>。</li>
+<li><strong>主节点被客观下线后，就需要哨兵们选取新的主节点了</strong>。</li>
+</ul>
+<h5 id="由哪个哨兵进行故障转移？"><a href="#由哪个哨兵进行故障转移？" class="headerlink" title="由哪个哨兵进行故障转移？"></a>由哪个哨兵进行故障转移？</h5><p>哨兵是以哨兵集群的方式存在的，当<strong>主节点发生客观下线</strong>的时候，<strong>哨兵们同样会投票选出一个leader</strong>，由leader执行故障转移。<strong>既然是投票，肯定有候选者。</strong></p>
+<ul>
+<li><p><strong>哪个哨兵判断了主节点客观下线（指这个哨兵，而且到他投票数刚好大于quorum），哪个节点就是候选者。</strong></p>
+</li>
+<li><p>在得到候选者之后，哨兵们会给候选者投票，来决定候选者是否能转正为leader。</p>
+</li>
+<li><p><strong>每个哨兵只能投一票，除了候选者可以投给自己一票外，其余的哨兵只能投给其他哨兵</strong>。一旦候选者投票数满足下面两个要求，就可以转为leader:</p>
+<ul>
+<li>候选者拿到半数以上的票；</li>
+<li>候选者的票数还必须大于等于 哨兵配置文件中的 quorum值；</li>
+</ul>
+</li>
+<li><p>之后<strong>候选者转正为leader，进行主从故障转移</strong></p>
+</li>
+</ul>
+<h5 id="主从状态转移的过程是怎样的："><a href="#主从状态转移的过程是怎样的：" class="headerlink" title="主从状态转移的过程是怎样的："></a>主从状态转移的过程是怎样的：</h5><ul>
+<li>第一步，<strong>从 旧主节点 的从节点中</strong>（因为这些从节点的数据肯定比较新），选取一个节点，并将其转换为主节点。当然，从节点个数有很多，具体选择哪一个作为 新主节点 需要经过一系列的筛选：<ul>
+<li>首先把<strong>网络连接状况不好</strong>的从节点给<strong>排除掉</strong>；</li>
+<li>然后，在剩下的这些从节点中，继续从<strong>优先级、复制进度、ID号</strong>三个维度依次进行考察（如果某一项考察已经得出结论，就不再往下继续考察了）：<ul>
+<li><strong>优先级高的节点胜出</strong>：这个优先级可以是服务器性能等，看具体配置。</li>
+<li><strong>复制进度最靠前的节点胜出</strong>：这个好理解，谁的数据最新就胜出。</li>
+<li><strong>ID号小的从节点胜出</strong>：每个节点都有一个ID，小的胜出。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第二步：让 <strong>已下线主节点（旧主节点）的 从节点们修改复制目标</strong>，修改为 <strong>新主节点</strong>。这一操作可以通过向从节点发送 slaveof 指令来实现。</li>
+<li>第三步：将 <strong>新主节点 的IP 和信息</strong>，通过 <strong>发布&#x2F;订阅</strong> 机制通知给<strong>客户端</strong>。<ul>
+<li>主从切换完成后，<strong>哨兵就会向</strong> switch-master <strong>频道</strong>发送一个 <strong>发布新主节点IP地址和信息 的消息</strong>，这个时候<strong>客户端就可以收到</strong>这条消息，<strong>然后跟 新主节点 通信了</strong>。</li>
+</ul>
+</li>
+<li>第四步：继续<strong>监视旧主节点</strong>，当这个<strong>旧主节点重新上线</strong>的时候，将它<strong>设置为新主节点的从节点</strong>。</li>
+</ul>
+<h1 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h1><h2 id="如何保证消息不丢失："><a href="#如何保证消息不丢失：" class="headerlink" title="如何保证消息不丢失："></a>如何保证消息不丢失：</h2><h3 id="那些环节会造成消息丢失？"><a href="#那些环节会造成消息丢失？" class="headerlink" title="那些环节会造成消息丢失？"></a>那些环节会造成消息丢失？</h3><ul>
+<li>生产者往MQ中发送消息的过程中丢失；</li>
+<li>MQ主从同步的过程中：主从同步的过程中主节点挂了，就会丢失数据。</li>
+<li>消息持久化的过程中：内存中的消息在持久化到硬盘中挂了，那么就会造成消息的丢失。</li>
+<li>消费者从MQ获取消息的过程中丢失；</li>
+</ul>
+<h3 id="怎么去防止消息丢失："><a href="#怎么去防止消息丢失：" class="headerlink" title="怎么去防止消息丢失："></a>怎么去防止消息丢失：</h3><ol>
+<li><p><strong>防止生产者往MQ中发送消息的过程中的丢失</strong>：</p>
+<ul>
+<li><p><strong>消息发送 + 回调：</strong>异步发送的时候，应该在回调方法中检查，如果发送失败或者异常，则进行重试。</p>
+</li>
+<li><p><strong>事务消息：</strong>事务消息可以<strong>保证 生产者本地事务 和 生产者向MQ发送消息 的原子性</strong>。换句话说，<strong>本地事务和消息发送同成功同失败。</strong></p>
+<p>生产者首先向MQ中发送一个 半消息（该消息对消费者不可见，它仅用于检查MQ状态可用）；</p>
+<p>MQ向生产者发送 半消息响应，表示MQ可以使用；</p>
+<p>生产者知道MQ可用之后，会执行自己的本地事务，同时发送一个具体的消息，<strong>这个消息中包含了本地事务的状态</strong>（事务状态有三种：成功、失败、未知）；</p>
+<p>MQ接收到这个带有 本地事务状态的消息之后，检查这个状态信息。如果本地事务成功，说明该信息可以保留在MQ中；如果失败，则应该丢弃这个消息；如果状态未知，则向生产者发送消息回查，生产者会再次检查本地事务状态（比如数据库中是否能查到这条信息）并再次返回事务状态给MQ，MQ会重复上面的检查，已决定是否保留这条消息。</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240514155139282.png" alt="image-20240514155139282"></p>
+</li>
+</ul>
+</li>
+<li><p><strong>防止MQ主从同步的过程中发生消息丢失：</strong></p>
+<p><strong>普通集群中：</strong>有两种方式进行同步：</p>
+<ul>
+<li><strong>同步进行</strong>：从节点都完成主从复制后，才会通知生产者消息提交成功。这种方式不会发生消息丢失，但是效率低。</li>
+<li><strong>异步进行：</strong>消息保存到主节点上就进行返回，异步进行从节点的复制。这种方式效率高，但是有可能发生消息丢失。</li>
+</ul>
+<p><strong>Dledger集群中</strong>，会使用两阶段提交的方式：</p>
+<ul>
+<li>Dledger集群与普通集群不同的是，普通集群主从节点一开始就确定好了，<strong>但是Dledger集群所有节点都是一个等级，</strong>只有在接收消息时会<strong>选举出一个主节点</strong>，其余的节点作为从节点。</li>
+<li>当消息保存到主节点时，就返回给主节点消息提交成功，并设置为自己的状态为uncommitted 。然后主节点异步进行主从复制。当半数以上从节点完成主从复制后，主节点状态转变为committed。等到下一个消息来临的时候，所有节点不区分主从，这样在保证吞吐的同时又能保证消息不丢失。</li>
+</ul>
+</li>
+<li><p><strong>防止消息持久化的过程中丢失：</strong></p>
+<p>两种机制：<strong>同步刷盘 &amp; 异步刷盘</strong>。</p>
+<ul>
+<li>同步刷盘是每条消息完成持久化后才会返回确认信息。效率低。</li>
+<li>异步刷盘是每条消息先保存到虚拟内存中，之后就直接返回确认信息了，然后用多线程将虚拟内存中的消息进行持久化。</li>
+</ul>
+</li>
+<li><p><strong>防止消费者从MQ获取消息的过程中丢失（消费没有被成功消费导致丢失）：</strong></p>
+<p>消费者保证成功消费消息的关键在于 <strong>确认的时机</strong>。<strong>不在收到消息后就立即发送消费确认，而是在执行完所有业务逻辑后，再发送消费确认。</strong></p>
+<p>因为消息队列维护了消费的位置，逻辑执行失败了，没有确认，再去队列拉取消息，就还是之前的一条。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B1%82%E8%81%8C/" rel="tag"># 求职</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/10/23/%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="prev" title="刷题笔记">
+      <i class="fa fa-chevron-left"></i> 刷题笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/03/19/redis%E5%A4%8D%E4%B9%A0-%E7%BB%93%E5%90%88%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81java%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">一、java基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">8种基本数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%8A%80%E6%9C%AF"><span class="nav-number">1.2.</span> <span class="nav-text">包装类型的常量池技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%EF%BC%9F"><span class="nav-number">1.3.</span> <span class="nav-text">为什么要有包装类型？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%87%AA%E5%8A%A8%E6%8B%86%E8%A3%85%E7%AE%B1%EF%BC%9F%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="nav-number">1.4.</span> <span class="nav-text">什么是自动拆装箱？原理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E8%BF%87%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1%E5%BC%95%E5%8F%91%E7%9A%84NPE%EF%BC%88%E7%A9%BA%E6%8C%87%E9%92%88%EF%BC%89%E9%97%AE%E9%A2%98%E4%B9%88%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">遇到过自动拆箱引发的NPE（空指针）问题么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String%EF%BC%8CStringBuffer%E5%92%8CStringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9FString%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%B6%E4%B8%8D%E5%8F%AF%E5%8F%98%E7%9A%84%EF%BC%9F"><span class="nav-number">1.6.</span> <span class="nav-text">String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%80%9C-x3D-x3D-%E2%80%9D%E5%92%8C%E2%80%9Cequals-%E2%80%9D%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.7.</span> <span class="nav-text">“&#x3D;&#x3D;”和“equals ()”的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E5%8F%8D%E5%B0%84%EF%BC%9F%E5%8F%8D%E5%B0%84%E6%9C%89%E4%BB%80%E4%B9%88%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%9F%E4%BD%A0%E6%98%AF%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E5%8F%8D%E5%B0%84%E7%9A%84%EF%BC%88%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A1%86%E6%9E%B6%E9%9C%80%E8%A6%81%E5%8F%8D%E5%B0%84%EF%BC%9F%EF%BC%89"><span class="nav-number">1.8.</span> <span class="nav-text">Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%88%E8%B0%88%E5%AF%B9Java%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%8C%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">1.9.</span> <span class="nav-text">谈谈对Java注解的理解，解决了什么问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E6%B3%9B%E5%9E%8B%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E7%B1%BB%E5%9E%8B%E6%93%A6%E9%99%A4%EF%BC%9F%E6%B3%9B%E5%9E%8B%E6%9C%89%E5%93%AA%E4%BA%9B%E9%99%90%E5%88%B6%EF%BC%9F%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8B%E5%B8%B8%E7%94%A8%E7%9A%84%E9%80%9A%E9%85%8D%E7%AC%A6%EF%BC%9F"><span class="nav-number">1.10.</span> <span class="nav-text">Java泛型了解么？泛型的作用？什么是类型擦除？泛型有哪些限制？介绍一下常用的通配符？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E7%B1%BB%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F"><span class="nav-number">1.10.1.</span> <span class="nav-text">内部类了解么？匿名内部类了解么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BIO%EF%BC%8CNIO%EF%BC%8CAIO%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">1.10.2.</span> <span class="nav-text">BIO，NIO，AIO有什么区别？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java%E9%9B%86%E5%90%88"><span class="nav-number">2.</span> <span class="nav-text">Java集合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%A0%E7%A7%8D%E9%9B%86%E5%90%88%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">几种集合的数据结构：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JUC"><span class="nav-number">3.</span> <span class="nav-text">JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile%E5%85%B3%E9%94%AE%E5%AD%97%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">volatile关键字：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#synchronized%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">3.2.</span> <span class="nav-text">synchronized关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%881%EF%BC%89synchronized%E7%9A%84%E4%B8%89%E7%A7%8D%E7%94%A8%E6%B3%95%EF%BC%9A"><span class="nav-number">3.2.1.</span> <span class="nav-text">（1）synchronized的三种用法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%882%EF%BC%89synchronized-%E6%80%8E%E4%B9%88%E4%BF%9D%E6%8C%81%E5%8F%AF%E8%A7%81%E6%80%A7%E7%9A%84%EF%BC%9A"><span class="nav-number">3.2.2.</span> <span class="nav-text">（2）synchronized 怎么保持可见性的：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%883%EF%BC%89synchronized-%E6%80%8E%E4%B9%88%E4%BF%9D%E6%8C%81%E6%9C%89%E5%BA%8F%E6%80%A7%E7%9A%84%EF%BC%9A"><span class="nav-number">3.2.3.</span> <span class="nav-text">（3）synchronized 怎么保持有序性的：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%884%EF%BC%89synchronized%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%87%8D%E5%85%A5%E7%9A%84%EF%BC%9A"><span class="nav-number">3.2.4.</span> <span class="nav-text">（4）synchronized怎么实现可重入的：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%885%EF%BC%89synchronized%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="nav-number">3.2.5.</span> <span class="nav-text">（5）synchronized的实现原理：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%81%E4%BB%A5%E5%8F%8A%E9%94%81%E5%8D%87%E7%BA%A7-%E6%97%A0%E9%94%81%E3%80%81%E5%81%8F%E5%90%91%E9%94%81%E3%80%81%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%94%81%E3%80%81%E9%87%8D%E9%87%8F%E7%BA%A7%E9%94%81"><span class="nav-number">3.3.</span> <span class="nav-text">锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E5%90%91%E9%94%81"><span class="nav-number">3.3.1.</span> <span class="nav-text">偏向锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%94%81"><span class="nav-number">3.3.2.</span> <span class="nav-text">轻量级锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocal"><span class="nav-number">3.4.</span> <span class="nav-text">ThreadLocal</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Theadlocal%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">3.4.1.</span> <span class="nav-text">Theadlocal的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadLocal%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="nav-number">3.4.2.</span> <span class="nav-text">ThreadLocal内存泄漏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadLocalMap%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">3.4.3.</span> <span class="nav-text">ThreadLocalMap的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadLocalMap%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E5%93%88%E5%B8%8C%E5%86%B2%E7%AA%81"><span class="nav-number">3.4.4.</span> <span class="nav-text">ThreadLocalMap如何解决哈希冲突</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Spring%E6%A1%86%E6%9E%B6"><span class="nav-number">4.</span> <span class="nav-text">二、Spring框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">4.1.</span> <span class="nav-text">1.Bean生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96"><span class="nav-number">4.2.</span> <span class="nav-text">2. Spring循环依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Spring%E4%BA%8B%E5%8A%A1"><span class="nav-number">4.3.</span> <span class="nav-text">3. Spring事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%EF%BC%9A"><span class="nav-number">4.3.1.</span> <span class="nav-text">spring事务隔离级别：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E8%A1%8C%E4%B8%BA%EF%BC%9A"><span class="nav-number">4.3.2.</span> <span class="nav-text">Spring事务传播行为：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%A4%B1%E6%95%88%E5%9C%BA%E6%99%AF"><span class="nav-number">4.3.3.</span> <span class="nav-text">事务失效场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E4%B8%8D%E5%9B%9E%E6%BB%9A%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="nav-number">4.3.4.</span> <span class="nav-text">事务不回滚场景：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-IOC"><span class="nav-number">4.4.</span> <span class="nav-text">4. IOC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationContext-amp-BeanFactory"><span class="nav-number">4.4.1.</span> <span class="nav-text">ApplicationContext &amp; BeanFactory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BeanDefination"><span class="nav-number">4.4.2.</span> <span class="nav-text">BeanDefination</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DI"><span class="nav-number">4.4.3.</span> <span class="nav-text">DI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOP"><span class="nav-number">4.4.4.</span> <span class="nav-text">AOP</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="nav-number">5.</span> <span class="nav-text">三、计算机网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B-amp-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">5.1.</span> <span class="nav-text">1. TCP三次握手 &amp; 四次挥手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E4%B8%8EUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="nav-number">5.2.</span> <span class="nav-text">TCP与UDP的区别：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5URL%E5%88%B0%E6%98%BE%E7%A4%BA%E4%B8%BB%E9%A1%B5%E7%9A%84%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">5.3.</span> <span class="nav-text">浏览器输入URL到显示主页的过程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-%E5%92%8CHTTPS-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="nav-number">5.4.</span> <span class="nav-text">HTTP 和HTTPS 有什么区别：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81JVM"><span class="nav-number">6.</span> <span class="nav-text">四、JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-JVM%E5%86%85%E5%AD%98"><span class="nav-number">6.1.</span> <span class="nav-text">1. JVM内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90%EF%BC%9A"><span class="nav-number">6.1.1.</span> <span class="nav-text">jvm内存组成：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">6.1.2.</span> <span class="nav-text">对象创建过程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="nav-number">6.1.3.</span> <span class="nav-text">对象的内存布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">6.1.4.</span> <span class="nav-text">对象有哪几种引用类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E5%8C%BA"><span class="nav-number">6.1.5.</span> <span class="nav-text">堆内存分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E6%98%AF%E4%B8%8D%E6%98%AF%E5%9E%83%E5%9C%BE%EF%BC%9A"><span class="nav-number">6.1.6.</span> <span class="nav-text">怎么判断一个对象是不是垃圾：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="nav-number">6.1.7.</span> <span class="nav-text">垃圾回收算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSTW-%EF%BC%88stop-the-world%EF%BC%89%EF%BC%9A"><span class="nav-number">6.1.8.</span> <span class="nav-text">什么是STW （stop the world）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">6.1.9.</span> <span class="nav-text">JVM垃圾回收器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">6.1.10.</span> <span class="nav-text">类生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">6.1.11.</span> <span class="nav-text">类加载过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="nav-number">6.1.12.</span> <span class="nav-text">类加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="nav-number">6.1.13.</span> <span class="nav-text">双亲委派机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">6.1.14.</span> <span class="nav-text">使用双亲委派机制的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%A0%B4%E5%9D%8F%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">6.1.15.</span> <span class="nav-text">如何破坏类加载机制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81MySQL"><span class="nav-number">7.</span> <span class="nav-text">五、MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E5%9F%BA%E7%A1%80"><span class="nav-number">7.1.</span> <span class="nav-text">0.基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E6%9D%A1SQL%E6%89%A7%E8%A1%8C%E7%9A%84%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="nav-number">7.1.1.</span> <span class="nav-text">一条SQL执行的步骤：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%B4%A2%E5%BC%95"><span class="nav-number">7.2.</span> <span class="nav-text">1. 索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="nav-number">7.2.1.</span> <span class="nav-text">索引分类:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%A0%91%E7%B4%A2%E5%BC%95%EF%BC%88%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95-or-%E4%BA%8C%E7%BA%A7%E7%B4%A2%E5%BC%95%EF%BC%89"><span class="nav-number">7.2.2.</span> <span class="nav-text">B+树索引（主键索引 or 二级索引）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95-amp-%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8%E4%BC%98%E5%8C%96"><span class="nav-number">7.2.3.</span> <span class="nav-text">联合索引 &amp; 索引下推优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%AD%90%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">7.2.4.</span> <span class="nav-text">⭐索引失效的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%B4%A2%E5%BC%95%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">7.2.5.</span> <span class="nav-text">优化索引的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-number">7.2.6.</span> <span class="nav-text">索引存储结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-%E8%A1%A8%E7%9A%84%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84"><span class="nav-number">7.2.7.</span> <span class="nav-text">MySQL 表的物理结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BA%8B%E5%8A%A1"><span class="nav-number">7.3.</span> <span class="nav-text">2.  事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">7.3.1.</span> <span class="nav-text">2.1 事务隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E4%B8%AA%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%EF%BC%9A"><span class="nav-number">7.3.1.1.</span> <span class="nav-text">四个隔离级别：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E4%B8%AA%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">7.3.1.2.</span> <span class="nav-text">四个隔离级别是如何实现的</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-MySQL%E9%94%81"><span class="nav-number">7.4.</span> <span class="nav-text">3.  MySQL锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E9%94%81%EF%BC%9A"><span class="nav-number">7.4.1.</span> <span class="nav-text">全局锁：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E7%BA%A7%E9%94%81"><span class="nav-number">7.4.2.</span> <span class="nav-text">表级锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E7%BA%A7%E9%94%81%EF%BC%88%E5%8F%AA%E6%9C%89InnoDB-%E6%94%AF%E6%8C%81%EF%BC%89"><span class="nav-number">7.4.3.</span> <span class="nav-text">行级锁（只有InnoDB 支持）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%97%A5%E5%BF%97"><span class="nav-number">7.5.</span> <span class="nav-text">4. 日志</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL%E7%9A%84%E4%B8%89%E4%B8%AA%E6%97%A5%E5%BF%97%EF%BC%9A"><span class="nav-number">7.5.1.</span> <span class="nav-text">MySQL的三个日志：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Eundo-log"><span class="nav-number">7.5.2.</span> <span class="nav-text">关于undo log:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Ebuffer-pool"><span class="nav-number">7.5.3.</span> <span class="nav-text">关于buffer pool:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Eredo-log"><span class="nav-number">7.5.4.</span> <span class="nav-text">关于redo log:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redo-log-%E5%92%8C-undo-log%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">7.5.5.</span> <span class="nav-text">redo log 和 undo log的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bin-log%E4%B8%8E-redo-log%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">7.5.6.</span> <span class="nav-text">bin log与 redo log的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%88%E4%BE%9D%E8%B5%96bin-log%EF%BC%89%EF%BC%9A"><span class="nav-number">7.5.7.</span> <span class="nav-text">主从复制如何实现（依赖bin log）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%BF%9B%E8%A1%8C%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%9F"><span class="nav-number">7.5.8.</span> <span class="nav-text">为什么需要进行两阶段提交？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis"><span class="nav-number">8.</span> <span class="nav-text">Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E8%A1%A8quickList-List%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%EF%BC%9A"><span class="nav-number">8.1.</span> <span class="nav-text">快表quickList (List的数据结构)：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%88%97%E8%A1%A8"><span class="nav-number">8.1.1.</span> <span class="nav-text">压缩列表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%EF%BC%88ZSet%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%89%EF%BC%9A"><span class="nav-number">8.2.</span> <span class="nav-text">跳表（ZSet的数据结构）：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">8.2.1.</span> <span class="nav-text">跳表的数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E7%9A%84%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B"><span class="nav-number">8.2.2.</span> <span class="nav-text">跳表的查询过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E7%9A%84%E6%8F%92%E5%85%A5%E5%92%8C%E5%88%A0%E9%99%A4"><span class="nav-number">8.2.3.</span> <span class="nav-text">跳表的插入和删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E7%B4%A2%E5%BC%95%E5%8A%A8%E6%80%81%E6%9B%B4%E6%96%B0"><span class="nav-number">8.2.4.</span> <span class="nav-text">跳表索引动态更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E6%9E%97coding%E4%B8%AD%E5%85%B3%E4%BA%8E%E8%B7%B3%E8%A1%A8%E8%8A%82%E7%82%B9%E5%B1%82%E6%95%B0%E8%AE%BE%E7%BD%AE%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-number">8.2.5.</span> <span class="nav-text">小林coding中关于跳表节点层数设置的内容：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%E8%80%8C%E4%B8%8D%E6%98%AF%E5%B9%B3%E8%A1%A1%E6%A0%91-%E7%BA%A2%E9%BB%91%E6%A0%91-%EF%BC%9F"><span class="nav-number">8.2.6.</span> <span class="nav-text">为什么选择使用跳表而不是平衡树(红黑树)？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E7%BC%93%E5%AD%98%E5%92%8C%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%9A"><span class="nav-number">8.3.</span> <span class="nav-text">如何保证缓存和数据库的一致性：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A7%E7%94%9F%E4%B8%8D%E4%B8%80%E8%87%B4%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%8E%9F%E5%9B%A0%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="nav-number">8.3.1.</span> <span class="nav-text">产生不一致的两种原因如下：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%9B%B4%E6%96%B0%E7%AD%96%E7%95%A5%EF%BC%9A"><span class="nav-number">8.3.2.</span> <span class="nav-text">缓存更新策略：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%E7%83%ADkey%EF%BC%9A"><span class="nav-number">8.4.</span> <span class="nav-text">怎么处理热key：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AF%B9%E7%83%ADkey%E8%BF%9B%E8%A1%8C%E7%9B%91%E6%8E%A7%EF%BC%9A"><span class="nav-number">8.4.1.</span> <span class="nav-text">如何对热key进行监控：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%83%ADkey%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="nav-number">8.4.2.</span> <span class="nav-text">热key处理方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%83%ADkey%E9%87%8D%E5%BB%BA%EF%BC%88%E8%81%94%E7%B3%BB%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%89%EF%BC%9A"><span class="nav-number">8.4.3.</span> <span class="nav-text">热key重建（联系缓存击穿）：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%9C%9F%E6%95%B0%E6%8D%AE%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5%EF%BC%9A"><span class="nav-number">8.5.</span> <span class="nav-text">过期数据回收策略：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E6%8E%A7%E5%88%B6-x2F-%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%9A"><span class="nav-number">8.6.</span> <span class="nav-text">内存溢出控制&#x2F;内存淘汰策略：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%A2%E5%87%BA%E6%8E%A7%E5%88%B6%E7%AD%96%E7%95%A5%EF%BC%9A"><span class="nav-number">8.6.1.</span> <span class="nav-text">溢出控制策略：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88Redis%E5%BF%AB"><span class="nav-number">8.7.</span> <span class="nav-text">为什么Redis快</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%9A"><span class="nav-number">8.8.</span> <span class="nav-text">Redis持久化：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF%E6%97%A5%E5%BF%97%EF%BC%9A"><span class="nav-number">8.8.1.</span> <span class="nav-text">AOF日志：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB%E5%BF%AB%E7%85%A7%EF%BC%9A"><span class="nav-number">8.8.2.</span> <span class="nav-text">RDB快照：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB%E4%B8%8EAOF%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9%E5%AF%B9%E6%AF%94%EF%BC%9A"><span class="nav-number">8.8.3.</span> <span class="nav-text">RDB与AOF的优缺点对比：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%9A"><span class="nav-number">8.8.4.</span> <span class="nav-text">混合持久化：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E9%9B%86%E7%BE%A4"><span class="nav-number">8.9.</span> <span class="nav-text">Redis集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%9C%8D%E5%8A%A1%E9%AB%98%E5%8F%AF%E7%94%A8%EF%BC%9A"><span class="nav-number">8.9.1.</span> <span class="nav-text">如何实现服务高可用：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%EF%BC%9A"><span class="nav-number">8.9.1.1.</span> <span class="nav-text">高可用之主从复制：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%ADRedis%E6%9F%90%E4%B8%AA%E8%8A%82%E7%82%B9%E6%98%AF%E5%90%A6%E6%AD%A3%E5%B8%B8%E5%B7%A5%E4%BD%9C"><span class="nav-number">8.9.1.1.1.</span> <span class="nav-text">如何判断Redis某个节点是否正常工作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E4%B8%BB%E4%BB%8E%E6%95%B0%E6%8D%AE%E7%9A%84%E4%B8%8D%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%9A"><span class="nav-number">8.9.1.1.2.</span> <span class="nav-text">如何应对主从数据的不一致性：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E4%B8%BB%E4%BB%8E%E5%88%87%E6%8D%A2%E5%AF%BC%E8%87%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1%EF%BC%9A"><span class="nav-number">8.9.1.1.3.</span> <span class="nav-text">如何应对主从切换导致的数据丢失：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%EF%BC%9A"><span class="nav-number">8.9.1.2.</span> <span class="nav-text">高可用之哨兵机制：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E4%B8%BB%E8%8A%82%E7%82%B9%E7%9C%9F%E7%9A%84%E6%95%85%E9%9A%9C%E4%BA%86%EF%BC%88%E4%B8%BB%E7%AE%A1%E4%B8%8B%E7%BA%BF-amp-%E5%AE%A2%E8%A7%82%E4%B8%8B%E7%BA%BF%EF%BC%89%EF%BC%9A"><span class="nav-number">8.9.1.2.1.</span> <span class="nav-text">如何判断主节点真的故障了（主管下线&amp;客观下线）：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%B1%E5%93%AA%E4%B8%AA%E5%93%A8%E5%85%B5%E8%BF%9B%E8%A1%8C%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB%EF%BC%9F"><span class="nav-number">8.9.1.2.2.</span> <span class="nav-text">由哪个哨兵进行故障转移？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E7%8A%B6%E6%80%81%E8%BD%AC%E7%A7%BB%E7%9A%84%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84%EF%BC%9A"><span class="nav-number">8.9.1.2.3.</span> <span class="nav-text">主从状态转移的过程是怎样的：</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RocketMQ"><span class="nav-number">9.</span> <span class="nav-text">RocketMQ</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%B6%88%E6%81%AF%E4%B8%8D%E4%B8%A2%E5%A4%B1%EF%BC%9A"><span class="nav-number">9.1.</span> <span class="nav-text">如何保证消息不丢失：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%A3%E4%BA%9B%E7%8E%AF%E8%8A%82%E4%BC%9A%E9%80%A0%E6%88%90%E6%B6%88%E6%81%AF%E4%B8%A2%E5%A4%B1%EF%BC%9F"><span class="nav-number">9.1.1.</span> <span class="nav-text">那些环节会造成消息丢失？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%8E%BB%E9%98%B2%E6%AD%A2%E6%B6%88%E6%81%AF%E4%B8%A2%E5%A4%B1%EF%BC%9A"><span class="nav-number">9.1.2.</span> <span class="nav-text">怎么去防止消息丢失：</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

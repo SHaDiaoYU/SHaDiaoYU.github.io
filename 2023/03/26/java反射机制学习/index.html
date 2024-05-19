@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"shadiaoyu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="java 反射(reflection)机制学习 反射知识重点：反射机制、Class类、类加载、反射获取类的结构信息（Class \ Field \ Method \ Constructor \ 访问属性 \ 访问方法）。 反射知识扩展：反射相关类、反射调用性能优化、Class类常用方法。  以需求来引入反射： 根据配置文件re.properties指定信息，创建Cat对象并调用方法hi(): 12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java反射机制学习">
+<meta property="og:url" content="http://shadiaoyu.github.io/2023/03/26/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="java 反射(reflection)机制学习 反射知识重点：反射机制、Class类、类加载、反射获取类的结构信息（Class \ Field \ Method \ Constructor \ 访问属性 \ 访问方法）。 反射知识扩展：反射相关类、反射调用性能优化、Class类常用方法。  以需求来引入反射： 根据配置文件re.properties指定信息，创建Cat对象并调用方法hi(): 12">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/QQ%E6%88%AA%E5%9B%BE20230327194724.png">
+<meta property="article:published_time" content="2023-03-26T13:01:27.000Z">
+<meta property="article:modified_time" content="2023-03-31T12:37:45.671Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/QQ%E6%88%AA%E5%9B%BE20230327194724.png">
+
+<link rel="canonical" href="http://shadiaoyu.github.io/2023/03/26/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>java反射机制学习 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2023/03/26/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          java反射机制学习
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-26 21:01:27" itemprop="dateCreated datePublished" datetime="2023-03-26T21:01:27+08:00">2023-03-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-31 20:37:45" itemprop="dateModified" datetime="2023-03-31T20:37:45+08:00">2023-03-31</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="java-反射-reflection-机制学习"><a href="#java-反射-reflection-机制学习" class="headerlink" title="java 反射(reflection)机制学习"></a>java 反射(reflection)机制学习</h3><ol>
+<li>反射知识重点：反射机制、Class类、类加载、反射获取类的结构信息（Class \ Field \ Method \ Constructor \ 访问属性 \ 访问方法）。</li>
+<li>反射知识扩展：反射相关类、反射调用性能优化、Class类常用方法。</li>
+</ol>
+<p><em>以需求来引入反射：</em></p>
+<p>根据配置文件re.properties指定信息，创建Cat对象并调用方法hi():</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">classfullpath</span> = <span class="string">com.java.cat</span></span><br><span class="line"></span><br><span class="line"><span class="attr">method</span> = <span class="string">hi</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>这样的需求在学习框架时特别多，即通过外部文件配置，在不通过修改源码的情况下控制程序，也符合设计模式的OCP原则（开闭原则：不修改源码，扩容功能）</p>
+</li>
+<li><p>传统的方式： 先创建对象，然后再调用其中的方法（发现这种方式来实现上述需求很困难）；</p>
+</li>
+</ul>
+<p><em>引入反射机制，使用反射机制解决：</em></p>
+<ol>
+<li><p>加载类，返回Class类型的对象（需要先用IO流读到classFullPath）:</p>
+<p><code>Class cls = Class.forName(classfullpath);</code></p>
+</li>
+<li><p>通过cls得到加载的类 com.java.Cat 的实例：</p>
+<p><code>Object o = cls.newInstance();</code></p>
+</li>
+<li><p>通过 cls 得到加载的类 com.java.Cat 的methodName “Hi”的方法对象（需要先用IO流读到methodName）。即：在反射中，可以把方法看作对象。 </p>
+<p><code>Method method1 = cls.getMethod(methodName);</code></p>
+</li>
+<li><p>通过method1 调用方法： 即通过方法对象来实现调用方法</p>
+<p><code>method1.invoke(o);</code></p>
+</li>
+<li><p>获取字段，同样地，传入的参数为字段名（注意：getField方法不能得到私有的属性）</p>
+<p><code>Field nameField = cls.getField(&quot;age&quot;);</code></p>
+</li>
+<li><p>获取无参构造器, ()中可以指定构造器参数类型，返回无参构造器</p>
+<p><code>Constructor constructor = cls.getConstructor();</code></p>
+</li>
+<li><p>获取有参构造器，()中传入的是有参构造器参数列表的类（.class）</p>
+<p><code>Constructor constructor2 = cls.getConstructor(String.class);</code></p>
+</li>
+</ol>
+<p>这样操作，就可以仅通过操作配置文件，来调用不同的方法了。</p>
+<p>—————————反射机制——————————–</p>
+<h5 id="java-Reflection反射机制"><a href="#java-Reflection反射机制" class="headerlink" title="java Reflection反射机制:"></a>java Reflection反射机制:</h5><ul>
+<li>反射机制允许程序在执行期间借助于<code>ReflectionAPI</code> 取得任何类的内部信息（比如成员变量、构造器、成员方法等等），并能操作对象的属性及方法。反射在设计模式和框架底层都会用到。</li>
+<li>加载完类之后，堆中产生Class类型的对象（一个类只有一个Class类型的对象），这个对象包含了类的完整结构信息。通过这个对象得到类的结构。这个Class对象就像一面镜子，透过这个镜子看到类的结构，所以被形象的称之为反射。</li>
+</ul>
+<h5 id="Java反射机制可以做的事情："><a href="#Java反射机制可以做的事情：" class="headerlink" title="Java反射机制可以做的事情："></a>Java反射机制可以做的事情：</h5><ul>
+<li>在运行时判断任意一个对象所属的类</li>
+<li>在运行时构造任意一个类的对象</li>
+<li>在运行时得到任意一个类所具有的成员变量和方法</li>
+<li>在运行时调用任意一个对象的成员变量和方法</li>
+<li>生成动态代理</li>
+</ul>
+<h5 id="Java反射相关的类："><a href="#Java反射相关的类：" class="headerlink" title="Java反射相关的类："></a>Java反射相关的类：</h5><ul>
+<li>java.lang.Class: 代表一个类，Class对象表示某个类加载在堆中的对象</li>
+<li>java.lang.reflect.Method: 代表类的方法，Method对象表示某个类的方法</li>
+<li>java.lang.reflect.Field: 代表类的成员变量</li>
+<li>java.lang.reflect.Constructor: 代表类的构造方法</li>
+</ul>
+<h5 id="反射的优缺点："><a href="#反射的优缺点：" class="headerlink" title="反射的优缺点："></a>反射的优缺点：</h5><ul>
+<li>优点： 可以动态的创建和使用对象（是框架的底层和核心），使用灵活，没有反射机制，框架技术就失去底层支撑。</li>
+<li>缺点： 使用反射基本是解释执行，对执行速度有影响。</li>
+</ul>
+<h5 id="关于Class类："><a href="#关于Class类：" class="headerlink" title="关于Class类："></a>关于Class类：</h5><ol>
+<li>Class也是类，因此也会继承Object类</li>
+<li>Class类对象不是new出来的，而是<strong>由系统创建</strong>的</li>
+<li>对于某个类的Class类对象，在内存中只有一份，因为<strong>类只加载一次</strong>（重点）</li>
+<li>每个类的实例都会记得自己是由哪个Class实例所生成</li>
+<li>通过Class可以完整地得到一个类的完整结构，通过一系列API</li>
+<li>Class对象是存放在<strong>堆</strong>内的</li>
+<li>类的字节码二进制数据(跟.class字节码文件是不同的)，是放在方法区的，有的地方称为类的元数据（包括方法代码、变量名、方法名、访问权限等）</li>
+</ol>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/QQ%E6%88%AA%E5%9B%BE20230327194724.png"></p>
+<h5 id="获取java对象的方式："><a href="#获取java对象的方式：" class="headerlink" title="获取java对象的方式："></a>获取java对象的方式：</h5><ol>
+<li><p>在代码阶段&#x2F;编译阶段： 使用<code>Class.forName()</code>获取</p>
+<p>​	<strong>前提</strong>：已知一个类的全类名，且该类在类路径下，可通过Class类的静态方法<code>forName()</code>获取，可能抛出ClassNotFoundException;</p>
+<p>​	<strong>实例</strong>：<code>Class cls1 = Class.forName(&quot;java.lang.Cat&quot;);</code></p>
+<p>​	<strong>应用场景</strong>：多用于配置文件，读取全类名，加载类；</p>
+</li>
+<li><p>在Class类阶段(加载阶段)：使用<code>类.class</code>获取</p>
+<p>​	<strong>前提</strong>：已知具体的类，通过类的class获取，该方式最为安全可靠，程序性能最高；</p>
+<p>​	<strong>实例</strong>：<code>Class cls2 = Cat.class;</code></p>
+<p>​	<strong>应用场景：</strong> 多用于参数传递，比如通过反射得到对应构造器对象； </p>
+</li>
+<li><p>在运行阶段(此时已经有对象被创建出来了)：使用<code>对象.getClass()</code>获取</p>
+</li>
+<li><p>通过类加载器ClassLoader获取：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 首先获取到类加载器</span></span><br><span class="line"><span class="type">ClassLoader</span> <span class="variable">classLoader</span> <span class="operator">=</span> cat.getClass().getClassLoader();</span><br><span class="line"><span class="comment">// 通过类加载器得到class对象</span></span><br><span class="line"><span class="type">Class</span> <span class="variable">cls4</span> <span class="operator">=</span> classLoader.loadClass(<span class="string">&quot;com.java.Cat&quot;</span>);</span><br><span class="line">System.out.println(cls4);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基本数据类型（int,char,boolean,float,double,byte,long,short）按照如下方式得到Class类对象：</p>
+<p>​	<code>Class cls = 基本数据类型.class</code></p>
+</li>
+<li><p>基本数据类型对应的包装类，可以通过<code>.TYPE</code>得到Class类对象</p>
+<p>​	<strong>实例：</strong><code>Class cls = 包装类.TYPE</code></p>
+</li>
+</ol>
+<h5 id="哪些类型有Class对象："><a href="#哪些类型有Class对象：" class="headerlink" title="哪些类型有Class对象："></a>哪些类型有Class对象：</h5><ul>
+<li>外部类、成员内部类、静态内部类、局部内部类、匿名内部类；</li>
+<li>interface</li>
+<li>数组</li>
+<li>enum枚举</li>
+<li>annotation注解</li>
+<li>基本数据类型</li>
+<li>void</li>
+</ul>
+<h5 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h5><p>反射机制是java实现动态语言的关键，也就是通过反射实现类动态加载。</p>
+<ul>
+<li><strong>静态加载</strong>：编译时加载相关的类，如果没有则报错，依赖性过强</li>
+<li><strong>动态加载</strong>：运行时加载需要的类，如果运行时不用该类（即使不存在该类），则不报错，降低了依赖性</li>
+</ul>
+<p><strong>类加载的时机</strong>：</p>
+<ul>
+<li>当创建对象时 &lt;&#x3D;&#x3D;&#x3D;&#x3D; 属于静态加载；</li>
+<li>当子类被加载时（子类被加载则父类也需要加载）&lt;&#x3D;&#x3D;&#x3D;&#x3D; 属于静态加载；</li>
+<li>调用类中的静态成员时&lt;&#x3D;&#x3D;&#x3D;&#x3D; 属于静态加载；</li>
+<li>通过反射&lt;&#x3D;&#x3D;&#x3D;&#x3D; 属于动态加载；</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/19/vue%E7%BB%84%E4%BB%B6%E4%BC%A0%E5%8F%82/" rel="prev" title="vue组件传参">
+      <i class="fa fa-chevron-left"></i> vue组件传参
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/04/03/SpringBoot%E5%AD%A6%E4%B9%A0-%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A/" rel="next" title="SpringBoot学习--配置绑定">
+      SpringBoot学习--配置绑定 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#java-%E5%8F%8D%E5%B0%84-reflection-%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">java 反射(reflection)机制学习</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#java-Reflection%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6"><span class="nav-number">1.0.1.</span> <span class="nav-text">java Reflection反射机制:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6%E5%8F%AF%E4%BB%A5%E5%81%9A%E7%9A%84%E4%BA%8B%E6%83%85%EF%BC%9A"><span class="nav-number">1.0.2.</span> <span class="nav-text">Java反射机制可以做的事情：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java%E5%8F%8D%E5%B0%84%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B1%BB%EF%BC%9A"><span class="nav-number">1.0.3.</span> <span class="nav-text">Java反射相关的类：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="nav-number">1.0.4.</span> <span class="nav-text">反射的优缺点：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EClass%E7%B1%BB%EF%BC%9A"><span class="nav-number">1.0.5.</span> <span class="nav-text">关于Class类：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96java%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="nav-number">1.0.6.</span> <span class="nav-text">获取java对象的方式：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%93%AA%E4%BA%9B%E7%B1%BB%E5%9E%8B%E6%9C%89Class%E5%AF%B9%E8%B1%A1%EF%BC%9A"><span class="nav-number">1.0.7.</span> <span class="nav-text">哪些类型有Class对象：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">1.0.8.</span> <span class="nav-text">类加载机制</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

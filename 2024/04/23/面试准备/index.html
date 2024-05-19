@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"shadiaoyu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="黑马点评相关问题1. 项目里为什么要用消息队列：在异步秒杀优惠券的业务中，涉及访问数据库的操作包括：根据优惠券id查询优惠券信息、查询当前用户是否已经购买过该优惠券、库存扣减、新增订单。串行执行的时候会相当消耗时间，于是对业务进行异步化改造。 使用阻塞队列的话，它用的是jvm内存，在高并发场景下可能会导致内存的溢出；同时，由于内容都是存在内存中，如果发生宕机，内存中的数据丢失会导致安全问题。因此选">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试准备">
+<meta property="og:url" content="http://shadiaoyu.github.io/2024/04/23/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="黑马点评相关问题1. 项目里为什么要用消息队列：在异步秒杀优惠券的业务中，涉及访问数据库的操作包括：根据优惠券id查询优惠券信息、查询当前用户是否已经购买过该优惠券、库存扣减、新增订单。串行执行的时候会相当消耗时间，于是对业务进行异步化改造。 使用阻塞队列的话，它用的是jvm内存，在高并发场景下可能会导致内存的溢出；同时，由于内容都是存在内存中，如果发生宕机，内存中的数据丢失会导致安全问题。因此选">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-04-23T11:55:39.000Z">
+<meta property="article:modified_time" content="2024-05-19T13:53:32.495Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://shadiaoyu.github.io/2024/04/23/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>面试准备 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2024/04/23/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          面试准备
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-04-23 19:55:39" itemprop="dateCreated datePublished" datetime="2024-04-23T19:55:39+08:00">2024-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-05-19 21:53:32" itemprop="dateModified" datetime="2024-05-19T21:53:32+08:00">2024-05-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="黑马点评相关问题"><a href="#黑马点评相关问题" class="headerlink" title="黑马点评相关问题"></a>黑马点评相关问题</h1><h2 id="1-项目里为什么要用消息队列："><a href="#1-项目里为什么要用消息队列：" class="headerlink" title="1. 项目里为什么要用消息队列："></a>1. 项目里为什么要用消息队列：</h2><p>在异步秒杀优惠券的业务中，涉及访问数据库的操作包括：根据优惠券id查询优惠券信息、查询当前用户是否已经购买过该优惠券、库存扣减、新增订单。串行执行的时候会相当消耗时间，于是对业务进行异步化改造。</p>
+<p>使用阻塞队列的话，它用的是jvm内存，在高并发场景下可能会导致内存的溢出；同时，由于内容都是存在内存中，如果发生宕机，内存中的数据丢失会导致安全问题。因此选择使用消息队列来进行处理。</p>
+<h2 id="2-请求很多，消息堆积处理不过来了如何应对（消息积压）"><a href="#2-请求很多，消息堆积处理不过来了如何应对（消息积压）" class="headerlink" title="2. 请求很多，消息堆积处理不过来了如何应对（消息积压）"></a>2. 请求很多，消息堆积处理不过来了如何应对（消息积压）</h2><ul>
+<li>消费者扩容：如果当前主题（Topic）的消息队列数量大于消费者数量，可以通过增加消费者来扩容，从而提高消费能力，尽快消费积压的消息。通过增加消费者，可以使消息队列分配给更多的消费者进行并行消费，加快消息处理速度</li>
+<li>消息迁移Queue扩容： 如果当前主题的消息队列数量小于或等于消费者数量，增加消费者可能无法有效提高消费能力。这时需要考虑<strong>扩容消息队列。</strong> <ul>
+<li><strong>一种方法是创建一个临时主题</strong>，在临时主题上设置更多的消息队列。然后将部分消费者用于将消息从原主题转发到临时主题，这个过程不需要进行业务处理，只是简单地将消息转发，因此速度很快。接下来，使用扩容后的消费者来消费临时主题中的消息。当所有积压消息都被消费完毕后，可以恢复到原始状态。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-用户在消息堆积时以为卡了，多次请求怎么处理"><a href="#3-用户在消息堆积时以为卡了，多次请求怎么处理" class="headerlink" title="3. 用户在消息堆积时以为卡了，多次请求怎么处理"></a>3. 用户在消息堆积时以为卡了，多次请求怎么处理</h2><p>前端在用户点击按钮之后，禁用按钮直到有结果返回。</p>
+<h2 id="4-项目都有哪些表"><a href="#4-项目都有哪些表" class="headerlink" title="4. 项目都有哪些表"></a>4. 项目都有哪些表</h2><p>博文表、博文的评论表、关注表、秒杀优惠券表、优惠券表、店铺信息表、店铺类型表（美食、酒吧等，以及关联icon）、用户信息表、优惠券订单表。</p>
+<h2 id="5-超卖问题怎么解决？"><a href="#5-超卖问题怎么解决？" class="headerlink" title="5. 超卖问题怎么解决？"></a>5. 超卖问题怎么解决？</h2><p>使用乐观锁解决超卖问题，这里直接对比库存值，在进行扣减操作之前会查询库存stack值，在进行扣减操作时，检查stack（内存中的值V）是否与最开始读到的值（预期原始值A），如果相同则可以进行扣减，反之，不同的话说明有其他线程更改过库存了，此时应该进行重试工作。</p>
+<h2 id="5-秒杀场景下扣减库存太慢了怎么解决"><a href="#5-秒杀场景下扣减库存太慢了怎么解决" class="headerlink" title="5. 秒杀场景下扣减库存太慢了怎么解决"></a>5. 秒杀场景下扣减库存太慢了怎么解决</h2><ul>
+<li>采用上面所说的异步执行秒杀逻辑的方法</li>
+<li>对库存进行拆分，比如将十万库存，分成100段，每段1000个库存。对应的，有100把锁去锁这100个库存段了，可以满足100个线程同时跑。</li>
+</ul>
+<h2 id="7-Redis大key怎么解决？"><a href="#7-Redis大key怎么解决？" class="headerlink" title="7. Redis大key怎么解决？"></a>7. Redis大key怎么解决？</h2><p>大key是指简单的key存储的value过大，或者hash，set，zset，list中存储过多的元素。</p>
+<p>大key会导致如下问题：</p>
+<ul>
+<li>客户端耗时增加：数据量大导致网络传输时间会增加，导致响应时间增加</li>
+<li>带宽和cpu资源占用过高：对大key进行读写操作时，会严重影响redis的性能和吞吐量。</li>
+<li>数据倾斜：大key集中到某个redis节点上时，会导致数据在redis中集群中的分布不均衡，造成节点负载不均</li>
+<li>阻塞问题：对大key进行删除或清理工作时，可能会导致redis阻塞。删除时会占用大量的CPU和IO资源导致响应变慢。在被动删除大key时，当redis内存不足时，会触发内存淘汰机制，可能导致部分大key被删除。</li>
+</ul>
+<p><strong>删除大key:</strong></p>
+<ul>
+<li>当Redis版本大于4.0时，可使用UNLINK命令安全地删除大Key，该命令能够 以非阻塞的方式，逐步地清理传入的Key。</li>
+<li>当Redis版本小于4.0时，避免使用阻塞式命令KEYS，而是建议通过SCAN命 令执行增量迭代扫描key，然后判断进行删除。</li>
+</ul>
+<p><strong>压缩和拆分key:</strong></p>
+<ul>
+<li>当vaule是string时，比较难拆分，则使用序列化、压缩算法将key的大小控制 在合理范围内，但是序列化和反序列化都会带来更多时间上的消耗。</li>
+<li>当value是string，压缩之后仍然是大key，则需要进行拆分，一个大key分为不 同的部分，记录每个部分的key，使用multiget等操作实现事务读取。</li>
+<li>当value是list&#x2F;set等集合类型时，根据预估的数据规模来进行分片，不同的元 素计算后分到不同的片。</li>
+</ul>
+<p>总结：</p>
+<ol>
+<li>对bigkey进行拆分，比如一个hash结构的key，可以拆成多个hash来存储</li>
+<li>直接删除bigkey，redis4.0起提供了unlink的非阻塞删除key方式</li>
+<li>对value采用压缩算法，如果压缩后还是很大，那么就继续拆分</li>
+<li>对失效的数据进行定期的清理</li>
+</ol>
+<h2 id="8-什么是热Key"><a href="#8-什么是热Key" class="headerlink" title="8. 什么是热Key"></a>8. 什么是热Key</h2><p>热key就是一个非常热销的产品，比如突然有几十万的请求去访问redis上的某个特定key。那么，这样会造成流量过于集中，达到物理网卡上限，从而导致这台redis的服务器宕机。</p>
+<h2 id="9-如何解决热key问题"><a href="#9-如何解决热key问题" class="headerlink" title="9. 如何解决热key问题"></a>9. 如何解决热key问题</h2><p>方案主要有两种：</p>
+<ol>
+<li>利用二级缓存：比如ehcache或者hashmap，都可以作为二级缓存，当发现热key之后，把热key加载到jvm中，而针对这种热key请求，会直接从jvm中获取，而不是从redis中，比如一个十万的请求，应用层有50台机器，那么每台机器备份到2000个请求，还是可以处理的</li>
+<li>备份热key：就是在redis集群当中，将这个key在多个redis上都进行保存，那么当有请求过来时，从集群当中挑选一个区访问进行取值</li>
+</ol>
+<h2 id="10-短信登录的短信怎么发送的"><a href="#10-短信登录的短信怎么发送的" class="headerlink" title="10.  短信登录的短信怎么发送的"></a>10.  短信登录的短信怎么发送的</h2><h2 id="11-项目的拦截器详细讲讲"><a href="#11-项目的拦截器详细讲讲" class="headerlink" title="11. 项目的拦截器详细讲讲"></a>11. 项目的拦截器详细讲讲</h2><h2 id="12-怎么保存验证码"><a href="#12-怎么保存验证码" class="headerlink" title="12. 怎么保存验证码"></a>12. 怎么保存验证码</h2><h2 id="13-项目里存在redis里的key的格式，存的什么"><a href="#13-项目里存在redis里的key的格式，存的什么" class="headerlink" title="13.项目里存在redis里的key的格式，存的什么"></a>13.项目里存在redis里的key的格式，存的什么</h2><h2 id="14-如何标识用户"><a href="#14-如何标识用户" class="headerlink" title="14. 如何标识用户"></a>14. 如何标识用户</h2><p>手机号作为用户标识</p>
+<h2 id="15-项目的权限刷新什么意思"><a href="#15-项目的权限刷新什么意思" class="headerlink" title="15.项目的权限刷新什么意思"></a>15.项目的权限刷新什么意思</h2><h2 id="16-旁路缓存机制具体解决的什么场景"><a href="#16-旁路缓存机制具体解决的什么场景" class="headerlink" title="16. 旁路缓存机制具体解决的什么场景"></a>16. 旁路缓存机制具体解决的什么场景</h2><h2 id="17-更新缓存失败了怎么办"><a href="#17-更新缓存失败了怎么办" class="headerlink" title="17 更新缓存失败了怎么办"></a>17 更新缓存失败了怎么办</h2><p>涉及Redis的高可用.</p>
+<p>当客户端发现master节点不可写后，可以采取降级措施，将数据暂时写入本地缓存和磁盘中，在一段时间后（master恢复正常后）重新写入master来保证数据不丢失。也可以将数据写入Kafka消息队列，等master恢复正常，再隔一段时间去消费Kafka中的数据，将数据重新写入master。</p>
+<h2 id="重试的时候，缓存中的错数据被访问多次了，怎么解决"><a href="#重试的时候，缓存中的错数据被访问多次了，怎么解决" class="headerlink" title="重试的时候，缓存中的错数据被访问多次了，怎么解决"></a>重试的时候，缓存中的错数据被访问多次了，怎么解决</h2><h2 id="项目为什么要加个消息队列"><a href="#项目为什么要加个消息队列" class="headerlink" title="项目为什么要加个消息队列"></a>项目为什么要加个消息队列</h2><h2 id="抢优惠券没有及时处理怎么办"><a href="#抢优惠券没有及时处理怎么办" class="headerlink" title="抢优惠券没有及时处理怎么办"></a>抢优惠券没有及时处理怎么办</h2><h2 id="抢优惠券处理完了如何通知用户"><a href="#抢优惠券处理完了如何通知用户" class="headerlink" title="抢优惠券处理完了如何通知用户"></a>抢优惠券处理完了如何通知用户</h2><h2 id="Redis的Zset"><a href="#Redis的Zset" class="headerlink" title="Redis的Zset"></a>Redis的Zset</h2><p>Zset是redis当中的SortedSet，比set多了一个score值，按score值升序排序</p>
+<p>那么zset底层依靠的是ziplist或者skiplist实现，当如果有序集合的元素个数小于 <code>128</code> 个，并且每个元素的值小于 <code>64</code> 字节时，Redis 会使用<strong>压缩列表</strong>作为 Zset 类型的底层数据结构；如果有序集合的元素不满足上面的条件，Redis 会使用<strong>跳表</strong>作为 Zset 类型的底层数据结构；</p>
+<p>但是其实使用skiplist，是将skiplist和dict一起进行包装，使用通dict中的entry记录key和value，使用skiplist记录score，从而通过dict进行键值的存储，通过，skiplist存储socre并进行排序和快速的查找</p>
+<p>当使用ziplist时，逻辑是将score和element连续存储</p>
+<h2 id="Zset的范围查询的时间复杂度是多少"><a href="#Zset的范围查询的时间复杂度是多少" class="headerlink" title="Zset的范围查询的时间复杂度是多少"></a>Zset的范围查询的时间复杂度是多少</h2><p><code>ZRANGE</code> 或 <code>ZRANGEBYSCORE</code>，其时间复杂度是 O(log N + M)，其中 N 是有序集合中的元素数量，M 是返回的元素数量。</p>
+<p>这是因为 Redis 内部使用了跳跃表（skip list）实现有序集合，而跳跃表的查询时间复杂度是 O(log N)。在执行范围查询时，Redis首先定位到开始的元素，然后按顺序移动到结束的元素，因此时间复杂度还取决于返回的元素数量 M。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/04/08/%E5%A4%A9%E6%9C%BA%E5%AD%A6%E5%A0%82%E5%AD%A6%E4%B9%A0/" rel="prev" title="天机学堂学习">
+      <i class="fa fa-chevron-left"></i> 天机学堂学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/05/08/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0-%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D-%E5%85%AB%E8%82%A1/" rel="next" title="api开放平台-项目介绍&八股">
+      api开放平台-项目介绍&八股 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">黑马点评相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%A1%B9%E7%9B%AE%E9%87%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">1. 项目里为什么要用消息队列：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%AF%B7%E6%B1%82%E5%BE%88%E5%A4%9A%EF%BC%8C%E6%B6%88%E6%81%AF%E5%A0%86%E7%A7%AF%E5%A4%84%E7%90%86%E4%B8%8D%E8%BF%87%E6%9D%A5%E4%BA%86%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%EF%BC%88%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">2. 请求很多，消息堆积处理不过来了如何应对（消息积压）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%94%A8%E6%88%B7%E5%9C%A8%E6%B6%88%E6%81%AF%E5%A0%86%E7%A7%AF%E6%97%B6%E4%BB%A5%E4%B8%BA%E5%8D%A1%E4%BA%86%EF%BC%8C%E5%A4%9A%E6%AC%A1%E8%AF%B7%E6%B1%82%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">3. 用户在消息堆积时以为卡了，多次请求怎么处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%A1%B9%E7%9B%AE%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E8%A1%A8"><span class="nav-number">1.4.</span> <span class="nav-text">4. 项目都有哪些表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E8%B6%85%E5%8D%96%E9%97%AE%E9%A2%98%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">5. 超卖问题怎么解决？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E7%A7%92%E6%9D%80%E5%9C%BA%E6%99%AF%E4%B8%8B%E6%89%A3%E5%87%8F%E5%BA%93%E5%AD%98%E5%A4%AA%E6%85%A2%E4%BA%86%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3"><span class="nav-number">1.6.</span> <span class="nav-text">5. 秒杀场景下扣减库存太慢了怎么解决</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Redis%E5%A4%A7key%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">1.7.</span> <span class="nav-text">7. Redis大key怎么解决？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E4%BB%80%E4%B9%88%E6%98%AF%E7%83%ADKey"><span class="nav-number">1.8.</span> <span class="nav-text">8. 什么是热Key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%83%ADkey%E9%97%AE%E9%A2%98"><span class="nav-number">1.9.</span> <span class="nav-text">9. 如何解决热key问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95%E7%9A%84%E7%9F%AD%E4%BF%A1%E6%80%8E%E4%B9%88%E5%8F%91%E9%80%81%E7%9A%84"><span class="nav-number">1.10.</span> <span class="nav-text">10.  短信登录的短信怎么发送的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%8B%A6%E6%88%AA%E5%99%A8%E8%AF%A6%E7%BB%86%E8%AE%B2%E8%AE%B2"><span class="nav-number">1.11.</span> <span class="nav-text">11. 项目的拦截器详细讲讲</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E6%80%8E%E4%B9%88%E4%BF%9D%E5%AD%98%E9%AA%8C%E8%AF%81%E7%A0%81"><span class="nav-number">1.12.</span> <span class="nav-text">12. 怎么保存验证码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-%E9%A1%B9%E7%9B%AE%E9%87%8C%E5%AD%98%E5%9C%A8redis%E9%87%8C%E7%9A%84key%E7%9A%84%E6%A0%BC%E5%BC%8F%EF%BC%8C%E5%AD%98%E7%9A%84%E4%BB%80%E4%B9%88"><span class="nav-number">1.13.</span> <span class="nav-text">13.项目里存在redis里的key的格式，存的什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-%E5%A6%82%E4%BD%95%E6%A0%87%E8%AF%86%E7%94%A8%E6%88%B7"><span class="nav-number">1.14.</span> <span class="nav-text">14. 如何标识用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%9D%83%E9%99%90%E5%88%B7%E6%96%B0%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D"><span class="nav-number">1.15.</span> <span class="nav-text">15.项目的权限刷新什么意思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-%E6%97%81%E8%B7%AF%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6%E5%85%B7%E4%BD%93%E8%A7%A3%E5%86%B3%E7%9A%84%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF"><span class="nav-number">1.16.</span> <span class="nav-text">16. 旁路缓存机制具体解决的什么场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#17-%E6%9B%B4%E6%96%B0%E7%BC%93%E5%AD%98%E5%A4%B1%E8%B4%A5%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">1.17.</span> <span class="nav-text">17 更新缓存失败了怎么办</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%AF%95%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E7%BC%93%E5%AD%98%E4%B8%AD%E7%9A%84%E9%94%99%E6%95%B0%E6%8D%AE%E8%A2%AB%E8%AE%BF%E9%97%AE%E5%A4%9A%E6%AC%A1%E4%BA%86%EF%BC%8C%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3"><span class="nav-number">1.18.</span> <span class="nav-text">重试的时候，缓存中的错数据被访问多次了，怎么解决</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8A%A0%E4%B8%AA%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">1.19.</span> <span class="nav-text">项目为什么要加个消息队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A2%E4%BC%98%E6%83%A0%E5%88%B8%E6%B2%A1%E6%9C%89%E5%8F%8A%E6%97%B6%E5%A4%84%E7%90%86%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">1.20.</span> <span class="nav-text">抢优惠券没有及时处理怎么办</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A2%E4%BC%98%E6%83%A0%E5%88%B8%E5%A4%84%E7%90%86%E5%AE%8C%E4%BA%86%E5%A6%82%E4%BD%95%E9%80%9A%E7%9F%A5%E7%94%A8%E6%88%B7"><span class="nav-number">1.21.</span> <span class="nav-text">抢优惠券处理完了如何通知用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E7%9A%84Zset"><span class="nav-number">1.22.</span> <span class="nav-text">Redis的Zset</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zset%E7%9A%84%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%98%AF%E5%A4%9A%E5%B0%91"><span class="nav-number">1.23.</span> <span class="nav-text">Zset的范围查询的时间复杂度是多少</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

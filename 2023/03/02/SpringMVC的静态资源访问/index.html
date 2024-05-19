@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"shadiaoyu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="在web阶段的时候，静态资源是交给默认的servlet来处理的。 具体位置可在tomcat中的web.xml中发现。 tomcat中的web.xml与我们工程中的web.xml的关系：二者相当于是一种继承关系，tomcat下的web.xml作用于部署在tomcat下的所有工程上，而我们工程中的web.xml只作用于当前工程。 如果当前工程中的配置与tomcat的配置不同，以当前工程的配置为准。 d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC的静态资源访问">
+<meta property="og:url" content="http://shadiaoyu.github.io/2023/03/02/SpringMVC%E7%9A%84%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E8%AE%BF%E9%97%AE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在web阶段的时候，静态资源是交给默认的servlet来处理的。 具体位置可在tomcat中的web.xml中发现。 tomcat中的web.xml与我们工程中的web.xml的关系：二者相当于是一种继承关系，tomcat下的web.xml作用于部署在tomcat下的所有工程上，而我们工程中的web.xml只作用于当前工程。 如果当前工程中的配置与tomcat的配置不同，以当前工程的配置为准。 d">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-02T07:50:02.000Z">
+<meta property="article:modified_time" content="2023-03-02T08:12:50.669Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://shadiaoyu.github.io/2023/03/02/SpringMVC%E7%9A%84%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E8%AE%BF%E9%97%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SpringMVC的静态资源访问 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2023/03/02/SpringMVC%E7%9A%84%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E8%AE%BF%E9%97%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringMVC的静态资源访问
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-02 15:50:02 / 修改时间：16:12:50" itemprop="dateCreated datePublished" datetime="2023-03-02T15:50:02+08:00">2023-03-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在web阶段的时候，静态资源是交给默认的servlet来处理的。</p>
+<p>具体位置可在tomcat中的web.xml中发现。</p>
+<h4 id="tomcat中的web-xml与我们工程中的web-xml的关系："><a href="#tomcat中的web-xml与我们工程中的web-xml的关系：" class="headerlink" title="tomcat中的web.xml与我们工程中的web.xml的关系："></a>tomcat中的web.xml与我们工程中的web.xml的关系：</h4><p>二者相当于是一种继承关系，tomcat下的web.xml作用于部署在tomcat下的所有工程上，而我们工程中的web.xml只作用于当前工程。</p>
+<p>如果当前工程中的配置与tomcat的配置不同，以当前工程的配置为准。</p>
+<p>dispatcherServlet处理请求方式：每一次都把请求地址去控制器中寻找相对应的请求映射，但是控制器中没有写访问静态资源的请求映射时，就会找不到静态资源然后报404错误。</p>
+<p>所以在遇到静态资源404的情况时，需要我们在当前项目的springMVC.xml中进行如下配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--开放对静态资源的访问--&gt;</span><br><span class="line">&lt;mvc:<span class="keyword">default</span>-servlet-handler&gt;&lt;/mvc:<span class="keyword">default</span>-servlet-handler&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果浏览器的请求dispatcherServlet访问不了，在进行此配置之后，就会交给tomcat的defaultServlet来处理。</p>
+<p>使用该配置时同样需要配置MVC注解驱动:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--开启注解驱动，之后很多场景，都会用到--&gt;</span><br><span class="line">&lt;mvc:annotation-driven&gt;&lt;/mvc:annotation-driven&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果不进行这项配置，我们所有的请求都会被dispatcherServlet所处理</p>
+<h4 id="总结一下，所有的请求先由diapatcherServlet处理，如果处理不了就交给defaultServlet来处理，如果仍处理不了就报404错误了。"><a href="#总结一下，所有的请求先由diapatcherServlet处理，如果处理不了就交给defaultServlet来处理，如果仍处理不了就报404错误了。" class="headerlink" title="总结一下，所有的请求先由diapatcherServlet处理，如果处理不了就交给defaultServlet来处理，如果仍处理不了就报404错误了。"></a>总结一下，所有的请求先由diapatcherServlet处理，如果处理不了就交给defaultServlet来处理，如果仍处理不了就报404错误了。</h4>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/15/web%E6%B8%97%E9%80%8F%E6%96%B9%E6%B3%95/" rel="prev" title="web渗透方法">
+      <i class="fa fa-chevron-left"></i> web渗透方法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/06/SpringMVC%E6%8B%A6%E6%88%AA%E5%99%A8/" rel="next" title="SpringMVC拦截器">
+      SpringMVC拦截器 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#tomcat%E4%B8%AD%E7%9A%84web-xml%E4%B8%8E%E6%88%91%E4%BB%AC%E5%B7%A5%E7%A8%8B%E4%B8%AD%E7%9A%84web-xml%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">tomcat中的web.xml与我们工程中的web.xml的关系：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B%EF%BC%8C%E6%89%80%E6%9C%89%E7%9A%84%E8%AF%B7%E6%B1%82%E5%85%88%E7%94%B1diapatcherServlet%E5%A4%84%E7%90%86%EF%BC%8C%E5%A6%82%E6%9E%9C%E5%A4%84%E7%90%86%E4%B8%8D%E4%BA%86%E5%B0%B1%E4%BA%A4%E7%BB%99defaultServlet%E6%9D%A5%E5%A4%84%E7%90%86%EF%BC%8C%E5%A6%82%E6%9E%9C%E4%BB%8D%E5%A4%84%E7%90%86%E4%B8%8D%E4%BA%86%E5%B0%B1%E6%8A%A5404%E9%94%99%E8%AF%AF%E4%BA%86%E3%80%82"><span class="nav-number">2.</span> <span class="nav-text">总结一下，所有的请求先由diapatcherServlet处理，如果处理不了就交给defaultServlet来处理，如果仍处理不了就报404错误了。</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

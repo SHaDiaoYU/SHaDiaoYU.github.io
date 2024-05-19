@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"shadiaoyu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Redis:Redis数据结构：（1）5种基础数据结构：String（字符串）、List（列表）、Set（集合）、Hash（散列）、Zset（有序集合）。 （2）3种特殊数据结构：HyperLogLogs（基数统计）、BitMap（位存储）、Geospatial（地理位置） 1.Redis 双写一致性：redis作为缓存，mysql的数据如何与redis进行同步呢？这里有两种需求（1）一致性要求高">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://shadiaoyu.github.io/2024/03/19/redis%E5%A4%8D%E4%B9%A0-%E7%BB%93%E5%90%88%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Redis:Redis数据结构：（1）5种基础数据结构：String（字符串）、List（列表）、Set（集合）、Hash（散列）、Zset（有序集合）。 （2）3种特殊数据结构：HyperLogLogs（基数统计）、BitMap（位存储）、Geospatial（地理位置） 1.Redis 双写一致性：redis作为缓存，mysql的数据如何与redis进行同步呢？这里有两种需求（1）一致性要求高">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240406200855325.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240406201005207.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240320213306700.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240320214835903.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240321202635871.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240321210833411.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326203018064.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326203034238.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326203318389.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326203940897.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326204001342.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240329215303515.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240330150853650.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240330154534430.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240330215139748.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240330220500961.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240331145142125.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240331152244051.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401141124091.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401142605710.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401143311866.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401150536638.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401153807053.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240402140309308.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240402141239535.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240402141618424.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240402141928196.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240403140103440.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240403140208717.png">
+<meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240403140306245.png">
+<meta property="article:published_time" content="2024-03-19T12:30:25.389Z">
+<meta property="article:modified_time" content="2024-05-10T13:46:00.854Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240406200855325.png">
+
+<link rel="canonical" href="http://shadiaoyu.github.io/2024/03/19/redis%E5%A4%8D%E4%B9%A0-%E7%BB%93%E5%90%88%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2024/03/19/redis%E5%A4%8D%E4%B9%A0-%E7%BB%93%E5%90%88%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-03-19 20:30:25" itemprop="dateCreated datePublished" datetime="2024-03-19T20:30:25+08:00">2024-03-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-05-10 21:46:00" itemprop="dateModified" datetime="2024-05-10T21:46:00+08:00">2024-05-10</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis:"></a>Redis:</h2><h3 id="Redis数据结构："><a href="#Redis数据结构：" class="headerlink" title="Redis数据结构："></a>Redis数据结构：</h3><p>（1）5种基础数据结构：String（字符串）、List（列表）、Set（集合）、Hash（散列）、Zset（有序集合）。</p>
+<p>（2）3种特殊数据结构：HyperLogLogs（基数统计）、BitMap（位存储）、Geospatial（地理位置）</p>
+<h4 id="1-Redis-双写一致性：redis作为缓存，mysql的数据如何与redis进行同步呢？"><a href="#1-Redis-双写一致性：redis作为缓存，mysql的数据如何与redis进行同步呢？" class="headerlink" title="1.Redis 双写一致性：redis作为缓存，mysql的数据如何与redis进行同步呢？"></a>1.Redis 双写一致性：redis作为缓存，mysql的数据如何与redis进行同步呢？</h4><p>这里有两种需求（1）一致性要求高的 （2）允许延迟一致，这里分开来描述：</p>
+<ul>
+<li><strong>一致性要求高的（但是性能不高）：</strong><ul>
+<li>读数据的时候添加读锁（其他线程可以读，但是不能写，跟共享锁一个概念），写数据的时候添加写锁（其他线程既不能读，也不能写，类似于排他锁），读写锁可以从redission中获取。</li>
+</ul>
+</li>
+<li><strong>允许延迟一致的（异步通知、基于Canal的异步通知）：</strong><ul>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240406200855325.png" alt="image-20240406200855325"></li>
+<li>基于Canal的异步通知<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240406201005207.png" alt="image-20240406201005207"></li>
+</ul>
+</li>
+</ul>
+<p>无论是先更新数据库，再更新缓存；还是先更新缓存，再更新数据库，这两个方案都存在并发问题，当两个请求并发更新同一条数据的时候，可能会出现缓存和数据库中的数据不一致的现象。</p>
+<p><strong>因此采用Cache Aside 策略，不更新缓存，而是删除缓存中的数据。最后到读取数据时，发现缓存中没有数据之后，再从数据库中读取数据，更新到缓存中。</strong></p>
+<ul>
+<li><strong>写策略的步骤：</strong><ul>
+<li>更新数据库中的数据</li>
+<li>删除缓存中的数据</li>
+</ul>
+</li>
+<li><strong>读策略的步骤：</strong><ul>
+<li>如果读取的数据命中了缓存，则直接返回数据；</li>
+<li>如果读取的数据没有命中缓存，则从数据库中读取数据，然后将数据写入到缓存中，并返回给用户。</li>
+</ul>
+</li>
+</ul>
+<p><strong>针对写策略步骤的执行先后顺序，又会有一些问题：</strong></p>
+<ul>
+<li>如果先删除缓存，再更新数据库的话，在<strong>读+写</strong>并发的时候，还是会出现缓存和数据库数据的不一致的情况；<ul>
+<li>这种情况下为了解决一致性问题，我们采用<strong>延迟双删</strong>的方法，即<strong>删除缓存，更新数据库，延迟一段时间后，再次删除缓存。</strong>主要是为了确保请求A在睡眠的时候，请求B能够在这一段时间内完成从数据库读取数据，再把缺失的缓存写入缓存的操作，<strong>但是具体睡眠多久比较玄学，搞不好依然会出现 读脏数据的问题。</strong></li>
+</ul>
+</li>
+<li>如果<strong>先更新数据库，再删除缓存</strong>，在并发的时候，还是会出现缓存和数据库的数据不一致的情况，<strong>但是出现这种情况的概率很小，因为缓存的写入远快于数据库的写入，</strong>很难出现请求B已经更新了数据库并删除了缓存后，请求A才更新完缓存的情况。<strong>所以，这种情况是可以保证一致性的</strong><ul>
+<li>但是这个方案因为在每次更新数据库的时候都要删除缓存，所以会导致缓存命中率降低。因此可以采用<strong>更新数据库+ 更新缓存的方案</strong>，但是会出现并发安全问题，因此有两种解决办法<strong>（1）在更新缓存之前添加一个分布式锁，保证同一时间只有一个请求更新缓存；（2）更新完缓存之后，给缓存加上较短的过期时间，这样即使出现不一致的情况，数据也会很快过期。</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="黑马点评"><a href="#黑马点评" class="headerlink" title="黑马点评"></a>黑马点评</h3><h4 id="（1）商家缓存主动更新策略（根据id查询商家信息时用到）："><a href="#（1）商家缓存主动更新策略（根据id查询商家信息时用到）：" class="headerlink" title="（1）商家缓存主动更新策略（根据id查询商家信息时用到）："></a>（1）商家缓存主动更新策略（根据id查询商家信息时用到）：</h4><ul>
+<li><p>这一策略同时进行数据库操作和缓存操作，加入了事务，以保证同成功同失败。</p>
+</li>
+<li><p><strong>先更新数据库，再更新缓存：</strong> 缓存的读写是很快的，而数据库的操作是很慢的，如果先操作缓存（即先删除缓存），再更新数据库时，另一个线程在进行同样的查询的过程中，由于没有读到缓存，会去读数据库中的数据（而数据库数据更新很慢，这时还没更新完成），因此会读到旧数据，并把这个旧数据给写入缓存中，这就导致了缓存数据和数据库数据的不一致。<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240320213306700.png"></p>
+</li>
+<li><p>具体实现:  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line">    <span class="comment">//更新店铺信息</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">update</span><span class="params">(Shop shop)</span> &#123;</span><br><span class="line">        <span class="type">Long</span> <span class="variable">id</span> <span class="operator">=</span> shop.getId();</span><br><span class="line">        <span class="keyword">if</span> (id == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.fail(<span class="string">&quot;店铺id 不能为空&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//1.更新数据库</span></span><br><span class="line">        updateById(shop);</span><br><span class="line">        <span class="comment">//2.删除缓存</span></span><br><span class="line">        stringRedisTemplate.delete(CACHE_SHOP_KEY + id);</span><br><span class="line">        <span class="keyword">return</span> Result.ok();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="（2）缓存穿透解决办法"><a href="#（2）缓存穿透解决办法" class="headerlink" title="（2）缓存穿透解决办法"></a>（2）缓存穿透解决办法</h4><ul>
+<li><p><strong>缓存穿透是指，请求的数据在缓存和数据库中都不存在，这样缓存永远不会生效，这些请求都会打到数据库</strong></p>
+</li>
+<li><p><strong>解决策略：</strong></p>
+<ul>
+<li>缓存空对象（本项目用的这个） ：数据库也查不到信息后，向缓存中缓存空数据（会设置TTL），防止一直访问数据库。<ul>
+<li>优点：实现简单，维护方便</li>
+<li>缺点：因为缓存了空数据，造成了额外的内存消耗。同时，如果数据库又更新了数据，而此时缓存中仍为空数据，会造成短时间内的数据不一致（在缓存TTL结束后就可以保持一致了）。</li>
+</ul>
+</li>
+<li>设置布隆过滤器：<ul>
+<li>优点：内存占用比较少，没用使用多余的key。</li>
+<li>缺点：实现复杂，并且存在误判的可能。</li>
+</ul>
+</li>
+<li>缓存预热时，需要预热布隆过滤器。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240320214835903.png" alt="image-20240320214835903"></p>
+<ul>
+<li>关于布隆过滤器的原理：<ul>
+<li>当我们向过滤器添加一个元素key的时候，我们通过多个hash函数，分别计算出多个值，然后将这些值所在的位置置为1.</li>
+<li><strong>那么如果新来一个数据，如何判断它存不存在？</strong>当新数据来的时候，同样使用前面的多个hash函数计算值，查看每一个计算结果对应的位置是不是1，如果有一个不是1，那么就认定这个数据不存在。</li>
+<li><strong>如果每个位置都是1，也不能保证这个数据真的存在。</strong>毕竟多个数据可以通过hash计算出相同的位置。如果这个位置是1，可能是另一个数据计算得来的。<strong>因此，布隆过滤器可以判定某个数据一定不存在，但不能保证某个数据一定存在。</strong></li>
+<li>布隆过滤器的优缺点很明显：使用二进制数组，占用内存极少，并且插入和查询速度都很快；但是随着数据的增加，误判率会增加，无法判断数据一定存在；此外还有一个重要的缺点，就是他无法删除数据。</li>
+</ul>
+</li>
+</ul>
+<h4 id="（3）缓存雪崩解决办法："><a href="#（3）缓存雪崩解决办法：" class="headerlink" title="（3）缓存雪崩解决办法："></a>（3）缓存雪崩解决办法：</h4><ul>
+<li><strong>缓存雪崩</strong>是指在同一时段内，大量的缓存key同时失效或者redis服务宕机，导致大量的请求打到数据库，带来巨大的压力。</li>
+<li>**解决策略： ** <ul>
+<li>给不同的key的ttl添加随机值</li>
+<li>利用redis集群提高服务的可用性</li>
+<li>为缓存业务添加降级限流策略：分库分表可还行。</li>
+<li>为业务设置多级缓存：例如使用本地缓存 + 分布式缓存的方式，不同级别缓存时间过时间不一样，即使某个级别缓存过期了，还有其他缓存级别兜底。</li>
+</ul>
+</li>
+</ul>
+<h4 id="（4）缓存击穿解决办法："><a href="#（4）缓存击穿解决办法：" class="headerlink" title="（4）缓存击穿解决办法："></a>（4）缓存击穿解决办法：</h4><ul>
+<li><p><strong>缓存击穿</strong>也叫热点key问题，就是一个<strong>被高并发访问，并且缓存重建业务较复杂的key</strong>突然失效了，无数的请求访问会在瞬间给数据库带来巨大冲击。</p>
+</li>
+<li><p>缓存雪崩是指大量的缓存key失效，而缓存击穿是指热点key失效。缓存穿透是指要查的key在缓存中和数据库中都不存在。</p>
+</li>
+<li><p>（查询数据库和重建缓存的过程会很缓慢，在这期间如果有大量的请求过来，都是未命中，导致一直访问数据库。）<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240321202635871.png" alt="image-20240321202635871"></p>
+</li>
+<li><p><strong>解决策略：</strong> </p>
+<ul>
+<li><p>互斥锁：</p>
+<ul>
+<li><p>每个请求如果未命中缓存后需要进行缓存的重建工作，这时我们指定唯一获得互斥锁的线程进行缓存重建，等到重建完成后再释放锁。在此期间其他线程会重复缓存查询以及获取锁的过程。</p>
+</li>
+<li><p>关于互斥锁的构建，这里使用stringRedisTemplate 的setIfAbsent来进行实现（Redis的Setnx命令），<strong>在指定的key不存在时，为key设置指定的值。返回值表示设置成功与失败</strong></p>
+</li>
+<li><p>&#96;&#96;&#96;java<br>&#x2F;&#x2F; 获取互斥锁，返回值标识是否获得<br>private boolean tryLock(String lockKey) {<br>    &#x2F;&#x2F; 添加锁，并设置有效期，有效期时长要比业务时间长<br>    Boolean flag &#x3D; stringRedisTemplate.opsForValue().setIfAbsent(lockKey, “1”, 10L, TimeUnit.SECONDS);<br>    &#x2F;&#x2F; 拆箱过程中可能会出现空指针异常，所以使用hutool提供的工具来解决<br>    return BooleanUtil.isTrue(flag);<br>}<br><br>&#x2F;&#x2F; 释放锁<br>private void unlock(String lockKey) {<br>    stringRedisTemplate.delete(lockKey);<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* 逻辑过期</span><br><span class="line"></span><br><span class="line">  * 逻辑过期并不是真正的过期，对于对应的key我们并不需要去设置TTL，而是通过业务逻辑来达到一个类似于过期的效果。其本质还是限制落到数据库的请求数量！</span><br><span class="line">  * 这样一来，缓存基本是会被命中的，因为没有给缓存设置任何过期时间，并且对于key的设置都是实现选择好的，如果出现未命中的情况基本可以判断他不在选择之内，这样我们就可以直接返回错误信息。</span><br><span class="line">  * 那么对于命中的情况，就需要先判断逻辑时间是否过期，再根据结果来决定是否进行缓存重建。**而这里的逻辑时间就是减少大量请求落到数据库的一个关口**</span><br><span class="line"></span><br><span class="line">* ![image-20240321202444133](https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240321202444133.png)</span><br><span class="line"></span><br><span class="line">* 在发现逻辑过期后（意味着数据更新），首先尝试获取互斥锁，在获取到锁后，会开启新的线程来进行缓存的重建，而原线程返回的是未更新的老数据，这意味着使用**逻辑时间不保证数据的一致性。**</span><br><span class="line"></span><br><span class="line">* **注意做逻辑过期时，要先预热，手动缓存热点key**</span><br><span class="line"></span><br><span class="line">* 在进行商铺信息的查询的过程中，使用了互斥锁以及逻辑过期时间的方式解决缓存击穿问题。</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">/**</span><br><span class="line">     * 使用互斥锁，解决缓存击穿问题</span><br><span class="line">     * 缓存穿透问题：缓存穿透是指客户请求的数据在缓存中和数据库中都不存在，这样缓存永远不会生效，这些请求都会被打到数据库。</span><br><span class="line">     * 缓存击穿问题：指热点key失效，大量请求打到数据库的问题。</span><br><span class="line">     */</span><br><span class="line"></span><br><span class="line">    private Shop queryWithMutex(Long id) &#123;</span><br><span class="line">        Shop shop;</span><br><span class="line">        //1.从redis中查询商铺缓存</span><br><span class="line">        String key = CACHE_SHOP_KEY + id;</span><br><span class="line">        String shopJson = stringRedisTemplate.opsForValue().get(key);</span><br><span class="line">        //2.判断是否存在</span><br><span class="line">        if (StrUtil.isNotBlank(shopJson)) &#123;</span><br><span class="line">            //3.存在则直接返回</span><br><span class="line">            shop = JSONUtil.toBean(shopJson, Shop.class);</span><br><span class="line">            return shop;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 因为我们在解决缓存穿透的时候会将空值放入redis中，所以可能会取得空值，因此需要对空值再进行一次判断</span><br><span class="line">        if (shopJson != null) &#123;</span><br><span class="line">            // 命中的信息是空值，所以直接进行返回</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        //添加互斥锁，解决缓存击穿问题</span><br><span class="line">        //第一步，获取互斥锁</span><br><span class="line">        String lockKey = RedisConstants.LOCK_SHOP_KEY + id;</span><br><span class="line">        try &#123;</span><br><span class="line">            boolean isLock = tryLock(lockKey);</span><br><span class="line">            //第二步，判断是否获得锁</span><br><span class="line">            if (!isLock) &#123;</span><br><span class="line">                //第三步，如果失败，进行休眠，休眠后重试</span><br><span class="line">                Thread.sleep(10);</span><br><span class="line">                return queryWithMutex(id);</span><br><span class="line">            &#125;</span><br><span class="line">            /*第四步，如果成功，应再次检测redis缓存是否存在，做double check，这样做的原因是我们在获得锁之后，其他</span><br><span class="line">             *线程可能已经将数据写入redis缓存中了，那么我们即使拿到锁，也没有必要再去查询数据库了，直接从redis中获取</span><br><span class="line">             * 就可以了。</span><br><span class="line">             * 而且，代码已经走到了这一步，说明我们的key取得的缓存不是我们用于解决缓存穿透时设置的空值了，因此不需要在进行</span><br><span class="line">             * 空值的校验了。</span><br><span class="line">             * */</span><br><span class="line">            String secondShopJson = stringRedisTemplate.opsForValue().get(key);</span><br><span class="line">            if (StrUtil.isNotBlank(secondShopJson)) &#123;</span><br><span class="line">                // 缓存中存在，则直接返回</span><br><span class="line">                Shop secondShop = JSONUtil.toBean(shopJson, Shop.class);</span><br><span class="line">                return secondShop;</span><br><span class="line">            &#125;</span><br><span class="line">            //走到这，说明拿到锁后，缓存中依旧没有出现我们想要的值，那么就需要查询数据库了</span><br><span class="line">            shop = getById(id);</span><br><span class="line">            // 模拟重建的延时</span><br><span class="line">            Thread.sleep(200);</span><br><span class="line">            //5.判断数据库中是否存在</span><br><span class="line">            if (shop == null) &#123;</span><br><span class="line">                // 避免缓存穿透问题，若数据库中不存在数据，则在redis中存入空值</span><br><span class="line">                stringRedisTemplate.opsForValue().set(key, &quot;&quot;, RedisConstants.CACHE_NULL_TTL, TimeUnit.MINUTES);</span><br><span class="line">                //7.若不存在，则报错</span><br><span class="line">                return null;</span><br><span class="line">            &#125;</span><br><span class="line">            //6.若存在，则存入redis缓存，并返回</span><br><span class="line">            stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonPrettyStr(shop), CACHE_SHOP_TTL, TimeUnit.MINUTES);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            throw new RuntimeException(e);</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            //释放锁</span><br><span class="line">            unlock(lockKey);</span><br><span class="line">        &#125;</span><br><span class="line">        return shop;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用线程池来管理线程</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">ExecutorService</span> <span class="variable">CACHE_REBUILD_EXECUTOR</span> <span class="operator">=</span> Executors.newFixedThreadPool(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Shop <span class="title function_">queryWithLocalExpire</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        Shop shop;</span><br><span class="line">        <span class="comment">//1.从redis中获取缓存</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> CACHE_SHOP_KEY + id;</span><br><span class="line">        <span class="type">String</span> <span class="variable">shopJson</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().get(key);</span><br><span class="line">        <span class="comment">//2.判断是否为空，如果为空则返回null;</span></span><br><span class="line">        <span class="keyword">if</span> (StrUtil.isBlank(shopJson)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//3.如果不为空，需要先把json反序列化为对象</span></span><br><span class="line">        <span class="type">RedisData</span> <span class="variable">redisData</span> <span class="operator">=</span> JSONUtil.toBean(shopJson, RedisData.class);</span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">data</span> <span class="operator">=</span> (JSONObject) redisData.getData();</span><br><span class="line">        shop = JSONUtil.toBean(data, Shop.class);</span><br><span class="line">        <span class="type">LocalDateTime</span> <span class="variable">expireTime</span> <span class="operator">=</span> redisData.getExpireTime();</span><br><span class="line">        <span class="comment">//4.获取时间，判断是否过期</span></span><br><span class="line">        <span class="keyword">if</span> (LocalDateTime.now().isBefore(expireTime)) &#123;</span><br><span class="line">            <span class="comment">//4.1 如果没有过期，则直接返回即可</span></span><br><span class="line">            <span class="keyword">return</span> shop;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//4.2 如果过期，需要进行缓存重建</span></span><br><span class="line">        <span class="comment">//5 缓存重建</span></span><br><span class="line">        <span class="comment">//6 获取互斥锁</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">lockKey</span> <span class="operator">=</span> RedisConstants.LOCK_SHOP_KEY + id;</span><br><span class="line">        <span class="comment">//6.1 判断是否获取成功，如果成功，开启新线程进行缓存重建</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">isLock</span> <span class="operator">=</span> tryLock(lockKey);</span><br><span class="line">        <span class="keyword">if</span> (isLock) &#123;</span><br><span class="line">            CACHE_REBUILD_EXECUTOR.submit(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="comment">// 重建缓存</span></span><br><span class="line">                    <span class="built_in">this</span>.saveShop2Redis(id, <span class="number">20L</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    <span class="comment">// 释放锁</span></span><br><span class="line">                    unlock(lockKey);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//7 返回旧数据</span></span><br><span class="line">        <span class="keyword">return</span> shop;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240321210833411.png" alt="image-20240321210833411" style="zoom:67%;" /></li>
+</ul>
+<h4 id="5-基于List的点赞列表-amp-基于SortedSet的点赞排行榜"><a href="#5-基于List的点赞列表-amp-基于SortedSet的点赞排行榜" class="headerlink" title="(5) 基于List的点赞列表&amp;基于SortedSet的点赞排行榜"></a>(5) 基于List的点赞列表&amp;基于SortedSet的点赞排行榜</h4><ul>
+<li><p>用户发表博文内容时，后端接收到的请求中不包含userID，userID需要我们从ThreadLocal中获取。在保存博文时，需要set博文的作者userID，在保存成功后，查询该用户的所有粉丝，并将博文信息推送给粉丝。</p>
+</li>
+<li><p>这里我们使用sortedSet来实现发布信息的推送，key为follow_user_id(粉丝ID)，value为blog_id，score为System.currentTimeMillis()。（这里可以优化为使用mq进行实现）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">saveBlog</span><span class="params">(Blog blog)</span> &#123;</span><br><span class="line">        <span class="comment">//获取登录用户</span></span><br><span class="line">        <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">        <span class="comment">//保存blog</span></span><br><span class="line">        blog.setUserId(userId);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">save</span> <span class="operator">=</span> save(blog);</span><br><span class="line">        <span class="keyword">if</span> (save) &#123;</span><br><span class="line">            <span class="comment">//查询笔记作者的所有粉丝</span></span><br><span class="line">            List&lt;Follow&gt; follows = followService.query().eq(<span class="string">&quot;follow_user_id&quot;</span>, userId).list();</span><br><span class="line">            <span class="keyword">for</span> (Follow follow : follows) &#123;</span><br><span class="line">                <span class="comment">//获取粉丝id</span></span><br><span class="line">                <span class="type">Long</span> <span class="variable">followUserId</span> <span class="operator">=</span> follow.getUserId();</span><br><span class="line">                <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisConstants.FEED_KEY + followUserId;</span><br><span class="line">                <span class="comment">//推送</span></span><br><span class="line">                stringRedisTemplate.opsForZSet().add(key, blog.getId().toString(), System.currentTimeMillis());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//推送笔记的id给所有粉丝</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//返回blog id</span></span><br><span class="line">        <span class="keyword">return</span> Result.ok(blog.getId());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对于博客实体类，我们通过‘@TableField(exist &#x3D; false)’注解来指定，icon（头像）,name（用户姓名）表示这两个字段不属于Blog表中的字段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户图标</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@TableField(exist = false)</span></span><br><span class="line">    <span class="keyword">private</span> String icon;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户姓名</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@TableField(exist = false)</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 是否点赞过了</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@TableField(exist = false)</span></span><br><span class="line">    <span class="keyword">private</span> Boolean isLike;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>因为用户和头像这俩字段不属于blog的数据表字段，所以不仅在保存博客的时候我们需要从threadLocal中获取用户id并保存，在查询博文内容的时候，我们还要根据博文的user ID来查询发布者的用户名以及头像等信息。</p>
+</li>
+<li><p><strong>点赞功能（首页探店排行榜&amp;博文详情页都可以点赞）</strong></p>
+<p>点赞功能的需求如下：（1）同一个用户只能点赞一次，再次点击则取消点赞；（2）如果当前用户已经点赞，则点赞按钮高亮显示（前端已经实现了，判断字段Blog类的isLike属性）</p>
+<ul>
+<li><p>实现步骤：</p>
+<ul>
+<li><p>给Blog类中添加一个isLike字段，用来表示当前blog是否被当前用户点赞。</p>
+</li>
+<li><p>修改点赞功能，利用Redis的set集合判断是否点赞过，未点赞过则点赞数加1，已点赞过则点赞数-1。缓存key为blog的id，缓存采用sortedSet的数据结构，value为userID，score为用户点赞时刻（<strong>即，每个blogID对应的是所有点赞该blog的userid，userID根据用户点赞时间为score进行排序</strong>）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">likeBlog</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        <span class="comment">//实现帖子点赞功能</span></span><br><span class="line">        <span class="comment">// 1. 获取当前登录用户</span></span><br><span class="line">        <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">        <span class="comment">//2.判断当前用户是否已经点赞</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisConstants.BLOG_LIKED_KEY + id;</span><br><span class="line">        <span class="type">Double</span> <span class="variable">score</span> <span class="operator">=</span> stringRedisTemplate.opsForZSet().score(key, userId.toString());</span><br><span class="line">        <span class="keyword">if</span> (score == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">//3.如果未点赞，可以点赞</span></span><br><span class="line">            <span class="comment">//3.1 数据库点赞数加一</span></span><br><span class="line">            <span class="type">boolean</span> <span class="variable">isSuccess</span> <span class="operator">=</span> update().setSql(<span class="string">&quot;liked = liked + 1&quot;</span>).eq(<span class="string">&quot;id&quot;</span>, id).update();</span><br><span class="line">            <span class="comment">//3.2 保存点赞用户id 到redis sortedSet集合</span></span><br><span class="line">            <span class="keyword">if</span> (isSuccess) &#123;</span><br><span class="line">                stringRedisTemplate.opsForZSet().add(key, userId.toString(), System.currentTimeMillis());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//4. 如果已经点赞，取消点赞</span></span><br><span class="line">            <span class="comment">//4.1 数据库点赞数减一</span></span><br><span class="line">            <span class="type">boolean</span> <span class="variable">isSuccess</span> <span class="operator">=</span> update().setSql(<span class="string">&quot;liked = liked - 1&quot;</span>).eq(<span class="string">&quot;id&quot;</span>, id).update();</span><br><span class="line">            <span class="comment">//4.2 将用户信息从reids sortedSet集合中删除</span></span><br><span class="line">            <span class="keyword">if</span> (isSuccess) &#123;</span><br><span class="line">                stringRedisTemplate.opsForZSet().remove(key, userId.toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Result.ok();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>修改queryBlogById方法，判断当前登录用户是否点赞过（即判断能不能查到当前userID，有就说明已点赞），并将结果赋值给blog的isLike字段。(<strong>isLike字段不属于blog表字段，它的作用是，当前用户如果点赞过，那么就将isLike置为真，在客户端发请求查询blog信息时，前端根据这个字段决定是否高亮显示点赞按钮</strong>)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">isBlogLiked</span><span class="params">(Blog blog)</span> &#123;</span><br><span class="line">       <span class="comment">//判断当前笔记是否被点赞过</span></span><br><span class="line">       <span class="type">UserDTO</span> <span class="variable">user</span> <span class="operator">=</span> UserHolder.getUser();</span><br><span class="line">       <span class="keyword">if</span> (user == <span class="literal">null</span>) &#123;</span><br><span class="line">           <span class="comment">//用户未登录，不用关心是否点赞过，直接返回</span></span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> user.getId();</span><br><span class="line">       <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisConstants.BLOG_LIKED_KEY + blog.getId();</span><br><span class="line">       <span class="type">Double</span> <span class="variable">score</span> <span class="operator">=</span> stringRedisTemplate.opsForZSet().score(key, userId.toString());</span><br><span class="line">       blog.setIsLike(score != <span class="literal">null</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>修改分页查询Blog业务，判断当前用户是否点赞过，赋值给isLike字段（<strong>这个业务是用于分页展示点赞排行榜的博文，点赞排行榜根据博文的点赞数量降序排序并分页展示的</strong>）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Result <span class="title function_">queryHotBlog</span><span class="params">(Integer current)</span> &#123;</span><br><span class="line">        <span class="comment">// 根据用户查询</span></span><br><span class="line">        Page&lt;Blog&gt; page = blogService.query()</span><br><span class="line">                .orderByDesc(<span class="string">&quot;liked&quot;</span>)</span><br><span class="line">                .page(<span class="keyword">new</span> <span class="title class_">Page</span>&lt;&gt;(current, SystemConstants.MAX_PAGE_SIZE));</span><br><span class="line">        <span class="comment">// 获取当前页数据</span></span><br><span class="line">        List&lt;Blog&gt; records = page.getRecords();</span><br><span class="line">        <span class="comment">// 查询用户,以及查询是否被点赞过</span></span><br><span class="line">        records.forEach(blog -&gt; &#123;</span><br><span class="line">            <span class="built_in">this</span>.queryBlogUser(blog);</span><br><span class="line">            <span class="built_in">this</span>.isBlogLiked(blog);</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">return</span> Result.ok(records);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询当前帖子被哪些用户点赞了（<strong>这里只在前端展示前5位点赞用户的头像，按照点赞时间从前到后进行排序</strong>）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Result <span class="title function_">queryBlogLikes</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        <span class="comment">//返回帖子点赞top5用户</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisConstants.BLOG_LIKED_KEY + id;</span><br><span class="line">        Set&lt;String&gt; top5 = stringRedisTemplate.opsForZSet().range(key, <span class="number">0</span>, <span class="number">4</span>);</span><br><span class="line">        <span class="keyword">if</span> (top5 == <span class="literal">null</span> || top5.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.ok();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//2. 解析出其中的用户id</span></span><br><span class="line">        List&lt;Long&gt; ids = top5.stream().map(Long::valueOf).collect(Collectors.toList());</span><br><span class="line">        <span class="type">String</span> <span class="variable">idListStr</span> <span class="operator">=</span> StrUtil.join(<span class="string">&quot;,&quot;</span>, ids);</span><br><span class="line">        <span class="comment">//3.根据用户id查询用户，返回已点赞用户列表</span></span><br><span class="line">        <span class="comment">//List&lt;UserDTO&gt; users = userService.listByIds(ids).stream().map(user -&gt; BeanUtil.copyProperties(user, UserDTO.class)).collect(Collectors.toList());</span></span><br><span class="line">        List&lt;UserDTO&gt; users = userService.query().in(<span class="string">&quot;id&quot;</span>, ids).last(<span class="string">&quot;order by field(id,&quot;</span> + idListStr + <span class="string">&quot;)&quot;</span>).list()</span><br><span class="line">                .stream()</span><br><span class="line">                .map(user -&gt; BeanUtil.copyProperties(user, UserDTO.class))</span><br><span class="line">                .collect(Collectors.toList());</span><br><span class="line">        <span class="comment">//4.返回</span></span><br><span class="line">        <span class="keyword">return</span> Result.ok(users);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="（6）好友关注功能"><a href="#（6）好友关注功能" class="headerlink" title="（6）好友关注功能"></a>（6）好友关注功能</h4><ul>
+<li><p>在探店图文的详情页面中，可以关注发布笔记的作者：</p>
+</li>
+<li><p><strong>业务逻辑：</strong></p>
+<ul>
+<li><p><strong>关注用户</strong>功能的实现：前端传一个isFollow值，如果用户已经关注该博主，则isFollow为false，没有关注资格，但可以进行取关。反之为true，说明可以进行关注。new Follow对象，将user ID和userFollowID（用户关注的人）都set到Follow对象里。再将follow对象save到数据库表中。</p>
+</li>
+<li><pre><code class="java">public Result follow(Long id, boolean isFollow) &#123;
+        //关注和取关
+        //1. 获取登录用户
+        UserDTO user = UserHolder.getUser();
+        if (user == null) &#123;
+            //如果用户未登录，不用判断是否关注
+            return Result.ok();
+        &#125;
+
+        Long userId = user.getId();
+        String key = RedisConstants.FOLLOW_USER_KEY + userId;
+        if (isFollow) &#123;
+            // 如果未关注，新增数据
+            Follow follow = new Follow();
+            follow.setUserId(userId);
+            follow.setFollowUserId(id);
+            boolean isSuccess = save(follow);
+            if (isSuccess) &#123;
+                stringRedisTemplate.opsForSet().add(key,id.toString());
+            &#125;
+        &#125; else &#123;
+            //如果已关注，取关删除数据
+            boolean isSuccess = remove(new QueryWrapper&lt;Follow&gt;().eq(&quot;user_id&quot;, userId).eq(&quot;follow_user_id&quot;, id));
+            if (isSuccess) &#123;
+                stringRedisTemplate.opsForSet().remove(key,id.toString());
+            &#125;
+        &#125;
+        return Result.ok();
+    &#125;
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* **查看他人主页功能的实现：**前端传该人的userID ，首先根据user ID查询用户信息，其次还要查询该用户发表的博文信息，并分页进行展示：</span><br><span class="line"></span><br><span class="line">* ```java</span><br><span class="line">  // 根据id查询用户</span><br><span class="line">      @GetMapping(&quot;/&#123;id&#125;&quot;)</span><br><span class="line">      public Result queryUserById(@PathVariable(&quot;id&quot;) Long userId)&#123;</span><br><span class="line">          // 查询详情</span><br><span class="line">          User user = userService.getById(userId);</span><br><span class="line">          if (user == null) &#123;</span><br><span class="line">              return Result.ok();</span><br><span class="line">          &#125;</span><br><span class="line">          UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);</span><br><span class="line">          // 返回</span><br><span class="line">          return Result.ok(userDTO);</span><br><span class="line">      &#125;</span><br><span class="line">  @GetMapping(&quot;/of/user&quot;)</span><br><span class="line">  public Result queryBlogByUserId(</span><br><span class="line">  		@RequestParam(value = &quot;current&quot;, defaultValue = &quot;1&quot;) Integer current,</span><br><span class="line">  		@RequestParam(&quot;id&quot;) Long id) &#123;</span><br><span class="line">  	// 根据用户查询</span><br><span class="line">  	Page&lt;Blog&gt; page = blogService.query()</span><br><span class="line">  			.eq(&quot;user_id&quot;, id).page(new Page&lt;&gt;(current, SystemConstants.MAX_PAGE_SIZE));</span><br><span class="line">  	// 获取当前页数据</span><br><span class="line">  	List&lt;Blog&gt; records = page.getRecords();</span><br><span class="line">  	return Result.ok(records);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+<li><p><strong>共同关注功能的实现：</strong>共同关注功能使用redis中的<strong>set结构</strong>进行实现，求两个用户关注列表的交集，因此我们不仅需要吧数据存入follow表中（保存关注关系），还要把user ID放入redis的set集合中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Result <span class="title function_">followCommons</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        <span class="comment">//获取当前用户</span></span><br><span class="line">        <span class="type">UserDTO</span> <span class="variable">user</span> <span class="operator">=</span> UserHolder.getUser();</span><br><span class="line">        <span class="keyword">if</span> (user == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">//如果用户未登录，不用判断是否关注</span></span><br><span class="line">            <span class="keyword">return</span> Result.ok();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> user.getId();</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">key1</span> <span class="operator">=</span> RedisConstants.FOLLOW_USER_KEY + userId;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key2</span> <span class="operator">=</span> RedisConstants.FOLLOW_USER_KEY + id;</span><br><span class="line">        <span class="comment">//求交集</span></span><br><span class="line">        Set&lt;String&gt; intersect = stringRedisTemplate.opsForSet().intersect(key1, key2);</span><br><span class="line">        <span class="comment">//查询交集中的用户 信息</span></span><br><span class="line">        <span class="keyword">if</span> (intersect == <span class="literal">null</span> || intersect.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.ok(Collections.emptyList());</span><br><span class="line">        &#125;</span><br><span class="line">        List&lt;Long&gt; ids = intersect.stream().map(Long::valueOf).collect(Collectors.toList());</span><br><span class="line">        List&lt;UserDTO&gt; commons = userService.listByIds(ids)</span><br><span class="line">                .stream().map(followUser -&gt; BeanUtil.copyProperties(followUser, UserDTO.class))</span><br><span class="line">                .collect(Collectors.toList());</span><br><span class="line">        <span class="keyword">return</span> Result.ok(commons);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>Feed流实现关注用户的博文推送：</strong></p>
+<ul>
+<li><p>本例中的个人界面，是基于关注的好友来进行feed流的，因此采用timeLine的方式，依照时间顺序刷新。（也有像抖音那种的，使用智能推荐算法进行推荐的智能排序的feed流）。</p>
+</li>
+<li><p>实现方案有三种：<strong>推模式、拉模式、推拉结合的模式（推拉是相对于当前用户而言的）</strong></p>
+<ul>
+<li>拉模式：又称为读扩散，每个博主发送信息的时候都发送到自己的发件箱中（一个缓冲区），用户读的时候从各个关注用户的发件箱中读取信息。但是读操作过于频繁，若用户关注了许多博主，一次要读的消息也是十分的多，延迟会很高。</li>
+</ul>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326203018064.png" alt="image-20240326203018064"></p>
+<ul>
+<li><p>推模式：又称为写扩散，每个用户有自己的收件箱（一个缓冲区），每个博主发送信息的时候，将发送内容推送至每一个用户的收件箱中。显然，这样会导致写操作十分频繁，如果博主有许多粉丝，写操作会更频繁。</p>
+</li>
+<li><p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326203034238.png" alt="image-20240326203034238"></p>
+</li>
+<li><p>推拉结合的模式：也称作读写结合，兼具推和拉两种方式的优点。对于普通博主，粉丝少，那么就可以使用推模式，这样写操作就并不繁重；对于大博主，粉丝多，分为两种情况，活跃粉多，那么就可以使用拉模式；活跃粉少，那么就可以使用推模式。</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326203318389.png" alt="image-20240326203318389"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>推送到粉丝收件箱：</strong></p>
+<ul>
+<li><p>需求：</p>
+<ul>
+<li>修改新增探店笔记的业务，在保存blog到数据库的同时，推送到粉丝的收件箱（收件箱使用sortedSet实现）</li>
+<li>收件箱满足可以根据时间戳排序，必须用redis的数据结构实现。</li>
+<li>查询收件箱数据的 时候，可以进行分页查询。</li>
+</ul>
+</li>
+<li><p><strong>注意：Feed流中的数据会不断更新，所以数据的角标也在变化，因此不能采用传统的分页模式。</strong></p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326203940897.png" alt="image-20240326203940897"></p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240326204001342.png" alt="image-20240326204001342"></p>
+</li>
+</ul>
+</li>
+<li><p>新增博文信息的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Result <span class="title function_">saveBlog</span><span class="params">(Blog blog)</span> &#123;</span><br><span class="line">       <span class="comment">//获取登录用户</span></span><br><span class="line">       <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">       <span class="comment">//保存blog</span></span><br><span class="line">       blog.setUserId(userId);</span><br><span class="line">       <span class="type">boolean</span> <span class="variable">save</span> <span class="operator">=</span> save(blog);</span><br><span class="line">       <span class="keyword">if</span> (save) &#123;</span><br><span class="line">           <span class="comment">//查询笔记作者的所有粉丝</span></span><br><span class="line">           List&lt;Follow&gt; follows = followService.query().eq(<span class="string">&quot;follow_user_id&quot;</span>, userId).list();</span><br><span class="line">           <span class="keyword">for</span> (Follow follow : follows) &#123;</span><br><span class="line">               <span class="comment">//获取粉丝id</span></span><br><span class="line">               <span class="type">Long</span> <span class="variable">followUserId</span> <span class="operator">=</span> follow.getUserId();</span><br><span class="line">               <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisConstants.FEED_KEY + followUserId;</span><br><span class="line">               <span class="comment">//推送</span></span><br><span class="line">               stringRedisTemplate.opsForZSet().add(key, blog.getId().toString(), System.currentTimeMillis());</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//推送笔记的id给所有粉丝</span></span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">//返回blog id</span></span><br><span class="line">       <span class="keyword">return</span> Result.ok(blog.getId());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>滚动分页的实现：<strong>简单来说，每次查询，我们都记住上一次查询的score的最小值，然后从小于最小值的第一个值进行查询</strong>，核心代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisConstants.FEED_KEY + userId;</span><br><span class="line">        Set&lt;ZSetOperations.TypedTuple&lt;String&gt;&gt; typedTuples = stringRedisTemplate.opsForZSet().reverseRangeByScoreWithScores(key, <span class="number">0</span>, max, offset, <span class="number">2L</span>);</span><br></pre></td></tr></table></figure>
+
+<p>对应的redis指令是<code>ZrevrangeByScore 【key]】【上次查到的score最小值】【score的最小值】 withscores Limit 【偏移量，这里为1】，【count，页面大小】</code>。</p>
+<p>翻译一下就是：以上次查询的最小值作为本次查询range的max，min为0，limit指定从上次查询的最小值的下一个元素（为0的话是查询&lt;&#x3D;最大值的的元素，会造成重复，所以这里应该为1，查询&lt;&#x3D;最大值的最近的元素）进行查询（根据偏移量来的），总共查询count个元素。</p>
+<p>这里计算最小时间minTime和偏移量offset的代码也很巧妙：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="variable">minTime</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">ofCount</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        List&lt;String&gt; ids = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(typedTuples.size());</span><br><span class="line">        <span class="comment">//3. 解析收件箱：blogId ,score ,minTime(时间戳)</span></span><br><span class="line">        <span class="keyword">for</span> (ZSetOperations.TypedTuple&lt;String&gt; typedTuple : typedTuples) &#123;</span><br><span class="line">            ids.add(typedTuple.getValue());</span><br><span class="line">            <span class="type">long</span> <span class="variable">time</span> <span class="operator">=</span> typedTuple.getScore().longValue();</span><br><span class="line">            <span class="keyword">if</span> (time == minTime) &#123;</span><br><span class="line">                ofCount ++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                ofCount = <span class="number">1</span>;</span><br><span class="line">                minTime = time;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>概括一下就是，ofCount是用来计算score值等于最小时间的元素个数，后续作为offset封装到对象中，time在遍历过程中不断进行更新，遍历完就是取得了最小值，把它付给minTime，封装到对象中去。</strong></p>
+<p>在查询后，又会将本次查询的最小值和偏移量封装到ScrollResult对象中，供下一次查询使用。</p>
+<p>总体代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">queryBlogOfFollow</span><span class="params">(Long max, Integer offset)</span> &#123;</span><br><span class="line">        <span class="comment">//1. 获取当前登录用户</span></span><br><span class="line">        <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">        <span class="comment">//2. 获取收件箱</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisConstants.FEED_KEY + userId;</span><br><span class="line">        Set&lt;ZSetOperations.TypedTuple&lt;String&gt;&gt; typedTuples = stringRedisTemplate.opsForZSet().reverseRangeByScoreWithScores(key, <span class="number">0</span>, max, offset, <span class="number">2L</span>);</span><br><span class="line">        <span class="comment">// 非空判断</span></span><br><span class="line">        <span class="keyword">if</span> (typedTuples.isEmpty() || typedTuples == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.ok();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">long</span> <span class="variable">minTime</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">ofCount</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        List&lt;String&gt; ids = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(typedTuples.size());</span><br><span class="line">        <span class="comment">//3. 解析收件箱：blogId ,score ,minTime(时间戳)</span></span><br><span class="line">        <span class="keyword">for</span> (ZSetOperations.TypedTuple&lt;String&gt; typedTuple : typedTuples) &#123;</span><br><span class="line">            ids.add(typedTuple.getValue());</span><br><span class="line">            <span class="type">long</span> <span class="variable">time</span> <span class="operator">=</span> typedTuple.getScore().longValue();</span><br><span class="line">            <span class="keyword">if</span> (time == minTime) &#123;</span><br><span class="line">                ofCount ++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                ofCount = <span class="number">1</span>;</span><br><span class="line">                minTime = time;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">String</span> <span class="variable">idStr</span> <span class="operator">=</span> StrUtil.join(<span class="string">&quot;,&quot;</span>, ids);</span><br><span class="line">        <span class="comment">//4. 根据id查询blog</span></span><br><span class="line">        List&lt;Blog&gt; blogs = blogService.query().in(<span class="string">&quot;id&quot;</span>, ids).last(<span class="string">&quot;order By field (id,&quot;</span> + idStr + <span class="string">&quot;)&quot;</span>).list();</span><br><span class="line">        <span class="comment">//4.1 查询blog用户，blog是否被点赞过</span></span><br><span class="line">        <span class="keyword">for</span> (Blog blog : blogs) &#123;</span><br><span class="line">            queryBlogUser(blog);</span><br><span class="line">            isBlogLiked(blog);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//封装并返回</span></span><br><span class="line">        <span class="type">ScrollResult</span> <span class="variable">scrollResult</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ScrollResult</span>();</span><br><span class="line">        scrollResult.setList(blogs);</span><br><span class="line">        scrollResult.setMinTime(minTime);</span><br><span class="line">        scrollResult.setOffset(ofCount);</span><br><span class="line">        <span class="keyword">return</span> Result.ok(scrollResult);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="（7）优惠券秒杀"><a href="#（7）优惠券秒杀" class="headerlink" title="（7）优惠券秒杀"></a>（7）优惠券秒杀</h4><ul>
+<li><p><strong>全局ID生成器</strong>：是一种在分布式系统下用来生成全局唯一id的工具，满足以下特性</p>
+<ul>
+<li><strong>唯一性</strong></li>
+<li>高可用</li>
+<li>高性能</li>
+<li><strong>递增性</strong></li>
+<li><strong>安全性</strong></li>
+</ul>
+</li>
+<li><p>我们生成的ID由以下部分组成，订单ID就使用了其生成的ID。</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240329215303515.png" alt="image-20240329215303515"></p>
+</li>
+<li><p>具体的工具类代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// prefix是业务的前缀，我们可以为不同的业务使用不同的全局ID</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">nextId</span><span class="params">(String keyPrefix)</span>&#123;</span><br><span class="line">        <span class="comment">//1. 生成时间戳（31位）</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">timeStamp</span> <span class="operator">=</span> LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - BEGIN_TIMESTAMP;</span><br><span class="line">        <span class="comment">//2. 生成序列号</span></span><br><span class="line">        <span class="comment">//2.1 获取当前日期，精确到天</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">date</span> <span class="operator">=</span> LocalDateTime.now().format(DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy:MM:dd&quot;</span>));</span><br><span class="line">        <span class="comment">//2.2 自增长（添加了date是为了防止key自增到上限，并且方便统计）</span></span><br><span class="line">        <span class="type">Long</span> <span class="variable">count</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().increment(<span class="string">&quot;icr:&quot;</span> + keyPrefix + <span class="string">&quot;:&quot;</span> + date);</span><br><span class="line">        <span class="comment">//3. 拼接并返回</span></span><br><span class="line">        <span class="keyword">return</span> (timeStamp &lt;&lt; COUNT_BITS) | count;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意拼接这一步，<code>timeStamp &lt;&lt;  32</code>是先让时间戳左移32位，然后与序列号进行或运算</strong></p>
+</li>
+<li><p><strong>乐观锁解决超卖问题</strong></p>
+<ul>
+<li><p>超卖问题产生的原因：线程1查询库存，发现余额为1并且大于0，可以进行扣减，但是在线程1进行扣减库存操作之前，有一个线程2，它也查询库存，发现为1(因为线程1还没开始扣减)，于是它也进行扣减，这就导致了1个库存却被两个线程消费了，这就是超卖问题。</p>
+</li>
+<li><p><strong>乐观锁&amp;悲观锁</strong>：</p>
+<ul>
+<li>悲观锁认为线程安全问题一定会发生，因此在<strong>操作数据之前都要先获取锁</strong>，确保线程串行执行。（例如Synchronize、Lock都属于悲观锁）；</li>
+<li>乐观锁则认为，线程安全问题不一定会发生，因此不进行加锁，只是<strong>在数据进行更新的时候去判断有没有其他线程对数据做了修改</strong>。如果没有修改，则认为是安全的，自己可以更新数据；如果已经被其他线程修改，说明发生了安全问题，此时可以重试或者异常。</li>
+</ul>
+</li>
+<li><p>悲观锁实现比较简单，操作前获取锁，操作结束后才释放锁，让多个线程串行执行，但是你让并发线程串行执行，效率会十分低下。</p>
+</li>
+<li><p><strong>乐观锁设计：</strong></p>
+<ul>
+<li><p>第一种设计：<strong>添加版本号version</strong>，在扣减操作前会读取库存stack和版本号version，在进行扣减时，要检查version的值是不是最开始查到的值，如果是的话，才进行stack的扣减，并且让version自增；如果version与最开始查到的值不同，说明有其他线程修改过库存了，此时应该进行重试操作。</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240330150853650.png" alt="image-20240330150853650" style="zoom: 50%;" />
+</li>
+<li><p>第二种设计：<strong>CAS法</strong>，这里我们直接对比库存值，在进行扣减操作前会查询库存stack值，在进行扣减操作时，检查statck值（<strong>内存中的值V</strong>）是否与最开始读到的值（<strong>预期原始值A</strong>）相同，如果相同则可以进行扣减，反之，不同的话说明有其他线程更改过库存了，此时应该进行重试工作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">什么是CAS机制（compare and swap）</span><br><span class="line">CAS算法的作用：解决多线程条件下使用锁造成性能损耗问题的算法，保证了原子性，这个原子操作是由CPU来完成的</span><br><span class="line">CAS的原理：CAS算法有三个操作数，通过内存中的值（V）、预期原始值（A)、修改后的新值。</span><br><span class="line">（1）如果内存中的值和预期原始值相等， 就将修改后的新值保存到内存中。</span><br><span class="line">（2）如果内存中的值和预期原始值不相等，说明共享数据已经被修改，放弃已经所做的操作，然后重新执行刚才的操作，直到重试成功。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建订单功能采用CAS法的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//5.扣减库存</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> seckillVoucherService.update()</span><br><span class="line">                .setSql(<span class="string">&quot;stock = stock - 1&quot;</span>)<span class="comment">//set stock = stock -1</span></span><br><span class="line">                .eq(<span class="string">&quot;voucher_id&quot;</span>,voucherId).eq(<span class="string">&quot;stock&quot;</span>,voucher.getStock()) <span class="comment">//where id = ? and stock =?</span></span><br><span class="line">                .update();</span><br></pre></td></tr></table></figure>
+
+<p>上面代码的意思就是，在执行update的时候，再次检查stock值和当前获取到的stack值是否相同。<strong>但是这样修改后，我们发现成功率很低，在开启200个线程执行的情况下，100张只卖出去了23张。</strong>原因就在于，在并发环境下，stock值前后匹配的成功率很小，这导致大量的线程购买失败了。</p>
+<p>因此对上面的代码继续修改，在扣减前查询stack值是否大于0，如果大于0，当前线程就可以进行扣减库存的操作了，如果等于0，说明有其他线程已经把库存扣完了，于是返回false表示库存扣减失败。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 5.扣减库存</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> seckillVoucherService.update()</span><br><span class="line">                .setSql(<span class="string">&quot;stock = stock - 1&quot;</span>)</span><br><span class="line">                .eq(<span class="string">&quot;voucher_id&quot;</span>, voucherId).gt(<span class="string">&quot;stock&quot;</span>, <span class="number">0</span>)</span><br><span class="line">                .update();</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>一人一单问题</strong></p>
+<ul>
+<li><p>需要修改业务逻辑，一名用户只能购买一张优惠券，防止黄牛刷券。</p>
+</li>
+<li><p>具体业务流程如下：</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240330154534430.png" alt="image-20240330154534430"></p>
+</li>
+<li><p>于是修改代码如下：</p>
+<ul>
+<li><p>&#96;&#96;&#96;java<br>&#x2F;&#x2F;查询订单<br>    int count &#x3D; query().eq(“user_id”, userId).eq(“voucher_id”, voucherId).count();<br>    if (count &gt; 0) {<br>        return Result.fail(“不可重复下单！”);<br>    }<br>    &#x2F;&#x2F; 5.扣减库存<br>    boolean success &#x3D; seckillVoucherService.update()<br>            .setSql(“stock &#x3D; stock - 1”)<br>            .eq(“voucher_id”, voucherId).gt(“stock”, 0)<br>            .update();<br>    if (!success) {<br>        return Result.fail(“优惠券库存不足！”);<br>    }<br>    &#x2F;&#x2F; 6.创建订单<br>。。。。。。。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line">**问题1**但是我们在测试的时候，发现问题并没有解决，原因就在于，在高并发环境下，多个线程查询该userID下的订单数count，都会得到0，从而都进行库存的扣减。导致没有实现一人一单。</span><br><span class="line">  </span><br><span class="line">那么自然考虑要加锁了，但是这里并不能用乐观锁方案，因为我们这里是新增数据操作，不是更新操作，数据一开始是不存在的。所以这里要使用悲观锁。</span><br><span class="line">  </span><br><span class="line">那么这里将查询订单到创建订单这个过程为一个方法，给这个方法加锁。</span><br><span class="line">  </span><br><span class="line">```java</span><br><span class="line">    @Transactional</span><br><span class="line">    public synchronized Result createVoucherOrder(Long voucherId) &#123;</span><br><span class="line">        // 一人一单</span><br><span class="line">        Long userId = UserHolder.getUser().getId();</span><br><span class="line">        //synchronized (userId.toString().intern()) &#123;</span><br><span class="line">        //查询订单</span><br><span class="line">        int count = query().eq(&quot;user_id&quot;, userId).eq(&quot;voucher_id&quot;, voucherId).count();</span><br><span class="line">        if (count &gt; 0) &#123;</span><br><span class="line">            return Result.fail(&quot;不可重复下单！&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        // 5.扣减库存</span><br><span class="line">        boolean success = seckillVoucherService.update()</span><br><span class="line">                .setSql(&quot;stock = stock - 1&quot;)</span><br><span class="line">                .eq(&quot;voucher_id&quot;, voucherId).gt(&quot;stock&quot;, 0)</span><br><span class="line">                .update();</span><br><span class="line">        if (!success) &#123;</span><br><span class="line">            return Result.fail(&quot;优惠券库存不足！&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        // 6.创建订单</span><br><span class="line">        long orderId = redisIdWorker.nextId(&quot;order&quot;);</span><br><span class="line">        VoucherOrder voucherOrder = new VoucherOrder();</span><br><span class="line">        //6.1订单id</span><br><span class="line">        voucherOrder.setId(orderId);</span><br><span class="line">        //6.2用户id</span><br><span class="line">        voucherOrder.setUserId(userId);</span><br><span class="line">        //6.3优惠券id</span><br><span class="line">        voucherOrder.setVoucherId(voucherId);</span><br><span class="line">        //7.保存订单</span><br><span class="line">        save(voucherOrder);</span><br><span class="line">        // 8.返回订单id</span><br><span class="line">        return Result.ok(orderId);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题二，缩小锁范围：</strong>但是在方法上使用synchronized锁的是当前this对象，导致每个用户到这里都要获取这一把锁，让这个方法串行执行了，效率会极低。我们只打算锁当前用户，不让他多次创建订单就可以了，那么这里我们synchronized（user ID.toString()）就可以了。</p>
+<p><strong>问题三，但是用了toString还是不好使，因为toString底层都是new了一个新的对象，所以锁无法起作用。</strong>于是我们再次修改为<code>synchronized(userID.toString().intern())</code>，intern会从字符串常量池中寻找值一样的引用并返回。</p>
+<p><strong>问题四，但是，我们这里将锁定义在了方法内部，因此在锁释放之后，创建订单的事务才会提交。而在锁释放到事务提交这段时间内（这个时候，由于事务尚未提交，数据库还没更新，如果此时有另外的线程进入的话，依然查不到count，会继续进行订单创建，这是我们不能允许的），因此synchronize不能放在方法内。</strong>于是就将代码改造成了下面这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Result <span class="title function_">seckillVoucher</span><span class="params">(Long voucherId)</span> &#123;</span><br><span class="line">        <span class="comment">//1. 查询优惠券</span></span><br><span class="line">        <span class="type">SeckillVoucher</span> <span class="variable">seckillVoucher</span> <span class="operator">=</span> seckillVoucherService.getById(voucherId);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.判断秒杀是否开始</span></span><br><span class="line">        <span class="type">LocalDateTime</span> <span class="variable">beginTime</span> <span class="operator">=</span> seckillVoucher.getBeginTime();</span><br><span class="line">        <span class="type">LocalDateTime</span> <span class="variable">endTime</span> <span class="operator">=</span> seckillVoucher.getEndTime();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (LocalDateTime.now().isBefore(beginTime)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀活动尚未开始！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 3.判断秒杀是否已经结束</span></span><br><span class="line">        <span class="keyword">if</span> (LocalDateTime.now().isAfter(endTime)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀活动已经结束！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 4.判断库存是否充足</span></span><br><span class="line">        <span class="type">Integer</span> <span class="variable">stock</span> <span class="operator">=</span> seckillVoucher.getStock();</span><br><span class="line">        <span class="keyword">if</span> (stock &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.fail(<span class="string">&quot;优惠券已售空！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 注意这里，这里是我们修改的地方</span></span><br><span class="line">        <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">     *  <span class="keyword">synchronized</span> (userId.toString().intern()) &#123;        </span><br><span class="line">     *     <span class="keyword">return</span> createVoucherOrder(voucherId);</span><br><span class="line">     *  &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题五，但是这里还存在一个事务的问题</strong>，这里return的实际上是this.createVoucherOrder()方法，而spring事务生效是因为spring对当前对象做了动态代理，用的是代理对象做事务处理，而这里用this，是一个非代理对象，显然事务是不会生效的。</p>
+<p>解决方案就是，拿到当前对象的代理对象。确保事务生效。</p>
+<p><strong>问题六，在分布式情况下，上面的一人一单解决方法不好使了。这里引出》》》》分布式锁！！</strong></p>
+<p>问题的原因如下，分布式情况下，有多个jvm存在，不同的jvm有多个锁监视器，这会导致每个jvm都会成功一个。</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240330215139748.png" alt="image-20240330215139748"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>分布式锁：</strong></p>
+<ul>
+<li>分布式锁就是满足分布式系统或集群模式下多进程可见并且互斥的锁。</li>
+<li>分布式锁应有如下功能特性：<strong>多进程可见、互斥、高可用、高性能、安全性</strong></li>
+<li>分布式锁的实现：</li>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240330220500961.png" alt="image-20240330220500961"></li>
+</ul>
+</li>
+<li><p><strong>Redis分布式锁误删问题：</strong></p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240331145142125.png" alt="image-20240331145142125"></p>
+<p><strong>问题：</strong>线程1在获取到锁，在进行自己的业务逻辑的时候却发生了阻塞，阻塞时间甚至超过了我们预设的redis锁超时时间。这导致锁提前被释放掉了，这时线程2自然而然获得了锁，在它执行业务逻辑的时候，<strong>线程1的业务完成了，于是线程1二话不说，进行释放锁，</strong>于是线程2的锁也没了，线程3就能获取锁执行自己的业务了………</p>
+<p><strong>解决方法：</strong>在释放锁的时候判断一下线程标识是否一致，如果一致，就释放锁，不一致就不释放。（很好判断，因为我们setNx的value就是线程id，但是在集群模式下，多个jvm会出现线程id的重复，因此我们存放的标识也要尽可能的唯一，这里采用UUID + 线程ID的方式。）</p>
+</li>
+<li><p><strong>分布式锁的原子性问题</strong>：</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240331152244051.png" alt="image-20240331152244051"></p>
+<p>上面我们解决了分布式锁误删问题，但是在并发情况下还是会存在隐患。</p>
+<p><strong>问题：</strong>线程1在获取锁执行完业务进行释放的时候，由于我们释放锁的过程分为两步（1）判断线程标识是否一致（2）delete KEY，<strong>而在完成第一步后释放锁之前，假设线程1阻塞了（很有可能发生，比如垃圾回收会阻塞所有线程），等到锁被超时释放掉的时候，</strong>线程2可以趁虚而入了，它可以获取锁并执行自己的业务，<strong>而在它执行业务的时候，线程1恢复了，由于线程1已经进行了一致性判断，因此线程1会直接把锁释放掉，</strong>加入此时又来一个线程3，它就又可以执行自己的业务了。</p>
+<p><strong>解决方法：</strong>这里我们使用lua脚本来保证释放锁的原子性。具体如下所示：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 获取锁中的线程标识</span></span><br><span class="line"><span class="keyword">local</span> id = redis.call(<span class="string">&#x27;get&#x27;</span>,KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="comment">-- 判断是否一致</span></span><br><span class="line"><span class="keyword">if</span> (ARGV[<span class="number">1</span>] == id)</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="keyword">return</span> redis.call(<span class="string">&#x27;del&#x27;</span>,KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>这里，为了避免每次释放锁的时候都要用IO流读脚本，这里采用静态代码块的方式，直接预加载我们的脚本。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//为了避免每次释放锁都要重新加载脚本浪费性能，所以我们选择使用静态代码块进行初始化加载</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> DefaultRedisScript&lt;Long&gt; UNLOCK_SCRIPT;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        UNLOCK_SCRIPT = <span class="keyword">new</span> <span class="title class_">DefaultRedisScript</span>&lt;&gt;();</span><br><span class="line">        UNLOCK_SCRIPT.setLocation(<span class="keyword">new</span> <span class="title class_">ClassPathResource</span>(<span class="string">&quot;unlock.lua&quot;</span>));</span><br><span class="line">        UNLOCK_SCRIPT.setResultType(Long.class);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，在类初始化后，我们的脚本也完成了预加载。</p>
+</li>
+<li><p><strong>分布式锁工具类SimpleRedisLock</strong></p>
+<p>在解决了锁误删问题以及原子性问题后，我们的工具类如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">(<span class="type">long</span> timeoutSec)</span> &#123;</span><br><span class="line">        <span class="comment">//获取当前线程标识</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">threadId</span> <span class="operator">=</span> ID_PREFIX +Thread.currentThread().getId();</span><br><span class="line">        <span class="comment">//获取锁</span></span><br><span class="line">        <span class="type">Boolean</span> <span class="variable">isSuccess</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().setIfAbsent(KEY_PREFIX + name, threadId, timeoutSec, TimeUnit.SECONDS);</span><br><span class="line">        <span class="keyword">return</span> BooleanUtil.isTrue(isSuccess);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">       <span class="comment">// 调用lua脚本, 参数列表： lua脚本，key,args</span></span><br><span class="line">        stringRedisTemplate.execute(UNLOCK_SCRIPT, Collections.singletonList(KEY_PREFIX + <span class="built_in">this</span>.name),ID_PREFIX +Thread.currentThread().getId());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>Redis分布式锁优化</strong></p>
+<ul>
+<li>基于setnx实现的分布式锁存在下面的问题<strong>（引出Redission）</strong>：<ul>
+<li><strong>不可重入：</strong>同一个线程无法多次获取同一把锁。</li>
+<li><strong>不可重试</strong>： 获取锁只尝试1次就返回了，没有重试机制。</li>
+<li><strong>超时释放</strong>：锁超时释放虽然可以避免死锁，但如果是业务执行耗时较长，也会导致所释放，存在安全隐患。</li>
+<li><strong>主从一致性：</strong>如果redis提供了主从集群，主从同步存在延迟，当主宕机时，如果从同步主中锁数据，则会出现锁实现。</li>
+</ul>
+</li>
+<li><strong>Redission：</strong>redission是一个在redis基础上实现的java驻内存数据网格。它<strong>不仅提供了一系列的分布式地常用Java对象，还提供了许多分布式服务，其中就包含了各种分布式锁的实现。</strong>（redis下各种分布式工具集合）</li>
+</ul>
+</li>
+<li><p><strong>Redission入门：</strong></p>
+<ul>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401141124091.png" alt="image-20240401141124091"><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401142605710.png" alt="image-20240401142605710"><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401143311866.png" alt="image-20240401143311866"><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401150536638.png" alt="image-20240401150536638"></li>
+<li><strong>Redission分布式锁原理：</strong><ul>
+<li>可重入：利用Hash结构，记录线程id和重入次数</li>
+<li>可重试：利用信号量和PubSub功能实现等待、唤醒、获取锁失败的重试机制</li>
+<li>超时续约：利用watchDog，每隔一段时间（releaseTime &#x2F; 3），重置超时时间</li>
+</ul>
+</li>
+<li><strong>Redission分布式锁主从一致性问题（联锁MultiLock）：</strong><ul>
+<li>一般redis集群会设置主从模式，主节点用来写，从节点用来读，同时设置主从同步机制保证数据的一致性。但是如果我们从主节点获取锁，但是在主从同步过程中主节点宕机，这就会导致新的主节点没有锁的内容，产生并发安全问题。</li>
+<li>Redission的解决方法是，不区分主从节点，所有节点同一级别，互不联系。在获取锁的时候，从每个redis节点获取锁，并且，只有当所有节点都能获取锁的时候该线程才能获取锁，这样就解决了分布式锁主从一致性问题。<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240401153807053.png" alt="image-20240401153807053"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>总结：</strong></p>
+<ul>
+<li>（1）不可重入Redis分布式锁:<ul>
+<li>原理：利用setNx的互斥性；利用ex避免死锁；释放锁时判断线程标识。</li>
+<li>缺陷：不可重入、无法重试、锁超时失效。</li>
+</ul>
+</li>
+<li>（2）可重入的Redis分布式锁：<ul>
+<li>原理：利用hash结构，记录线程标识可重入次数；利用watchDog延续锁时间；利用信号量控制锁充实等待</li>
+<li>缺陷：redis宕机引起锁失效问题</li>
+</ul>
+</li>
+<li>（3）Redission的multilock:<ul>
+<li>原理：多个独立的redis节点，必须在所有节点都获取重入锁，才算获取锁成功</li>
+<li>缺陷：运维成本高、实现复杂</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>异步秒杀思路</strong></p>
+<ul>
+<li><p>在我们使用了分布式锁改造后的优惠券秒杀过程可以概括为如下几步：</p>
+<ul>
+<li>根据传入的voucher ID查询优惠券信息（<strong>访问数据库</strong>）；</li>
+<li>判断秒杀是否开始或者已经结束（访问优惠券属性）</li>
+<li>判断库存是否充足（访问优惠券属性）</li>
+<li>获取当前用户id，查询当前用户是否已经购买过该优惠券（<strong>访问数据库</strong>）</li>
+<li>如果符合一人一单，那么进行库存扣减（<strong>访问数据库</strong>）</li>
+<li>创建订单信息并持久化（<strong>访问数据库</strong>）</li>
+</ul>
+</li>
+<li><p><strong>该过程涉及4次数据库访问，串行执行的时候，会相当消耗时间，从而造成效率的降低，因此需要对整个流程进行异步化改造。</strong></p>
+</li>
+<li><p>这里，将判断秒杀库存和校验一人一单的功能交给redis来做，开启新的线程来完成那些需要访问数据库的操作。redis和tomcat之间通过一个消息队列来进行消息传递，当库存充足并且通过一人一单的校验后，redis向消息队列中发布消息，包含用户id，优惠券id，订单id；tomcat在接收到消息队列中的信息后，访问数据库，完成订单的创建。</p>
+</li>
+<li><p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240402140309308.png" alt="image-20240402140309308"></p>
+</li>
+<li><p><strong>缓存设计：</strong>对于判断秒杀库存的缓存设计，直接使用string结构就可以；而对于一人一单的校验，这里我们使用set结构来保存。1是因为同一张id的优惠券可以被多个用户购买，2是这些value不能有重复的，因此选用set结构正合适。</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240402141239535.png" alt="image-20240402141239535"></p>
+</li>
+<li><p>使用lua脚本来保证我们使用缓存进行库存判断和一人一单校验时的原子性：</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240402141618424.png" alt="image-20240402141618424"></p>
+</li>
+<li><p>整个工作流程如下：</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240402141928196.png" alt="image-20240402141928196" style="zoom:67%;" />
+</li>
+<li><p>具体代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Result <span class="title function_">seckillVoucher</span><span class="params">(Long voucherId)</span> &#123;</span><br><span class="line">       <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">       </span><br><span class="line">       <span class="comment">//1. 执行lua脚本</span></span><br><span class="line">       <span class="type">Long</span> <span class="variable">result</span> <span class="operator">=</span> stringRedisTemplate.execute(</span><br><span class="line">               SECKILL_SCRIPT,</span><br><span class="line">               Collections.emptyList(),</span><br><span class="line">               voucherId.toString(), userId.toString(), String.valueOf(orderId));</span><br><span class="line">       <span class="comment">//2.判断结果，</span></span><br><span class="line">       <span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> result.intValue();</span><br><span class="line">       <span class="keyword">if</span> (r != <span class="number">0</span>) &#123;</span><br><span class="line">           <span class="comment">//2.1 不为0，代表没有</span></span><br><span class="line">           <span class="keyword">return</span> Result.fail(r == <span class="number">1</span> ? <span class="string">&quot;库存不足！&quot;</span> : <span class="string">&quot;不能重复下单！&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line">    <span class="comment">// 生成订单id</span></span><br><span class="line">       <span class="type">long</span> <span class="variable">orderId</span> <span class="operator">=</span> redisIdWorker.nextId(<span class="string">&quot;order&quot;</span>);</span><br><span class="line">    <span class="comment">// 添加阻塞队列</span></span><br><span class="line">    .......</span><br><span class="line">    <span class="comment">//3.返回订单id</span></span><br><span class="line">       <span class="keyword">return</span> Result.ok(orderId);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用阻塞队列的方式完成异步下单 有一个很重要的缺点，那就是<strong>阻塞队列使用的是jvm内存，在高并发情况下会有无数的对象放在阻塞队列中，这可能会导致内存的溢出；同时，由于内容都是存在于内存中，如果发生宕机，内存中的数据发生丢失，会出现数据的安全问题</strong>（引出消息队列）。</p>
+</li>
+<li><p>基于PubSub的消息队列的优缺点：</p>
+<ul>
+<li>优点：采用发布订阅模型，支持多生产，多消费</li>
+<li>缺点：不支持持久化；无法避免消息丢失；消息堆积有上限，超出时数据丢失</li>
+</ul>
+</li>
+<li><p><strong>基于Stream的消息队列–单消费模式：</strong></p>
+<ul>
+<li>stream是redis5.0引入的一种新数据类型，可以实现一个功能非常完善的消息队列</li>
+<li>stream中的消息读完不会删除。</li>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240403140103440.png" alt="image-20240403140103440"></li>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240403140208717.png" alt="image-20240403140208717"></li>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240403140306245.png" alt="image-20240403140306245"></li>
+<li><strong>阻塞方式的一个bug：</strong>当我们指定起始id为$时，代表读取最新的消息，如果我们处理一条消息的过程中，又有超过1条以上的消息到达队列，则下次获取时也只能读取到最新的一条，会出现漏读消息的问题。</li>
+<li><strong>总结，Stream类型的消息队列的xRead命令特点如下：</strong><ul>
+<li>消息可回溯</li>
+<li>一个消息可以被多个消费者读取</li>
+<li>可以阻塞读取</li>
+<li>有消息漏读的风险</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>基于Stream的消费队列–消费者组</strong></p>
+<ul>
+<li><strong>消费者组：</strong>将多个消费者划分到一个组中，监听同一个队列。具备以下特点：<ul>
+<li><strong>消息分流：</strong>队列中的消息会分流给组内的不同消费者，而不是重复的消费，从而加快消息处理的速度</li>
+<li><strong>消息标识：</strong>消费者组会维护一个标识，记录最后一个被处理的消息，哪怕消费者宕机重启，还会从标识之后读取消息。确保每一个消息都会被消费</li>
+<li><strong>消息确认：</strong>消费者获取消息后，消息处于pending状态，并存入一个pending-List。当处理完成后需要XACK来确认消息，标记消息已处理，才会从pendingList中移除。</li>
+</ul>
+</li>
+<li><strong>Stream类型消息队列的XREADGROUP命令特点：</strong><ul>
+<li>消息可回溯</li>
+<li>可以多消费者争抢消息，加快消费速度</li>
+<li>可以阻塞读取</li>
+<li>没有消息漏读的风险</li>
+<li>有消息确认机制，保证消息至少被消费一次</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>基于Stream消息队列实现</strong></p>
+<ul>
+<li><p>流程变更如下：</p>
+<ul>
+<li>创建一个stream类型的消息队列，命名为stream.orders</li>
+<li>修改之前的秒杀下单lua脚本，在认定有抢购资格后，直接向stream.order中添加消息，内容包含voucherID、user ID、orderID</li>
+<li>项目启动时，开启一个线程任务，尝试获取stream.order中的信息，完成下单</li>
+</ul>
+</li>
+<li><p>修改后的Lua脚本：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--参数列表</span></span><br><span class="line"><span class="comment">--优惠券id</span></span><br><span class="line"><span class="keyword">local</span> voucherId = ARGV[<span class="number">1</span>]</span><br><span class="line"><span class="comment">--用户id</span></span><br><span class="line"><span class="keyword">local</span> userId = ARGV[<span class="number">2</span>]</span><br><span class="line"><span class="comment">--订单id</span></span><br><span class="line"><span class="keyword">local</span> orderId = ARGV[<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">--数据key</span></span><br><span class="line"><span class="comment">--库存key</span></span><br><span class="line"><span class="keyword">local</span> stockKey = <span class="string">&#x27;seckill:stock:&#x27;</span> .. voucherId</span><br><span class="line"><span class="comment">--订单key(这里的orderKey代表的是：该优惠券下的所有订单，它是一个集合的key)</span></span><br><span class="line"><span class="keyword">local</span> orderKey = <span class="string">&#x27;seckill:order:&#x27;</span> .. voucherId</span><br><span class="line"></span><br><span class="line"><span class="comment">--3.脚本业务</span></span><br><span class="line"><span class="comment">--3.1判断库存是否充足 get stockkey</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">tonumber</span>(redis.call(<span class="string">&#x27;get&#x27;</span>,stockKey)) &lt;= <span class="number">0</span>) <span class="keyword">then</span></span><br><span class="line">    <span class="comment">--3.2 库存不足，返回1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="comment">--判断用户是否下单 sismember orderKey userId</span></span><br><span class="line"><span class="keyword">if</span> (redis.call(<span class="string">&#x27;sismember&#x27;</span>, orderKey, userId) == <span class="number">1</span>) <span class="keyword">then</span></span><br><span class="line">    <span class="comment">--3.3 存在，说明是重复下单，返回2</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="comment">--3.4 扣减库存，</span></span><br><span class="line">redis.call(<span class="string">&#x27;incrby&#x27;</span>,stockKey,<span class="number">-1</span>)</span><br><span class="line"><span class="comment">--3.5 下单，保存用户(将用户id加入到以orderKey 为key的集合中)</span></span><br><span class="line">redis.call(<span class="string">&#x27;sadd&#x27;</span>,orderKey,userId)</span><br><span class="line"><span class="comment">--3.6 发送消息到消息队列中，XADD stream.orders * k1 v1 k2 v2....</span></span><br><span class="line">redis.call(<span class="string">&quot;XADD&quot;</span>,<span class="string">&quot;stream.orders&quot;</span>,<span class="string">&quot;*&quot;</span>,<span class="string">&quot;userId&quot;</span>,userId,<span class="string">&quot;voucherId&quot;</span>,voucherId,<span class="string">&quot;id&quot;</span>,orderId)</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改后的，使用stream的订单处理线程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> &#123;</span><br><span class="line">        SECKILL_ORDER_EXECUTOR.submit(<span class="keyword">new</span> <span class="title class_">VoucherOrderHandler</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">VoucherOrderHandler</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">queueName</span> <span class="operator">=</span> <span class="string">&quot;stream.orders&quot;</span>;</span><br><span class="line">            <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="comment">//1.获取消息队列中的订单信息</span></span><br><span class="line">                    List&lt;MapRecord&lt;String, Object, Object&gt;&gt; list = stringRedisTemplate.opsForStream().read(</span><br><span class="line">                            Consumer.from(<span class="string">&quot;g1&quot;</span>, <span class="string">&quot;c1&quot;</span>),</span><br><span class="line">                            StreamReadOptions.empty().count(<span class="number">1</span>).block(Duration.ofSeconds(<span class="number">2</span>)),</span><br><span class="line">                            StreamOffset.create(queueName, ReadOffset.lastConsumed())</span><br><span class="line">                    );</span><br><span class="line">                    <span class="comment">//2.判断消息获取是否成功</span></span><br><span class="line">                    <span class="keyword">if</span> (list == <span class="literal">null</span> || list.isEmpty()) &#123;</span><br><span class="line">                        <span class="comment">//2.1 如果消息获取失败，说明没有消息，继续进行下一次循环</span></span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">//2.2 如果消息获取成功，对消息进行处理</span></span><br><span class="line">                    <span class="comment">// 解析list中的订单信息</span></span><br><span class="line">                    MapRecord&lt;String, Object, Object&gt; record = list.get(<span class="number">0</span>);</span><br><span class="line">                    Map&lt;Object, Object&gt; map = record.getValue();</span><br><span class="line">                    <span class="type">VoucherOrder</span> <span class="variable">voucherOrder</span> <span class="operator">=</span> BeanUtil.fillBeanWithMap(map, <span class="keyword">new</span> <span class="title class_">VoucherOrder</span>(), <span class="literal">true</span>);</span><br><span class="line">                    <span class="comment">//对消息进行处理,即创建订单</span></span><br><span class="line">                    handleVoucherOrder(voucherOrder);</span><br><span class="line">                    <span class="comment">//3. ACK确认</span></span><br><span class="line">                    stringRedisTemplate.opsForStream().acknowledge(queueName, <span class="string">&quot;g1&quot;</span>, record.getId());</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    log.error(<span class="string">&quot;订单消息处理异常！&quot;</span>, e);</span><br><span class="line">                    <span class="comment">//4.消息处理异常，说明存在被读取但未被ack的订单消息</span></span><br><span class="line">                    handlePendingList();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="面试相关问题"><a href="#面试相关问题" class="headerlink" title="面试相关问题"></a>面试相关问题</h1><h2 id="1-项目里为什么要用消息队列："><a href="#1-项目里为什么要用消息队列：" class="headerlink" title="1. 项目里为什么要用消息队列："></a>1. 项目里为什么要用消息队列：</h2><h2 id="2-请求很多，消息堆积处理不过来了如何应对"><a href="#2-请求很多，消息堆积处理不过来了如何应对" class="headerlink" title="2. 请求很多，消息堆积处理不过来了如何应对"></a>2. 请求很多，消息堆积处理不过来了如何应对</h2><h2 id="3-用户在消息堆积时以为卡了，多次请求怎么处理"><a href="#3-用户在消息堆积时以为卡了，多次请求怎么处理" class="headerlink" title="3. 用户在消息堆积时以为卡了，多次请求怎么处理"></a>3. 用户在消息堆积时以为卡了，多次请求怎么处理</h2><h2 id="4-项目都有哪些表"><a href="#4-项目都有哪些表" class="headerlink" title="4. 项目都有哪些表"></a>4. 项目都有哪些表</h2><h2 id="5-超卖问题怎么解决？"><a href="#5-超卖问题怎么解决？" class="headerlink" title="5. 超卖问题怎么解决？"></a>5. 超卖问题怎么解决？</h2><h2 id="5-秒杀场景下扣减库存太慢了怎么解决"><a href="#5-秒杀场景下扣减库存太慢了怎么解决" class="headerlink" title="5. 秒杀场景下扣减库存太慢了怎么解决"></a>5. 秒杀场景下扣减库存太慢了怎么解决</h2><h2 id="7-Redis大key怎么解决？"><a href="#7-Redis大key怎么解决？" class="headerlink" title="7. Redis大key怎么解决？"></a>7. Redis大key怎么解决？</h2><h2 id="8-什么是热Key"><a href="#8-什么是热Key" class="headerlink" title="8. 什么是热Key"></a>8. 什么是热Key</h2><h2 id="9-如何解决热key问题"><a href="#9-如何解决热key问题" class="headerlink" title="9. 如何解决热key问题"></a>9. 如何解决热key问题</h2><h2 id="10-短信登录的短信怎么发送的"><a href="#10-短信登录的短信怎么发送的" class="headerlink" title="10.  短信登录的短信怎么发送的"></a>10.  短信登录的短信怎么发送的</h2><h2 id="11-项目的拦截器详细讲讲"><a href="#11-项目的拦截器详细讲讲" class="headerlink" title="11. 项目的拦截器详细讲讲"></a>11. 项目的拦截器详细讲讲</h2><h2 id="12-怎么保存验证码"><a href="#12-怎么保存验证码" class="headerlink" title="12. 怎么保存验证码"></a>12. 怎么保存验证码</h2><h2 id="13-项目里存在redis里的key的格式，存的什么"><a href="#13-项目里存在redis里的key的格式，存的什么" class="headerlink" title="13.项目里存在redis里的key的格式，存的什么"></a>13.项目里存在redis里的key的格式，存的什么</h2><h2 id="14-如何标识用户"><a href="#14-如何标识用户" class="headerlink" title="14. 如何标识用户"></a>14. 如何标识用户</h2><h2 id="15-项目的权限刷新什么意思"><a href="#15-项目的权限刷新什么意思" class="headerlink" title="15.项目的权限刷新什么意思"></a>15.项目的权限刷新什么意思</h2><h2 id="16-旁路缓存机制具体解决的什么场景"><a href="#16-旁路缓存机制具体解决的什么场景" class="headerlink" title="16. 旁路缓存机制具体解决的什么场景"></a>16. 旁路缓存机制具体解决的什么场景</h2><h2 id="17-更新缓存失败了怎么办"><a href="#17-更新缓存失败了怎么办" class="headerlink" title="17 更新缓存失败了怎么办"></a>17 更新缓存失败了怎么办</h2><h2 id="重试的时候，缓存中的错数据被访问多次了，怎么解决"><a href="#重试的时候，缓存中的错数据被访问多次了，怎么解决" class="headerlink" title="重试的时候，缓存中的错数据被访问多次了，怎么解决"></a>重试的时候，缓存中的错数据被访问多次了，怎么解决</h2><h2 id="项目为什么要加个消息队列"><a href="#项目为什么要加个消息队列" class="headerlink" title="项目为什么要加个消息队列"></a>项目为什么要加个消息队列</h2><h2 id="抢优惠券没有及时处理怎么办"><a href="#抢优惠券没有及时处理怎么办" class="headerlink" title="抢优惠券没有及时处理怎么办"></a>抢优惠券没有及时处理怎么办</h2><h2 id="抢优惠券处理完了如何通知用户"><a href="#抢优惠券处理完了如何通知用户" class="headerlink" title="抢优惠券处理完了如何通知用户"></a>抢优惠券处理完了如何通知用户</h2><h2 id="Redis的Zset"><a href="#Redis的Zset" class="headerlink" title="Redis的Zset"></a>Redis的Zset</h2><h2 id="Zset的范围查询的时间复杂度是多少"><a href="#Zset的范围查询的时间复杂度是多少" class="headerlink" title="Zset的范围查询的时间复杂度是多少"></a>Zset的范围查询的时间复杂度是多少</h2>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/02/27/%E5%85%AB%E8%82%A1%E6%96%87/" rel="prev" title="八股文">
+      <i class="fa fa-chevron-left"></i> 八股文
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/04/08/%E5%A4%A9%E6%9C%BA%E5%AD%A6%E5%A0%82%E5%AD%A6%E4%B9%A0/" rel="next" title="天机学堂学习">
+      天机学堂学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis"><span class="nav-number">1.</span> <span class="nav-text">Redis:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">Redis数据结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Redis-%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%9Aredis%E4%BD%9C%E4%B8%BA%E7%BC%93%E5%AD%98%EF%BC%8Cmysql%E7%9A%84%E6%95%B0%E6%8D%AE%E5%A6%82%E4%BD%95%E4%B8%8Eredis%E8%BF%9B%E8%A1%8C%E5%90%8C%E6%AD%A5%E5%91%A2%EF%BC%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.Redis 双写一致性：redis作为缓存，mysql的数据如何与redis进行同步呢？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84"><span class="nav-number">1.2.</span> <span class="nav-text">黑马点评</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%95%86%E5%AE%B6%E7%BC%93%E5%AD%98%E4%B8%BB%E5%8A%A8%E6%9B%B4%E6%96%B0%E7%AD%96%E7%95%A5%EF%BC%88%E6%A0%B9%E6%8D%AEid%E6%9F%A5%E8%AF%A2%E5%95%86%E5%AE%B6%E4%BF%A1%E6%81%AF%E6%97%B6%E7%94%A8%E5%88%B0%EF%BC%89%EF%BC%9A"><span class="nav-number">1.2.1.</span> <span class="nav-text">（1）商家缓存主动更新策略（根据id查询商家信息时用到）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">1.2.2.</span> <span class="nav-text">（2）缓存穿透解决办法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95%EF%BC%9A"><span class="nav-number">1.2.3.</span> <span class="nav-text">（3）缓存雪崩解决办法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%884%EF%BC%89%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95%EF%BC%9A"><span class="nav-number">1.2.4.</span> <span class="nav-text">（4）缓存击穿解决办法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E5%9F%BA%E4%BA%8EList%E7%9A%84%E7%82%B9%E8%B5%9E%E5%88%97%E8%A1%A8-amp-%E5%9F%BA%E4%BA%8ESortedSet%E7%9A%84%E7%82%B9%E8%B5%9E%E6%8E%92%E8%A1%8C%E6%A6%9C"><span class="nav-number">1.2.5.</span> <span class="nav-text">(5) 基于List的点赞列表&amp;基于SortedSet的点赞排行榜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%886%EF%BC%89%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8%E5%8A%9F%E8%83%BD"><span class="nav-number">1.2.6.</span> <span class="nav-text">（6）好友关注功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%887%EF%BC%89%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80"><span class="nav-number">1.2.7.</span> <span class="nav-text">（7）优惠券秒杀</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="nav-number"></span> <span class="nav-text">面试相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%A1%B9%E7%9B%AE%E9%87%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">1. 项目里为什么要用消息队列：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%AF%B7%E6%B1%82%E5%BE%88%E5%A4%9A%EF%BC%8C%E6%B6%88%E6%81%AF%E5%A0%86%E7%A7%AF%E5%A4%84%E7%90%86%E4%B8%8D%E8%BF%87%E6%9D%A5%E4%BA%86%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9"><span class="nav-number">2.</span> <span class="nav-text">2. 请求很多，消息堆积处理不过来了如何应对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%94%A8%E6%88%B7%E5%9C%A8%E6%B6%88%E6%81%AF%E5%A0%86%E7%A7%AF%E6%97%B6%E4%BB%A5%E4%B8%BA%E5%8D%A1%E4%BA%86%EF%BC%8C%E5%A4%9A%E6%AC%A1%E8%AF%B7%E6%B1%82%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">3. 用户在消息堆积时以为卡了，多次请求怎么处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%A1%B9%E7%9B%AE%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E8%A1%A8"><span class="nav-number">4.</span> <span class="nav-text">4. 项目都有哪些表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E8%B6%85%E5%8D%96%E9%97%AE%E9%A2%98%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">5. 超卖问题怎么解决？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E7%A7%92%E6%9D%80%E5%9C%BA%E6%99%AF%E4%B8%8B%E6%89%A3%E5%87%8F%E5%BA%93%E5%AD%98%E5%A4%AA%E6%85%A2%E4%BA%86%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3"><span class="nav-number">6.</span> <span class="nav-text">5. 秒杀场景下扣减库存太慢了怎么解决</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Redis%E5%A4%A7key%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">7. Redis大key怎么解决？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E4%BB%80%E4%B9%88%E6%98%AF%E7%83%ADKey"><span class="nav-number">8.</span> <span class="nav-text">8. 什么是热Key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%83%ADkey%E9%97%AE%E9%A2%98"><span class="nav-number">9.</span> <span class="nav-text">9. 如何解决热key问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95%E7%9A%84%E7%9F%AD%E4%BF%A1%E6%80%8E%E4%B9%88%E5%8F%91%E9%80%81%E7%9A%84"><span class="nav-number">10.</span> <span class="nav-text">10.  短信登录的短信怎么发送的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%8B%A6%E6%88%AA%E5%99%A8%E8%AF%A6%E7%BB%86%E8%AE%B2%E8%AE%B2"><span class="nav-number">11.</span> <span class="nav-text">11. 项目的拦截器详细讲讲</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E6%80%8E%E4%B9%88%E4%BF%9D%E5%AD%98%E9%AA%8C%E8%AF%81%E7%A0%81"><span class="nav-number">12.</span> <span class="nav-text">12. 怎么保存验证码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-%E9%A1%B9%E7%9B%AE%E9%87%8C%E5%AD%98%E5%9C%A8redis%E9%87%8C%E7%9A%84key%E7%9A%84%E6%A0%BC%E5%BC%8F%EF%BC%8C%E5%AD%98%E7%9A%84%E4%BB%80%E4%B9%88"><span class="nav-number">13.</span> <span class="nav-text">13.项目里存在redis里的key的格式，存的什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-%E5%A6%82%E4%BD%95%E6%A0%87%E8%AF%86%E7%94%A8%E6%88%B7"><span class="nav-number">14.</span> <span class="nav-text">14. 如何标识用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%9D%83%E9%99%90%E5%88%B7%E6%96%B0%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D"><span class="nav-number">15.</span> <span class="nav-text">15.项目的权限刷新什么意思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-%E6%97%81%E8%B7%AF%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6%E5%85%B7%E4%BD%93%E8%A7%A3%E5%86%B3%E7%9A%84%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF"><span class="nav-number">16.</span> <span class="nav-text">16. 旁路缓存机制具体解决的什么场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#17-%E6%9B%B4%E6%96%B0%E7%BC%93%E5%AD%98%E5%A4%B1%E8%B4%A5%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">17.</span> <span class="nav-text">17 更新缓存失败了怎么办</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%AF%95%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E7%BC%93%E5%AD%98%E4%B8%AD%E7%9A%84%E9%94%99%E6%95%B0%E6%8D%AE%E8%A2%AB%E8%AE%BF%E9%97%AE%E5%A4%9A%E6%AC%A1%E4%BA%86%EF%BC%8C%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3"><span class="nav-number">18.</span> <span class="nav-text">重试的时候，缓存中的错数据被访问多次了，怎么解决</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8A%A0%E4%B8%AA%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">19.</span> <span class="nav-text">项目为什么要加个消息队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A2%E4%BC%98%E6%83%A0%E5%88%B8%E6%B2%A1%E6%9C%89%E5%8F%8A%E6%97%B6%E5%A4%84%E7%90%86%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">20.</span> <span class="nav-text">抢优惠券没有及时处理怎么办</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A2%E4%BC%98%E6%83%A0%E5%88%B8%E5%A4%84%E7%90%86%E5%AE%8C%E4%BA%86%E5%A6%82%E4%BD%95%E9%80%9A%E7%9F%A5%E7%94%A8%E6%88%B7"><span class="nav-number">21.</span> <span class="nav-text">抢优惠券处理完了如何通知用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E7%9A%84Zset"><span class="nav-number">22.</span> <span class="nav-text">Redis的Zset</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zset%E7%9A%84%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%98%AF%E5%A4%9A%E5%B0%91"><span class="nav-number">23.</span> <span class="nav-text">Zset的范围查询的时间复杂度是多少</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
