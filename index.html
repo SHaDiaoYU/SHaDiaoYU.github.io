@@ -176,7 +176,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-13 16:14:47" itemprop="dateModified" datetime="2024-05-13T16:14:47+08:00">2024-05-13</time>
+                <time title="修改时间：2024-05-20 20:03:19" itemprop="dateModified" datetime="2024-05-20T20:03:19+08:00">2024-05-20</time>
               </span>
 
           
@@ -193,16 +193,17 @@
           <p>项目介绍：</p>
 <p>项目架构：</p>
 <h1 id="项目点："><a href="#项目点：" class="headerlink" title="项目点："></a>项目点：</h1><h2 id="为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access-key-amp-secret-key以鉴权，保证调用的安全性、可溯源性。"><a href="#为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access-key-amp-secret-key以鉴权，保证调用的安全性、可溯源性。" class="headerlink" title="为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access key &amp; secret key以鉴权，保证调用的安全性、可溯源性。"></a>为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access key &amp; secret key以鉴权，保证调用的安全性、可溯源性。</h2><p>为用户分配两个密钥，access key &amp; secret key，类似用户名和密码（通过acckey，能得到secret key），以此作为用户信息的唯一标识，这两个密钥是无状态的（复杂无序无规律）。</p>
-<p>因为请求有可能被拦截，所以密钥不能放在header里面明文传输。这里根据密钥，生成签名sign。</p>
-<h3 id="签名的做法："><a href="#签名的做法：" class="headerlink" title="签名的做法："></a>签名的做法：</h3><p>将 用户参数、密钥组合，通过签名生成算法（md5，sha1等，这里使用md5）进行加密，得到一个不可解密的值。</p>
-<h3 id="签名的验证："><a href="#签名的验证：" class="headerlink" title="签名的验证："></a>签名的验证：</h3><p>在后端，使用同样的方式，将用户参数，密钥组合（用户信息存在treadlocal中，获取到用户信息就能获取到它的密钥）以同样的方式进行加密，比较两个生成的签名是否一致，以此来完成签名的验证。</p>
+<p>因为请求有可能被拦截，所以<strong>密钥不能直接放在header里面明文传输</strong>。所以这里有两个密钥，<strong>acc key是放在请求体中（签名也放在请求体中），可以进行明文传输。后端根据acc key来查找secret key，然后生成签名sign。</strong></p>
+<p>然后<strong>将生成的sign与 传递过来的签名进行对比</strong>，以进行用户鉴权。</p>
+<h3 id="签名的做法："><a href="#签名的做法：" class="headerlink" title="签名的做法："></a>签名的做法：</h3><p><strong>将 用户参数、密钥组合</strong>，通过签名生成算法（md5，sha1等，<strong>这里使用md5</strong>）进行加密，得到一个不可解密的值。</p>
+<h3 id="签名的验证："><a href="#签名的验证：" class="headerlink" title="签名的验证："></a>签名的验证：</h3><p>在后端，使用同样的方式，将用户参数，密钥组合（请求参数中有access key，可以通过acc key查到secret key）以同样的方式进行加密，比较两个生成的签名是否一致，以此来完成签名的验证。</p>
 <h3 id="防重放处理"><a href="#防重放处理" class="headerlink" title="防重放处理"></a>防重放处理</h3><p>我们的请求可能被劫持后重放到后端，这里通过 时间戳 和 随机数 实现了防重放。</p>
 <p>首先请求参数中，添加一项nonce随机数，以及timestamp时间戳。</p>
 <p>后端接收到请求后，会将随机数保存在全局信息中，如果发现接收到了已经出现过的随机数，说明存在重放，就拒绝该请求。</p>
 <p>时间戳用来进行随机数信息的清理，等到达时间戳中的时间后，便会清除该范围内的随机数信息，以保证无效信息能及时被清理。</p>
 <p>请求参数包括 access key，加密后的签名，nonce随机数，时间戳，body数据。</p>
-<p>用户在前端界面请求时，只传递必要的参数，之后后端接口会查询access key，secret key加密生成签名，结合时间戳，随机数，把这些信息放到请求头里面，通过hutool再次发起http请求，这次会请求api接口，之后返回数据。</p>
-<h3 id="关于可溯源性的理解"><a href="#关于可溯源性的理解" class="headerlink" title="关于可溯源性的理解"></a>关于可溯源性的理解</h3><p>如果某个用户的请求发生了异常，后台在通知前端用户进行告警之后，后端得知发生问题的用户（这就是溯源？），随后对该用户进行监控或限制等措施。</p>
+<p><strong>用户在前端界面请求时，只传递必要的参数，之后后端接口会查询access key，secret key加密生成签名，结合时间戳，随机数，把这些信息放到请求头里面，通过hutool再次发起http请求，这次会请求api接口，之后返回数据。</strong></p>
+<h3 id="关于可溯源性的理解"><a href="#关于可溯源性的理解" class="headerlink" title="关于可溯源性的理解"></a>关于可溯源性的理解</h3><p>如果<strong>某个用户的请求发生了异常</strong>，后台在通知前端用户进行告警之后，<strong>后端得知发生问题的用户</strong>（这就是溯源？），<strong>随后对该用户进行监控或限制等措施</strong>。</p>
 <h2 id="基于-SpringBoot-Starter开发了客户端SDK，通过简短的代码即可调用接口，解决了开发者调用成本过高的问题。"><a href="#基于-SpringBoot-Starter开发了客户端SDK，通过简短的代码即可调用接口，解决了开发者调用成本过高的问题。" class="headerlink" title="基于 SpringBoot Starter开发了客户端SDK，通过简短的代码即可调用接口，解决了开发者调用成本过高的问题。"></a>基于 SpringBoot Starter开发了客户端SDK，通过简短的代码即可调用接口，解决了开发者调用成本过高的问题。</h2><p>SDK是给开发者使用的，他们可以在自己的项目里引入我们的SDK，从而可以通过调api的方式调用接口。开发者只用关心调用哪些接口，传递哪些参数就行了，就跟调用自己的代码一样简单。</p>
 <p>用户在自己项目的配置文件中，指定自己的access key，secret key。这是用户的身份标识。</p>
 <p>显然，还需要给开发者一个SDK使用文档，让开发者知道得怎么用才行。</p>
@@ -314,6 +315,14 @@
 <p>一些<strong>公用的信息</strong>，比如接口信息、用户信息、用户接口调用关系等各种实体类，以及获取接口信息、接口是否存在、是否已分配给用户密钥的接口。需要<strong>抽离到公共服务</strong>上，避免代码的重复编写。</p>
 <p><strong>RPC的作用</strong>：<strong>像调用本地方法一样调用远程方法。</strong></p>
 <p><strong>RPC优点</strong>：<strong>对开发者透明</strong>，减少沟通成本；其次是，<strong>RPC向远程服务器发送请求时，未必使用HTTP协议，比如还可以使用TCP&#x2F;IP，性能更高。</strong></p>
+<p>这里将nacos整合dubbo，<strong>服务调用方从nacos注册中心获取provider的信息，之后再去调用provider的方法</strong>。这里注册中心只负责提供服务信息，并不会帮助调用。</p>
+<p><strong>这里抽取一些公共项目放到api-commen中，然后由gateway来RPC调用：</strong></p>
+<ul>
+<li>去数据库中查询是否已经分配给用户密钥（根据 accessKey 拿到用户信息，返回用户信息，为空表示不存在）</li>
+<li>从数据库中查询模拟接口是否存在（请求路径、请求方法、请求参数，返回接口信息，为空表示不存在）</li>
+<li>接口调用次数+ 1 invokeCount (accessKey、secretKey(标识用户），请求接口路径)</li>
+</ul>
+<p>api-common里面只放置接口，这些接口的实现需要放在api-backend中（将api-common打包并导入api-backend项目中），<strong>实现类用@DubboService标识</strong></p>
 
       
     </div>
@@ -1096,7 +1105,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-18 16:28:47" itemprop="dateModified" datetime="2024-05-18T16:28:47+08:00">2024-05-18</time>
+                <time title="修改时间：2024-05-20 21:49:53" itemprop="dateModified" datetime="2024-05-20T21:49:53+08:00">2024-05-20</time>
               </span>
 
           
@@ -1278,6 +1287,28 @@
 <li>TreeMap： 基于红黑树实现的有序Map</li>
 <li>Hashtable：基于哈希表实现的map，线程安全</li>
 <li>concurrentHashMap：基于哈希表实现的线程安全的 Map，支持高并发操作。</li>
+<li>ArrayList：底层基于数组</li>
+<li>LinkedList：底层基于双向链表</li>
+</ul>
+<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><ul>
+<li>1.7之前，数组 +链表</li>
+<li>1.8之后，数组 + 链表 + 红黑树</li>
+<li><strong>数组初始长度都为2的整数次幂</strong>，这是为了方便在进行取余时可以转化为位运算进而提升效率。</li>
+</ul>
+<h3 id="HashMap扩容机制"><a href="#HashMap扩容机制" class="headerlink" title="HashMap扩容机制"></a>HashMap扩容机制</h3><ul>
+<li><p><strong>当元素个数大于容量 * 扩容因子（0.75）时，就会对数组进行扩容（扩容2倍）</strong>；</p>
+<ul>
+<li>假设原table长度为16，扩容后长度为32。hash值的每个二进制位用abcde来表示，那么，hash和新旧table按位与的结果，最<strong>后4位显然是相同的</strong>，<strong>唯一可能出现的区别就在第5位</strong>，也就是hash值的b所在的那一位，如果b所在的那一位是0，那么新table按位与的结果和旧table的结果就相同，反之如果b所在的那一位是1，则新table按位与的结果就比旧table的结果多了10000（二进制），而这个二进制10000就是旧table的长度16。<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240520213906849.png" alt="image-20240520213906849" style="zoom: 67%;" /></li>
+<li>换言之，<strong>hash值的新散列下标是不是需要加上旧table长度，只需要看看hash值第5位是不是1就行了</strong>，位运算的方法就是hash值和10000（也就是旧table长度）来按位与，其结果只可能是10000或者00000。</li>
+</ul>
+</li>
+<li><p><strong>当链表长度大于8时，就会将链表转换为红黑树</strong>；</p>
+</li>
+<li><p><strong>当链表长度小于6时，就会将红黑树退化为链表</strong>；</p>
+<ul>
+<li>之所以设置为6，是为了防止频繁进行链表和红黑树的转换。</li>
+</ul>
+</li>
 </ul>
 <h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="volatile关键字："><a href="#volatile关键字：" class="headerlink" title="volatile关键字："></a>volatile关键字：</h2><p>volatile关键字保证了 <strong>可见性（一个线程对共享变量进行修改后，其他线程能立即看到这个修改）</strong> 和 <strong>有序性（程序执行的顺序与代码的顺序一致）</strong></p>
 <p><strong>volatile如何保证可见性：</strong></p>
@@ -1333,6 +1364,13 @@
 <li><p>当前线程执行完同步代码块时，会释放锁，count减一，recursion减一。当recursions的值为0时，说明线程已经释放了锁。</p>
 </li>
 </ul>
+<h2 id="Synchronize-与-ReentrantLock之间的区别："><a href="#Synchronize-与-ReentrantLock之间的区别：" class="headerlink" title="Synchronize 与 ReentrantLock之间的区别："></a>Synchronize 与 ReentrantLock之间的区别：</h2><ul>
+<li><strong>synchronized</strong> 是java语言的关键字，<strong>基于JVM实现</strong>；<strong>ReentrantLock</strong>是<strong>基于JDK</strong>的API层面实现的。</li>
+<li>1.6锁优化之前，synchronized比不上reentrantLock，1.6开始，synchronized增加了适应性自旋、锁消除等，二者性能就差不多了。</li>
+<li><strong>ReentrantLock实现了一些高级功能，比如等待可中断、可实现公平锁、可实现选择性通知。</strong></li>
+<li><strong>ReentrantLock需要手工声明来加锁和释放锁</strong>，一般跟finally配合释放锁。而 <strong>synchronized不用手动释放锁</strong>。</li>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240520214928221.png" alt="image-20240520214928221"></li>
+</ul>
 <h2 id="锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁"><a href="#锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁" class="headerlink" title="锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)"></a>锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)</h2><p>jdk1.6中，为了减少获取锁和释放锁带来的性能消耗，引入了偏向锁和轻量级锁，锁状态变为了四种。锁的状态会随着竞争激烈程度而升级。并且锁只能升级不能降级（为了提高获取&#x2F;释放锁的效率）。锁升级顺序如下:</p>
 <p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240518144521730.png" alt="image-20240518144521730"></p>
 <h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><p>引入偏向锁的目的：<strong>减少只有一个线程执行同步代码块时的性能消耗</strong>。（没有其他线程竞争，只有1个线程获取到锁）</p>
@@ -1379,6 +1417,28 @@
 </ul>
 <h3 id="ThreadLocalMap如何解决哈希冲突"><a href="#ThreadLocalMap如何解决哈希冲突" class="headerlink" title="ThreadLocalMap如何解决哈希冲突"></a>ThreadLocalMap如何解决哈希冲突</h3><p>其使用 <strong>开放定址法</strong> 来解决哈希冲突，简单来说就是，进行哈希之后，发现当前位置已经存放了一个Entry，那么就<strong>从当前位置开始，向后寻找空闲位置</strong>并放入。</p>
 <p>在查值时，也会先将目标key与当前 key是否一致，不一致就向后寻找直到找到为止。</p>
+<h2 id="AQS（Abstract-Queued-Synchronizer-抽象同步队列）"><a href="#AQS（Abstract-Queued-Synchronizer-抽象同步队列）" class="headerlink" title="AQS（Abstract Queued Synchronizer 抽象同步队列）"></a>AQS（Abstract Queued Synchronizer 抽象同步队列）</h2><p>java并发包java.util.concurrent.locks中的锁就是基于AQS实现的。</p>
+<ul>
+<li><p>AQS是一个FIFO的双向队列，Node节点中的Thread变量用来存放进入AQS队列中的线程，此外还有当前节点在队列中的状态（waitStatus）、前驱节点（prev）、后继节点（next）。</p>
+</li>
+<li><p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240520165516148.png" alt="image-20240520165516148"></p>
+</li>
+<li><p>AQS使用一个volatile修饰的int类型变量state来表示同步状态，state的初值为0，表示锁处于未锁定状态。volatile保证了变量在多线程之间的可见性，修改state值时通过CAS机制来保证修改的原子性。</p>
+</li>
+<li><p>获取state的方式分为两种，（1）独占方式tryAcquire()（2）共享方式tryAcquireShared()：</p>
+<ul>
+<li>独占方式tryAcquire()：一个线程使用独占方式获取了资源，其他线程在获取失败后就会阻塞。</li>
+<li>共享方式tryAcquireShared()：一个线 程使用共享方式获取了资源，另外一个线程还可以通过CAS的方式进行获取。</li>
+<li>tryAcquire()和tryAcquireShared()是抽象方法，需要子类自行实现。</li>
+</ul>
+</li>
+<li><p>如果共享资源被占用，需要一定的阻塞等待唤醒机制来保证锁的分配，AQS中会将竞争共享资源失败的线程添加到队列中，线程进入队列后会进行自旋，自旋一定次数后，会使用LockSupport.park()进入阻塞状态。</p>
+</li>
+<li><p>可重入性的体现：假设线程 A 获取锁成功了，释放锁之前，A 线程自己是可以重复获取此锁的（<code>state</code> 会累加）。这就是可重入性的体现：一个线程可以多次获取同一个锁而不会被阻塞。</p>
+</li>
+<li><p>释放资源的时候，会使用CAS 操作将state修改为0，重入多少次，释放多少次，并使用LockSupport.unpark()唤醒 处于等待状态的线程</p>
+</li>
+</ul>
 <h1 id="二、Spring框架"><a href="#二、Spring框架" class="headerlink" title="二、Spring框架"></a>二、Spring框架</h1><h2 id="1-Bean生命周期"><a href="#1-Bean生命周期" class="headerlink" title="1.Bean生命周期"></a>1.Bean生命周期</h2><p>大致可分为四个阶段： <strong>实例化 -&gt; 属性赋值 -&gt; 初始化 -&gt; 销毁</strong></p>
 <ul>
 <li><strong>（实例化）</strong>首先，在Bean容器中找到SpringBean的定义BeanDefination。</li>
