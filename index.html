@@ -1105,7 +1105,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-20 21:49:53" itemprop="dateModified" datetime="2024-05-20T21:49:53+08:00">2024-05-20</time>
+                <time title="修改时间：2024-05-21 22:02:03" itemprop="dateModified" datetime="2024-05-21T22:02:03+08:00">2024-05-21</time>
               </span>
 
           
@@ -1407,6 +1407,10 @@
 <h3 id="ThreadLocal内存泄漏"><a href="#ThreadLocal内存泄漏" class="headerlink" title="ThreadLocal内存泄漏"></a>ThreadLocal内存泄漏</h3><p>因为TheadLocalMap中的<strong>key，是ThreadLocal对象的一个弱引用，而弱引用很容易被回收</strong> （弱引用的回收条件：不管内存够不够，都有可能回收），所以一旦key被jvm回收了，这个<strong>map只有value没有key了，就造成了内存泄露</strong>的问题。</p>
 <p><strong>解决方法就是</strong>：在我们使用完ThreadLocal后，<strong>及时调用remove()方法释放内存空间</strong>。</p>
 <p><strong>为什么key要设计成弱引用</strong>？那就是因为<strong>如果是强引用</strong>，即使线程不再使用某个ThreadLocal对象，该对象也没办法被回收，<strong>还是会造成内存泄漏</strong>。</p>
+<h3 id="内存泄漏与内存溢出的区别"><a href="#内存泄漏与内存溢出的区别" class="headerlink" title="内存泄漏与内存溢出的区别"></a>内存泄漏与内存溢出的区别</h3><ul>
+<li><strong>内存泄漏</strong>：指程序在申请完内存后，无法释放已申请的内存空间。结果导致申请到的那块内存自己也不能再次访问，而且系统也不能再次将它分配给需要的程序。一次内存泄漏危害可以忽略，但内存泄漏堆积后果很严重。</li>
+<li><strong>内存溢出</strong>：指程序在申请内存时，没有足够的内存空间供其使用，出现了OOM。</li>
+</ul>
 <h3 id="ThreadLocalMap的结构"><a href="#ThreadLocalMap的结构" class="headerlink" title="ThreadLocalMap的结构"></a>ThreadLocalMap的结构</h3><p>虽然叫map，但是它没有实现Map接口。ThreadLcoal主要关注两个要素：元素数组 和 散列方法。</p>
 <ul>
 <li>元素数组：是一个table数组，存储Entry类型的元素（就是存放每一个节点），对于每个Entry，key是Thread对象的弱引用，value是存储的object对象。</li>
@@ -1419,24 +1423,69 @@
 <p>在查值时，也会先将目标key与当前 key是否一致，不一致就向后寻找直到找到为止。</p>
 <h2 id="AQS（Abstract-Queued-Synchronizer-抽象同步队列）"><a href="#AQS（Abstract-Queued-Synchronizer-抽象同步队列）" class="headerlink" title="AQS（Abstract Queued Synchronizer 抽象同步队列）"></a>AQS（Abstract Queued Synchronizer 抽象同步队列）</h2><p>java并发包java.util.concurrent.locks中的锁就是基于AQS实现的。</p>
 <ul>
-<li><p>AQS是一个FIFO的双向队列，Node节点中的Thread变量用来存放进入AQS队列中的线程，此外还有当前节点在队列中的状态（waitStatus）、前驱节点（prev）、后继节点（next）。</p>
-</li>
-<li><p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240520165516148.png" alt="image-20240520165516148"></p>
-</li>
-<li><p>AQS使用一个volatile修饰的int类型变量state来表示同步状态，state的初值为0，表示锁处于未锁定状态。volatile保证了变量在多线程之间的可见性，修改state值时通过CAS机制来保证修改的原子性。</p>
-</li>
-<li><p>获取state的方式分为两种，（1）独占方式tryAcquire()（2）共享方式tryAcquireShared()：</p>
-<ul>
+<li>AQS是一个FIFO的双向队列，Node节点中的Thread变量用来存放进入AQS队列中的线程，此外还有当前节点在队列中的状态（waitStatus）、前驱节点（prev）、后继节点（next）。</li>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240520165516148.png" alt="image-20240520165516148"></li>
+<li>AQS使用一个volatile修饰的int类型变量state来表示同步状态，state的初值为0，表示锁处于未锁定状态。volatile保证了变量在多线程之间的可见性，修改state值时通过CAS机制来保证修改的原子性。</li>
+<li>获取state的方式分为两种，（1）独占方式tryAcquire()（2）共享方式tryAcquireShared()：<ul>
 <li>独占方式tryAcquire()：一个线程使用独占方式获取了资源，其他线程在获取失败后就会阻塞。</li>
 <li>共享方式tryAcquireShared()：一个线 程使用共享方式获取了资源，另外一个线程还可以通过CAS的方式进行获取。</li>
 <li>tryAcquire()和tryAcquireShared()是抽象方法，需要子类自行实现。</li>
 </ul>
 </li>
-<li><p>如果共享资源被占用，需要一定的阻塞等待唤醒机制来保证锁的分配，AQS中会将竞争共享资源失败的线程添加到队列中，线程进入队列后会进行自旋，自旋一定次数后，会使用LockSupport.park()进入阻塞状态。</p>
+<li>如果共享资源被占用，需要一定的阻塞等待唤醒机制来保证锁的分配，AQS中会将竞争共享资源失败的线程添加到队列中，线程进入队列后会进行自旋，自旋一定次数后，会使用LockSupport.park()进入阻塞状态。</li>
+<li>可重入性的体现：假设线程 A 获取锁成功了，释放锁之前，A 线程自己是可以重复获取此锁的（<code>state</code> 会累加）。这就是可重入性的体现：一个线程可以多次获取同一个锁而不会被阻塞。</li>
+<li>释放资源的时候，会使用CAS 操作将state修改为0，重入多少次，释放多少次，并使用LockSupport.unpark()唤醒 处于等待状态的线程</li>
+</ul>
+<h2 id="什么是守护线程"><a href="#什么是守护线程" class="headerlink" title="什么是守护线程"></a>什么是守护线程</h2><p>Java中，<strong>线程分为两类：用户线程 和守护线程</strong>，默认情况下我们创建的线程或线程池都是用户线程，所以用户线程也成为普通线程。</p>
+<p>想要查看线程到底是用户线程还是守护线程，可以通过 Thread.isDaemon() 方法来判断，如果返回的结果是 true 则为守护线程，反之则为用户线程。</p>
+<p>守护线程（daemon线程）也称为后台线程或服务线程，<strong>守护线程是为用户线程服务的</strong>，当程序中的<strong>用户线程 全部执行结束后，守护线程也会跟随结束。不论守护线程是否还在工作</strong></p>
+<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h3 id="使用线程池的好处："><a href="#使用线程池的好处：" class="headerlink" title="使用线程池的好处："></a>使用线程池的好处：</h3><ul>
+<li>降低资源消耗。</li>
+<li>提高响应速度。</li>
+<li>提高线程的可管理性。</li>
+</ul>
+<p>线程池一般用于执行多个不相关联的耗时任务，没有多线程的情况下，任务顺序执行，使用了线程池的话可以让多个不相关的任务同时执行。</p>
+<h3 id="ThreadPoolExecutor类"><a href="#ThreadPoolExecutor类" class="headerlink" title="ThreadPoolExecutor类"></a>ThreadPoolExecutor类</h3><p>ThreadPoolExecutor类是<strong>Executor</strong>框架最核心的类。其中有<strong>最重要的三个参数</strong>：</p>
+<ul>
+<li><strong>corePoolSize</strong>：任务队列未达到最大容量时，最大可以同时运行线程的线程数量。</li>
+<li><strong>maximumPoolSize</strong>：任务队列中存放的任务达到队列容量的时候，当前可以同时运行的线程数量变为最大线程数。</li>
+<li><strong>workQueue</strong>：新任务到达的时候，会先判断当前运行的线程数量是否到达核心线程数，如果达到的话，新任务会被放在队列中。</li>
+</ul>
+<p>以及其余<strong>4个非核心参数</strong>：</p>
+<ul>
+<li><strong>keepAliveTime</strong>：非核心线程 &#x3D; （maximumPoolSize - corePoolSize），<strong>非核心线程闲置下来不干活最多存活时间</strong>。</li>
+<li><strong>unit：</strong>非核心线程存活时间的时间单位。</li>
+<li><strong>threadFactory：</strong>创建一个新线程时使用的工厂，可以用来设定线程名、是否为daemon线程（守护线程）等等。</li>
+<li><strong>handler：</strong>设置的拒绝策略。</li>
+</ul>
+<p><strong>ThreadPoolExecutor拒绝策略：</strong></p>
+<ul>
+<li>AbortPolicy：抛出RejectedExecutionException 异常来拒绝新任务的处理。</li>
+<li>CallerRunsPolicy：调用自己的线程运行任务，也就是直接在调用execute方法的线程中运行被拒绝的任务。这种策略会降低任务的提交速度，但是可以保证任务的执行。</li>
+<li>DiscardPolicy：不处理任务，直接丢弃掉。</li>
+<li>DiscardOldestPolicy：此策略将丢弃最早的未处理的任务请求。</li>
+</ul>
+<h3 id="线程池创建的两种方式（ThreadPoolExecutor-amp-Executors）："><a href="#线程池创建的两种方式（ThreadPoolExecutor-amp-Executors）：" class="headerlink" title="线程池创建的两种方式（ThreadPoolExecutor &amp; Executors）："></a>线程池创建的两种方式（ThreadPoolExecutor &amp; Executors）：</h3><p>第一种：通过ThreadPoolExecutor构造函数创建 （推荐）</p>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240521155821330.png" alt="image-20240521155821330"></p>
+<p>第二种：通过Executor框架的工具类Executors来创建（都有OOM风险，不推荐。）</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240521155906126.png" alt="image-20240521155906126" style="zoom:67%;" />
+
+<ul>
+<li><strong>FixedThreadPool</strong>：<strong>固定线程数量的线程池</strong>。该线程池中的线程数量始终不变。当有一个新的任务提交时，线程池中若有空闲线程，则立即执行。若没有，则新的任务会被暂存在一个任务队列中，待有线程空闲时，便处理在任务队列中的任务。<ul>
+<li>使用的是无界的任务队列（长度Integer.MaxValue），会导致OOM。</li>
+</ul>
 </li>
-<li><p>可重入性的体现：假设线程 A 获取锁成功了，释放锁之前，A 线程自己是可以重复获取此锁的（<code>state</code> 会累加）。这就是可重入性的体现：一个线程可以多次获取同一个锁而不会被阻塞。</p>
+<li><strong>SingleThreadExecutor</strong>：<strong>只有一个线程的线程池</strong>。若多余一个任务被提交到该线程池，任务会被保存在一个任务队列中，待线程空闲，按先入先出的顺序执行队列中的任务。<ul>
+<li>使用的是无界的任务队列（长度Integer.MaxValue），会导致OOM。</li>
+</ul>
 </li>
-<li><p>释放资源的时候，会使用CAS 操作将state修改为0，重入多少次，释放多少次，并使用LockSupport.unpark()唤醒 处于等待状态的线程</p>
+<li><strong>CachedThreadPool</strong>：可根据实际情况调整线程数量的线程池。线程池的线程<strong>数量不确定</strong>，但若有空闲线程可以复用，则会优先使用可复用的线程。若所有线程均在工作，又有新的任务提交，则会创建新的线程处理任务。所有线程在当前任务执行完毕后，将返回线程池进行复用。<ul>
+<li>如果任务数量过多且执行速度较慢，可能会创建大量的线程，从而导致 OOM。</li>
+</ul>
+</li>
+<li><strong>ScheduledThreadPool</strong>：给定的<strong>延迟后运行任务或者定期执行任务的线程池</strong>。<ul>
+<li>使用的无界的延迟阻塞队列<code>DelayedWorkQueue</code>，任务队列最大长度为 <code>Integer.MAX_VALUE</code>,可能堆积大量的请求，从而导致 OOM。</li>
+</ul>
 </li>
 </ul>
 <h1 id="二、Spring框架"><a href="#二、Spring框架" class="headerlink" title="二、Spring框架"></a>二、Spring框架</h1><h2 id="1-Bean生命周期"><a href="#1-Bean生命周期" class="headerlink" title="1.Bean生命周期"></a>1.Bean生命周期</h2><p>大致可分为四个阶段： <strong>实例化 -&gt; 属性赋值 -&gt; 初始化 -&gt; 销毁</strong></p>
