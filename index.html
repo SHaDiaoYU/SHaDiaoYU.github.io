@@ -1105,7 +1105,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-21 22:02:03" itemprop="dateModified" datetime="2024-05-21T22:02:03+08:00">2024-05-21</time>
+                <time title="修改时间：2024-05-26 20:06:27" itemprop="dateModified" datetime="2024-05-26T20:06:27+08:00">2024-05-26</time>
               </span>
 
           
@@ -1327,6 +1327,7 @@
 <p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240507210744195.png" alt="image-20240507210744195"></p>
 </li>
 </ul>
+<p><strong>volatile不能保证原子性，只能保证单次的读&#x2F;写操作具有原子性。</strong></p>
 <h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2><h3 id="（1）synchronized的三种用法："><a href="#（1）synchronized的三种用法：" class="headerlink" title="（1）synchronized的三种用法："></a><strong>（1）synchronized的三种用法：</strong></h3><ul>
 <li>修饰实例方法：这种方式相当于 synchronized（this对象），进入同步代码块之前需要获得 当前对象实例的锁；</li>
 <li>修饰静态方法：这种用法会作用于类的所有对象实例，进入同步块之前要获得当前 class的锁；</li>
@@ -1364,11 +1365,17 @@
 <li><p>当前线程执行完同步代码块时，会释放锁，count减一，recursion减一。当recursions的值为0时，说明线程已经释放了锁。</p>
 </li>
 </ul>
+<h3 id="（6）关于Synchronized关键字的一些其他内容："><a href="#（6）关于Synchronized关键字的一些其他内容：" class="headerlink" title="（6）关于Synchronized关键字的一些其他内容："></a>（6）关于Synchronized关键字的一些其他内容：</h3><ul>
+<li>synchronized在发生异常的时候会自动释放占有的锁，因此不会发生死锁；</li>
+<li>synchronized修饰的方法在抛出异常的时候，<strong>会自动释放锁</strong>。</li>
+<li>synchronized实现的是<strong>非公平锁</strong>。</li>
+</ul>
 <h2 id="Synchronize-与-ReentrantLock之间的区别："><a href="#Synchronize-与-ReentrantLock之间的区别：" class="headerlink" title="Synchronize 与 ReentrantLock之间的区别："></a>Synchronize 与 ReentrantLock之间的区别：</h2><ul>
 <li><strong>synchronized</strong> 是java语言的关键字，<strong>基于JVM实现</strong>；<strong>ReentrantLock</strong>是<strong>基于JDK</strong>的API层面实现的。</li>
 <li>1.6锁优化之前，synchronized比不上reentrantLock，1.6开始，synchronized增加了适应性自旋、锁消除等，二者性能就差不多了。</li>
-<li><strong>ReentrantLock实现了一些高级功能，比如等待可中断、可实现公平锁、可实现选择性通知。</strong></li>
+<li><strong>ReentrantLock实现了一些高级功能，比如等待可中断（当持有锁的线程长期不是放锁的时候，正在 等待的线程可以选择放弃等待，改为处理其他事情）、可实现公平锁、可实现选择性通知。</strong></li>
 <li><strong>ReentrantLock需要手工声明来加锁和释放锁</strong>，一般跟finally配合释放锁。而 <strong>synchronized不用手动释放锁</strong>。</li>
+<li><strong>ReentrantLock可以同时绑定多个Condition对象</strong></li>
 <li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240520214928221.png" alt="image-20240520214928221"></li>
 </ul>
 <h2 id="锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁"><a href="#锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁" class="headerlink" title="锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)"></a>锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)</h2><p>jdk1.6中，为了减少获取锁和释放锁带来的性能消耗，引入了偏向锁和轻量级锁，锁状态变为了四种。锁的状态会随着竞争激烈程度而升级。并且锁只能升级不能降级（为了提高获取&#x2F;释放锁的效率）。锁升级顺序如下:</p>
@@ -1423,22 +1430,50 @@
 <p>在查值时，也会先将目标key与当前 key是否一致，不一致就向后寻找直到找到为止。</p>
 <h2 id="AQS（Abstract-Queued-Synchronizer-抽象同步队列）"><a href="#AQS（Abstract-Queued-Synchronizer-抽象同步队列）" class="headerlink" title="AQS（Abstract Queued Synchronizer 抽象同步队列）"></a>AQS（Abstract Queued Synchronizer 抽象同步队列）</h2><p>java并发包java.util.concurrent.locks中的锁就是基于AQS实现的。</p>
 <ul>
-<li>AQS是一个FIFO的双向队列，Node节点中的Thread变量用来存放进入AQS队列中的线程，此外还有当前节点在队列中的状态（waitStatus）、前驱节点（prev）、后继节点（next）。</li>
+<li>AQS是一个<strong>FIFO的双向队列</strong>，Node节点中的Thread变量用来存放进入AQS队列中的线程，此外还有当前节点在队列中的状态（waitStatus）、前驱节点（prev）、后继节点（next）。</li>
 <li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240520165516148.png" alt="image-20240520165516148"></li>
-<li>AQS使用一个volatile修饰的int类型变量state来表示同步状态，state的初值为0，表示锁处于未锁定状态。volatile保证了变量在多线程之间的可见性，修改state值时通过CAS机制来保证修改的原子性。</li>
-<li>获取state的方式分为两种，（1）独占方式tryAcquire()（2）共享方式tryAcquireShared()：<ul>
-<li>独占方式tryAcquire()：一个线程使用独占方式获取了资源，其他线程在获取失败后就会阻塞。</li>
-<li>共享方式tryAcquireShared()：一个线 程使用共享方式获取了资源，另外一个线程还可以通过CAS的方式进行获取。</li>
-<li>tryAcquire()和tryAcquireShared()是抽象方法，需要子类自行实现。</li>
+<li>AQS使用一个<strong>volatile修饰的int类型变量state来表示同步状态</strong>，state的初值为0，表示锁处于未锁定状态。volatile保证了变量在多线程之间的可见性，<strong>修改state值时通过CAS机制来保证修改的原子性</strong>。</li>
+<li><strong>获取state的方式分为两种，（1）独占方式tryAcquire()（2）共享方式tryAcquireShared()：</strong><ul>
+<li>**独占方式tryAcquire()**：只有一个线程能够访问执行，又根据是否按队列的顺序分为公平锁和非公平锁。</li>
+<li><strong>共享方式tryAcquireShared(</strong>)：多个线程可以同时访问执行，ReentrantReadWriteLock可以看成是组合模式，允许多个线程同时对某一资源进行读。</li>
+<li><strong>tryAcquire()和tryAcquireShared()是抽象方法，需要子类自行实现</strong>。</li>
 </ul>
 </li>
 <li>如果共享资源被占用，需要一定的阻塞等待唤醒机制来保证锁的分配，AQS中会将竞争共享资源失败的线程添加到队列中，线程进入队列后会进行自旋，自旋一定次数后，会使用LockSupport.park()进入阻塞状态。</li>
 <li>可重入性的体现：假设线程 A 获取锁成功了，释放锁之前，A 线程自己是可以重复获取此锁的（<code>state</code> 会累加）。这就是可重入性的体现：一个线程可以多次获取同一个锁而不会被阻塞。</li>
 <li>释放资源的时候，会使用CAS 操作将state修改为0，重入多少次，释放多少次，并使用LockSupport.unpark()唤醒 处于等待状态的线程</li>
 </ul>
+<h2 id="Thread-sleep-和Object-wait-的区别"><a href="#Thread-sleep-和Object-wait-的区别" class="headerlink" title="Thread.sleep()和Object.wait()的区别"></a>Thread.sleep()和Object.wait()的区别</h2><ul>
+<li>sleep不会释放锁，wait()会释放占有的锁。</li>
+<li>sleep必须传入时间，wait()可传可不传，不传表示一直阻塞下去；</li>
+<li>sleep到时间了会自动唤醒，然后继续执行；</li>
+<li>wait不带时间的，需要另一个线程使用Object.notify唤醒；</li>
+<li>wait带时间的，假如没有被notify，到时间了会自动唤醒，这时又分好两种情况，一是立即获取到了锁，线程自然会继续执行；二是没有立即获取锁，线程进入同步队列等待获取锁。</li>
+</ul>
 <h2 id="什么是守护线程"><a href="#什么是守护线程" class="headerlink" title="什么是守护线程"></a>什么是守护线程</h2><p>Java中，<strong>线程分为两类：用户线程 和守护线程</strong>，默认情况下我们创建的线程或线程池都是用户线程，所以用户线程也成为普通线程。</p>
 <p>想要查看线程到底是用户线程还是守护线程，可以通过 Thread.isDaemon() 方法来判断，如果返回的结果是 true 则为守护线程，反之则为用户线程。</p>
 <p>守护线程（daemon线程）也称为后台线程或服务线程，<strong>守护线程是为用户线程服务的</strong>，当程序中的<strong>用户线程 全部执行结束后，守护线程也会跟随结束。不论守护线程是否还在工作</strong></p>
+<h2 id="CAS会有哪些问题"><a href="#CAS会有哪些问题" class="headerlink" title="CAS会有哪些问题"></a>CAS会有哪些问题</h2><ul>
+<li><strong>ABA问题</strong><ul>
+<li>一个值原来是A，变成了B，又变成了A，那么使用CAS进行检查的时候就会发现它的值没有发生变化，但实际上却变化了。</li>
+<li>ABA问题的解决思路就是使用版本号。在变量前面使用版本号，每次变量更新的时候把版本号加1，那么A-&gt;B-&gt;A就会变成1A-&gt;2B-&gt;3A。</li>
+</ul>
+</li>
+<li><strong>循环时间长开销大</strong><ul>
+<li>自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。</li>
+<li>如果JVM能够支持处理器提供pause指令，那么效率会有一定的提升。pause指令有两个作用：<ul>
+<li>第一，可以延迟流水线执行命令，使CPU不会消耗过多的执行资源，延迟的时间取决于具体实现的版本；</li>
+<li>第二，它可以避免在退出循环的时候因为内存顺序冲突而引起CPU流水线被清空，从而提高CPU的执行效率。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>只能保证一个共享变量的原子操作</strong><ul>
+<li>当对一个共享变量的执行操作的时候，我们可以使用循环CAS的方式来保证原子操作。但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候<strong>就可以用锁</strong>。</li>
+<li>还有一种方法，就是把多个共享变量合并成一个共享变量来操作。比如，有两个共享变量i&#x3D;2，j &#x3D; a，合并一下ij &#x3D; 2a，然后用CAS来操作ij。</li>
+</ul>
+</li>
+</ul>
 <h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h3 id="使用线程池的好处："><a href="#使用线程池的好处：" class="headerlink" title="使用线程池的好处："></a>使用线程池的好处：</h3><ul>
 <li>降低资源消耗。</li>
 <li>提高响应速度。</li>
@@ -1565,13 +1600,25 @@
 <p>同样的，如果byType的时候，从单例池中只有一个bean，那么就使用该bean进行注入，不管beanName对不对的上。</p>
 <p>如果我们使用的是@Resource注解（没有指定name），那么直接byName进行查找，如果查找不到就会byType查找。</p>
 <p>如果我们使用的是@Resource注解（指定了name），那么直接byName进行查找，如果查找不到就直接报错。</p>
-<h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>什么是AOP？有没有用过AOP？</p>
+<h2 id="5-AOP"><a href="#5-AOP" class="headerlink" title="5. AOP"></a>5. AOP</h2><p>什么是AOP？有没有用过AOP？</p>
 <p>AOP称为面向切面编程，用于将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块，这个模块被命名为”切面“Aspect，减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。</p>
 <p>AOP常见使用场景：</p>
 <ul>
 <li>记录操作日志</li>
 <li>缓存数据</li>
 <li>Spring事务</li>
+</ul>
+<h2 id="6-Spring-Bean"><a href="#6-Spring-Bean" class="headerlink" title="6. Spring Bean"></a>6. Spring Bean</h2><h3 id="spring-中-bean的作用域有哪些？"><a href="#spring-中-bean的作用域有哪些？" class="headerlink" title="spring 中 bean的作用域有哪些？"></a>spring 中 bean的作用域有哪些？</h3><ul>
+<li><strong>singleton</strong>：唯一bean实例，<strong>Spring中的bean默认都是单例的</strong>。</li>
+<li><strong>prototype</strong>：每次请求都会创建一个新的bean。</li>
+<li><strong>request</strong>：每次Http请求都会产生一个新的bean，该bean尽在当前http request内有效。</li>
+<li><strong>session</strong>：每一次Http请求都会产生一个新的bean，该bean仅在当前http session内有效。</li>
+</ul>
+<h3 id="Spring中的单例Bean的线程安全问题了解么？"><a href="#Spring中的单例Bean的线程安全问题了解么？" class="headerlink" title="Spring中的单例Bean的线程安全问题了解么？"></a>Spring中的单例Bean的线程安全问题了解么？</h3><p>单例bean存在线程安全问题，主要是因为当多个线程操作同一个对象时，对这个对象的非静态成员变量的写操作会存在线程安全问题。</p>
+<p>两种常见的解决方案：</p>
+<ul>
+<li>在bean对象中尽量避免定义可变的成员变量（不太现实）；</li>
+<li>在类中<strong>定义一个ThreadLocal成员变量，</strong>将需要的可变成员变量保存在ThreadLocal中（推荐的方式）</li>
 </ul>
 <h1 id="三、计算机网络"><a href="#三、计算机网络" class="headerlink" title="三、计算机网络"></a>三、计算机网络</h1><h2 id="1-TCP三次握手-amp-四次挥手"><a href="#1-TCP三次握手-amp-四次挥手" class="headerlink" title="1. TCP三次握手 &amp; 四次挥手"></a>1. TCP三次握手 &amp; 四次挥手</h2><p><strong>三次握手建立连接</strong>。从client的视角来看：</p>
 <ul>
@@ -1648,7 +1695,7 @@
 </li>
 </ul>
 <h3 id="对象创建过程："><a href="#对象创建过程：" class="headerlink" title="对象创建过程："></a>对象创建过程：</h3><ul>
-<li>遇到new字节码指令的时候，检查指令的参数能否找到一个类的符号引用</li>
+<li><strong>遇到new字节码指令</strong>的时候，检查<strong>指令的参数</strong>能否找到一个<strong>类的符号引用</strong></li>
 <li>如果这个符号引用对应的类还没有被加载、解析、初始化过，那么先执行类加载过程。</li>
 <li>类加载完成后，为新对象分配内存，分配内存的方法包括<strong>指针碰撞、空闲列表</strong>方法。</li>
 <li>分配完内存，对分配好的内存（除了对象头）进行初始化工作，都初始化为0值。</li>
@@ -1706,9 +1753,43 @@
 </ul>
 <p>对象被创建时，会被放至Eden区，垃圾回收后，Eden中的存活对象会被转入survivor区，经过多次垃圾回收后会转入老年代。老年代的回收频率较低。</p>
 <p>每次分配内存只是用Eden和其中一块survivor，发生垃圾收集时，eden和survivor中存活的对象一次性复制到另一块survivor上。然后直接清理掉 Eden和已用过的那块Survivor空间。</p>
-<h3 id="怎么判断一个对象是不是垃圾："><a href="#怎么判断一个对象是不是垃圾：" class="headerlink" title="怎么判断一个对象是不是垃圾："></a>怎么判断一个对象是不是垃圾：</h3><ul>
+<h3 id="JVM内存分配策略"><a href="#JVM内存分配策略" class="headerlink" title="JVM内存分配策略"></a>JVM内存分配策略</h3><ul>
+<li><strong>对象优先在Eden分配</strong><ul>
+<li>大多数情况下，对象在新生代Eden区分配，<strong>当Eden区空间不够时，发起Minor GC</strong>。</li>
+</ul>
+</li>
+<li><strong>大对象直接进入老年代</strong><ul>
+<li>大对象是指需要连续内存空间的对象，最典型的大对象是那种很长的字符串以及数组。</li>
+<li>如果经常出现大对象，会导致提前进行垃圾回收以获取足够的连续空间分配给大对象。</li>
+<li><strong>大于PretenureSizeThreshold的对象会直接在老年代分配，避免在Eden区和Survivor区之间的大量内存复制</strong></li>
+</ul>
+</li>
+<li><strong>长期存活的对象直接进入老年代</strong><ul>
+<li>为对象定义年龄计数器，对象<strong>在 Eden 出生并经过 Minor GC 依然存活，将移动到 Survivor 中，年龄就增加 1 岁</strong>，<strong>增加到一定年龄则移动到老年代中</strong></li>
+</ul>
+</li>
+<li><strong>动态对象年龄判定</strong><ul>
+<li>JVM并不总是根据年龄超过阈值才将对象晋升到老年代中，<strong>如果Survivor区中相同年龄的对象超过了Survivor区的一半，则年龄大于等于该年龄的对象可以直接进入老年代。</strong></li>
+</ul>
+</li>
+<li><strong>空间分配担保</strong><ul>
+<li>在发生Minor GC之前，JVM会先检查<strong>老年代最大可用的连续空间是否大于新生代所有对象的总空间</strong>，如果大于，则说明这一次的Minor GC是安全的，可以进行。</li>
+<li>如果不安全，则要判断 JVM<strong>是否允许担保失败</strong>。<strong>如果允许</strong>，那么如果<strong>老年代最大可用连续空间大于 过往历次晋升到老年代对象的平均大小，如果大于则可以进行Minor GC</strong> ，<strong>如果小于，或者设置了不允许担保失败，则进行 Full GC</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="怎么判断一个对象是不是垃圾："><a href="#怎么判断一个对象是不是垃圾：" class="headerlink" title="怎么判断一个对象是不是垃圾："></a><strong>怎么判断一个对象是不是垃圾：</strong></h3><ul>
 <li><strong>引用计数法</strong>：早期的方法，一个对象被引用了计数器就加一，否则减一。如果为0就可以进行回收，<strong>缺点是无法回收相互引用的对象</strong>，造成内存泄漏。</li>
-<li><strong>根可达算法</strong>：在内存中，<strong>从引用根对象向下一直寻找引用</strong>，如果找不到的对象就是垃圾。<strong>GCRoot包括 栈（虚拟机栈、方法栈）、Class类、运行时常量池、静态变量。</strong></li>
+<li><strong>根可达算法</strong>：在内存中，<strong>从引用根对象向下一直寻找引用</strong>，如果找不到的对象就是垃圾。<ul>
+<li><strong>GC Roots一般包含以下</strong>内容：<ul>
+<li><strong>虚拟机栈</strong>中引用的对象；</li>
+<li><strong>本地方法栈</strong>中引用的对象；</li>
+<li>方法区中<strong>类静态属性引用</strong>的对象；</li>
+<li>方法区中的<strong>常量引用</strong>的对象。</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><ul>
 <li><strong>标记-清除法（MarkSweep）</strong>：标记出要回收的对象，然后回收所有被标记的对象。<ul>
@@ -1746,6 +1827,34 @@
 <li><strong>并发清除</strong>：并发地清除未被标记的对象。不会STW。</li>
 </ul>
 </li>
+</ul>
+<h3 id="什么是Minor-GC、Major-GC、FullGC"><a href="#什么是Minor-GC、Major-GC、FullGC" class="headerlink" title="什么是Minor GC、Major GC、FullGC"></a>什么是Minor GC、Major GC、FullGC</h3><p>jvm进行垃圾回收时，并不是每次都对新生代、老年代和方法区的内存进行回收的，<strong>大部分时候回收的都是新生代</strong>。</p>
+<p>针对hotpot虚拟机的实现，它里面的GC按照回收区域又分为两大类：<strong>部分收集（Partial GC），整堆收集 （Full GC ）</strong></p>
+<ul>
+<li><strong>部分收集</strong>（partial GC），指不是完整收集整个Java堆的垃圾收集。其中又分为：<ul>
+<li>新生代收集（<strong>Minor GC&#x2F;Young GC</strong>）：只是新生代的垃圾收集；</li>
+<li>老年代收集（<strong>Major GC&#x2F;Old GC</strong>）：只是老年代的垃圾收集；<ul>
+<li><strong>只有CMS垃圾收集器会单独收集老年代</strong></li>
+<li>很多时候 Major GC 和 Full GC混合使用，需要具体分辨是老年代回收还是整堆回收。</li>
+</ul>
+</li>
+<li>混合收集（<strong>Mixed GC</strong>）：收集<strong>整个新生代</strong> 以及 <strong>部分老年代</strong>的垃圾；<ul>
+<li>目前<strong>只有G1垃圾收集器会Mixed GC 。</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>整堆收集（Full GC）：收集整个<strong>Java堆</strong>和<strong>方法区</strong>的垃圾。</li>
+</ul>
+<h2 id="什么时候会触发Full-GC"><a href="#什么时候会触发Full-GC" class="headerlink" title="什么时候会触发Full GC"></a>什么时候会触发Full GC</h2><p><strong>当Eden区满了，就会触发Minor GC</strong>。但是Full GC相对复杂，有以下条件：</p>
+<ul>
+<li>**调用System.gc()**：这种方式只是建议进行full gc，JVM不一定真去执行。</li>
+<li><strong>老年代空间不足</strong>：引起老年代空间不足的情况主要发生在<strong>大对象直接进入老年代、长期存活的对象进入老年代</strong>的时候。<ul>
+<li>因此为了避免Full GC，可以尽量不去创建大的对象。同时也可以扩大新生代区域，让对象尽量在新生代就被回收掉。或者提升新生代对象晋升到老年代的阈值，让对象在新生代多存活一段时间。</li>
+</ul>
+</li>
+<li><strong>空间担保失败</strong>：这种情况发生在Minor GC前，老年代最大连续内存空间小于新生代中的对象大小总和的情况下。<strong>如果空间担保失败(指最大连续空间小于历次晋升老年代的对象的平均值，或者不允许空间担保)则会进行Full GC 。</strong></li>
+<li><strong>Concurrent Mode Failure</strong>：执行 <strong>CMS GC</strong> 的过程中同时有对象要放入老年代，而此时老年代空间不足(可能是 GC 过程中浮动垃圾过多导致暂时性的空间不足)，便会报 Concurrent Mode Failure 错误，并触发 Full GC。</li>
 </ul>
 <h3 id="类生命周期"><a href="#类生命周期" class="headerlink" title="类生命周期"></a>类生命周期</h3><ol>
 <li>加载： 将类的字节码文件加载到内存中，并创建该类的.Class对象</li>
@@ -1827,10 +1936,28 @@
 </li>
 </ul>
 <h3 id="优化索引的方法"><a href="#优化索引的方法" class="headerlink" title="优化索引的方法"></a>优化索引的方法</h3><ul>
-<li>前缀索引优化</li>
-<li>覆盖索引优化</li>
-<li>主键索引最好是自增的</li>
-<li>防止索引失效</li>
+<li><strong>前缀索引优化</strong><ul>
+<li>顾名思义，就是使用某个字段的字符串的前几个字符建立索引。</li>
+<li><strong>使用前缀索引是为了减少索引字段大小，可以增加一个索引页中存储的索引值</strong>，有效提高索引的查询速度。在一些大字符串的字段作为索引时，使用前缀索引可以帮助减少索引项的大小。</li>
+<li>前缀索引有一定的<strong>局限性</strong>：<ul>
+<li><strong>order By 无法使用前缀索引</strong>；</li>
+<li><strong>无法把前缀索引作为覆盖索引</strong>；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>覆盖索引优化</strong><ul>
+<li>建立覆盖索引，从二级索引中查询得到记录，可以<strong>避免回表</strong>的操作。</li>
+<li>同时，使用覆盖索引，不需要查询出包含整条记录的所有信息，大大<strong>减少了IO操作</strong>。</li>
+</ul>
+</li>
+<li><strong>主键索引最好是自增的</strong><ul>
+<li>如果我们使用自增主键，每次插入一条记录，都是追加操作，<strong>不需要重新移动数据</strong>，因此效率很高。</li>
+<li>如果使用非自增主键，可能会导致出现<strong>页分裂</strong>的问题，<strong>页分裂 还有可能导致大量的内存碎片，导致索引结构不紧凑，从而影响查询效率。</strong></li>
+<li>另外，主键字段的长度不要过大，<strong>主键字段长度越小，意味着二级索引的叶子节点越小</strong>（二级索引叶子节点存放的是主键值），这样二级索引占用的空间也就越小。</li>
+</ul>
+</li>
+<li><strong>防止索引失效</strong></li>
 </ul>
 <h3 id="索引存储结构"><a href="#索引存储结构" class="headerlink" title="索引存储结构"></a>索引存储结构</h3><ul>
 <li>根据物理存储分类，索引分为<strong>聚簇索引和二级索引</strong>。<ul>
@@ -1992,13 +2119,13 @@
 </ul>
 </li>
 </ul>
-<h3 id="关于buffer-pool"><a href="#关于buffer-pool" class="headerlink" title="关于buffer pool:"></a>关于buffer pool:</h3><p>引入buffer pool是为了提升读写性能，buffer pool中缓存的是数据页（默认16kb）：</p>
+<h3 id="关于buffer-pool"><a href="#关于buffer-pool" class="headerlink" title="关于buffer pool:"></a>关于buffer pool:</h3><p>引入buffer pool是为了提升读写性能，<strong>buffer pool中缓存的是数据页</strong>（默认16kb）：</p>
 <ul>
 <li>如果读记录时，该记录在缓冲池中，那么就从缓冲池中读，否则去磁盘中读；</li>
-<li>修改记录时，如果记录存在于缓冲池中，那么直接修改该记录在缓冲池中的页，并将其标志为脏页。脏页不会立即写入磁盘，后台线程会挑选一个合适的时机将其写入磁盘。</li>
+<li>修改记录时，如果记录存在于缓冲池中，那么直接修改该记录在缓冲池中的页，并将其标志为脏页。<strong>脏页不会立即写入磁盘，后台线程会挑选一个合适的时机将其写入磁盘</strong>。</li>
 </ul>
-<p>MySQL启动的时候，InnoDB会为 buffer pool中申请一片空闲空间，随着程序运行，磁盘上的页会逐渐放进这些空闲空间中。</p>
-<p>当查询一条记录的时候，InnoDB是会把整个页的数据加载到buffer pool中，页加载后，再通过页中的 页目录 去定位到某条具体的记录。</p>
+<p>MySQL<strong>启动的时候</strong>，InnoDB会为 buffer pool中申请<strong>一片空闲空间，随着程序运行，磁盘上的页会逐渐放进这些空闲空间中。</strong></p>
+<p>当<strong>查询</strong>一条记录的时候，InnoDB是会把<strong>整个页的数据加载到buffer pool</strong>中，页加载后，<strong>再通过页中的 页目录 去定位到某条具体的记录</strong>。</p>
 <h3 id="关于redo-log"><a href="#关于redo-log" class="headerlink" title="关于redo log:"></a>关于redo log:</h3><p>引入redo log，是因为<strong>buffer pool是基于内存</strong>的，在断电重启时，<strong>没来得及落盘的脏页数据会丢失</strong>。为了解决这个问题，<strong>当有一条记录需要修改的时候，InnoDB首先更新内存（标记为脏页），然后将本次对这个页的修改以 redo log的形式记录下来。</strong></p>
 <p>随后，后台线程会在合适的时机将脏页写到磁盘中。</p>
 <ul>
@@ -2284,6 +2411,25 @@
 <p>在该阶段，<strong>首先进行RDB持久化，然后将RDB文件的内容 和 AOF日志文件</strong>放在一起，这里的<strong>AOF日志</strong>不再是全量的日志，而<strong>是RDB持久化开始到RDB持久化结束期间产生的AOF</strong>（这部分AOF通常很小）。</p>
 <p><strong>优点就是</strong>：在提升恢复速度的同时，大大减少了数据丢失的风险。</p>
 <p><strong>缺点很明显：</strong>可读性差，并且混合日志老版本的redis用不了。</p>
+<h2 id="Redisson分布式锁"><a href="#Redisson分布式锁" class="headerlink" title="Redisson分布式锁"></a>Redisson分布式锁</h2><h3 id="Redisson如何实现分布式锁的？（set指令-lua脚本）"><a href="#Redisson如何实现分布式锁的？（set指令-lua脚本）" class="headerlink" title="Redisson如何实现分布式锁的？（set指令 + lua脚本）"></a>Redisson如何实现分布式锁的？（set指令 + lua脚本）</h3><ul>
+<li><strong>第一步，使用lua脚本执行加锁操作</strong>：lua脚本会<strong>判断锁是否存在</strong>，<strong>如果不存在</strong>，使用hset命令<strong>设置锁的值</strong>，使用pexpire命令<strong>设置锁的过期时间</strong>。<strong>如果锁已经被当前线程持有，则将锁的值加一，并设置锁的过期时间为指定的时间</strong>。</li>
+<li><strong>第二步，续约锁的时间：</strong>获取锁成功后，Redisson会<strong>开启一个定时任务</strong>（<strong>就是watch dog</strong>），定期延长锁的过期时间（续约）。这个<strong>定时任务也是通过lua脚本实现</strong>的。</li>
+<li><strong>第三步，释放锁：</strong>当锁的持有者完成任务后，Redission会<strong>调用redis的DEL指令来删除锁的键</strong>，释放锁。</li>
+</ul>
+<h3 id="关于Watch-Dog看门狗机制："><a href="#关于Watch-Dog看门狗机制：" class="headerlink" title="关于Watch Dog看门狗机制："></a>关于Watch Dog看门狗机制：</h3><p>watch dog定期检查和维护分布式锁的状态，可以保证分布式锁有有效性和可靠性。看门狗机制主要有两个作用：</p>
+<ul>
+<li><strong>续约</strong>：watch dog会<strong>定期</strong>（release Time&#x2F;3）<strong>发送续约命令给持有锁的客户端</strong>，更新锁的时间。这样保证锁不会因为过期被其他客户端获取。</li>
+<li><strong>释放</strong>：如果watch dog发现<strong>持有锁的客户端不再存活或者发生故障，会自动触发锁的释放</strong>动作。可以避免客户端占着茅坑不拉屎。</li>
+</ul>
+<h3 id="Red-Lock红锁，Redission是怎样实现的？"><a href="#Red-Lock红锁，Redission是怎样实现的？" class="headerlink" title="Red Lock红锁，Redission是怎样实现的？"></a>Red Lock红锁，Redission是怎样实现的？</h3><p>红锁旨在解决<strong>redis单点故障或网络分区</strong>的情况下，分布式锁的可用性和可靠性问题。</p>
+<p>红锁的实现思路如下：</p>
+<ul>
+<li>获取<strong>当前时间戳和一个随机的唯一标识符</strong>；</li>
+<li><strong>尝试在多个独立的Redis实例上获取锁</strong>，<strong>每个实例</strong>都是用<strong>相同的唯一标识符和过期时间</strong>。</li>
+<li>统计成功获取锁的实例数量，如果<strong>大部分实例</strong>（例如大于半数）<strong>成功获取到锁</strong>，则认为获取锁成功。</li>
+<li>如果获取锁<strong>成功，则执行业务逻辑操作，完成后释放锁</strong>。</li>
+<li>如果获取锁<strong>失败，尝试在获取锁失败的实例上主动释放锁</strong>，以防止锁被永久持有。</li>
+</ul>
 <h2 id="Redis集群"><a href="#Redis集群" class="headerlink" title="Redis集群"></a>Redis集群</h2><h3 id="如何实现服务高可用："><a href="#如何实现服务高可用：" class="headerlink" title="如何实现服务高可用："></a>如何实现服务高可用：</h3><p>如果说<strong>高可用</strong>，那么必须得<strong>使用集群</strong>，并且进行<strong>读写分离</strong>。如果使用了集群，就涉及<strong>主从复制、哨兵模式、切片集群</strong>等问题。</p>
 <h4 id="高可用之主从复制："><a href="#高可用之主从复制：" class="headerlink" title="高可用之主从复制："></a>高可用之主从复制：</h4><p><strong>主从复制是redis高可用的最基本保证</strong>，并且主从服务器之间进行读写分离。<strong>主服务器可以进行读写操作</strong>，当发生写操作的时候，自动将写操作同步给 从服务器。<strong>从服务器一般是 只读</strong>，并接收主服务器同步过来的写命令。</p>
 <p><strong>⭐主从第一次同步⭐（第一次同步的时候，主服务器有数据，从服务器空荡荡，所以第一次是全量复制</strong>），主从第一次同步可以包括以下几个阶段：</p>
@@ -2419,6 +2565,9 @@
 <p>生产者知道MQ可用之后，会执行自己的本地事务，同时发送一个具体的消息，<strong>这个消息中包含了本地事务的状态</strong>（事务状态有三种：成功、失败、未知）；</p>
 <p>MQ接收到这个带有 本地事务状态的消息之后，检查这个状态信息。如果本地事务成功，说明该信息可以保留在MQ中；如果失败，则应该丢弃这个消息；如果状态未知，则向生产者发送消息回查，生产者会再次检查本地事务状态（比如数据库中是否能查到这条信息）并再次返回事务状态给MQ，MQ会重复上面的检查，已决定是否保留这条消息。</p>
 <p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240514155139282.png" alt="image-20240514155139282"></p>
+<p><strong>应用：如何设计一个订单超时关闭的功能？</strong></p>
+<p>生产者在第三步向MQ中发送消息的时候，主动地发送一个未知状态的消息，时候MQ会发起回查。</p>
+<p>这里注意了，这里生产者接收到MQ回查消息后，不再检查自己的本地事务状态，而是检查订单系统中的支付状态，如果已完成则返回成功，否则失败。</p>
 </li>
 </ul>
 </li>
@@ -2446,7 +2595,83 @@
 <p>因为消息队列维护了消费的位置，逻辑执行失败了，没有确认，再去队列拉取消息，就还是之前的一条。</p>
 </li>
 </ol>
-
+<h2 id="订单超时自动取消如何实现？"><a href="#订单超时自动取消如何实现？" class="headerlink" title="订单超时自动取消如何实现？"></a>订单超时自动取消如何实现？</h2><ol>
+<li><p><strong>使用DelayQueue延迟队列来实现</strong></p>
+<p>每次生成的订单加入到延迟队列中，以超时时间作为权重排序，最快超时的订单排在队列最前。由一个线程不停的轮询延迟队列。一旦发现有订单超时，则进行超时处理（即取消订单）。</p>
+<ul>
+<li>优点：好实现，不需要引入第三方库。</li>
+<li>缺点：<ul>
+<li>所有超时处理订单都要加入到延迟队列中，占用内存大；</li>
+<li>数据都是在内存中，掉电恢复时还得从数据库中初始化，很麻烦；</li>
+<li>没法做到分布式处理，因为它是基于JVM的，只能在集群中选一台leader专门进行处理，效率低。</li>
+<li>不适合订单量大的场景。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>使用消息队列的延迟消息来实现（RocketMq）</strong></p>
+<p>消息的生产者，会向消息队列中发送一个带有定时时间的消息。当定时时间到了之后，该消息才能投递给消费者，被消费者所消费。</p>
+<ul>
+<li>优点：<ul>
+<li>使用简单，就像发送一个普通消息一样。</li>
+<li>支持分布式。</li>
+<li>精度高，支持任意时刻。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>使用限制：定时时长的最大值为24小时。</li>
+<li>每个订单都会新增一个定时消息，并且不会马上进行消费，这给MQ带来很大的存储成本。</li>
+<li>同一时刻大量消息会导致消息延迟：定时消息的实现逻辑需要先经过定时存储等待触发，定时时间到达后才会投递给消费者。因此，<strong>如果将大量定时消息的定时时间设置到同一刻，则到达该时刻后会有大量的消息同时需要被处理，会造成系统压力过大，导致消息分发延迟，影响定时精度。</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>使用redis的过期监听实现</strong></p>
+<ul>
+<li>优点同使用MQ的优点，好实现、支持分布式、精度高等</li>
+<li>缺点（也是所有中间件的缺点）<ul>
+<li>不可靠，Redis在过期通知的时候，如果应用正好重启或者宕机，那么就有可能通知事件就丢了，会导致订单一直无法关闭，有稳定性问题。如果一定要使用Redis过期监听方案，建议再通过定时任务做兜底。</li>
+<li>如果订单量庞大，需要占用中间件大量的存储空间，需要额外的维护成本。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>定时任务分布式批处理</strong></p>
+</li>
+</ol>
+<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240522153230935.png" alt="image-20240522153230935"></p>
+<p>由分布式任务调度中间件（quartz、xxlJob等）来实现，在定时任务中间件指定定时任务，比如从数据库中筛选出超时的订单信息统一处理批量入库。</p>
+<ul>
+<li>优点：<ul>
+<li>稳定性好，使用中间件都可能导致消息丢失，而在这种方式下，任务调度中间件挂了重启后，再从超时中心中获取超时订单进行处理就可以了。</li>
+<li>容易实现。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>超时精度不高，需要设置合适的处理频率。</li>
+</ul>
+</li>
+</ul>
+<p>如果对于超时精度比较高，超时时间在24小时内，并且不会有峰值压力的场景，推荐使用RocketMQ的延迟消息的解决方案。</p>
+<p>在电商业务下，许多订单超时场景都在24小时以上，对于超时精度没有那么敏感，并且由海量的订单需要处理，推荐使用定时任务分布式批处理的解决方案。</p>
+<h2 id="如何保证消息的顺序性："><a href="#如何保证消息的顺序性：" class="headerlink" title="如何保证消息的顺序性："></a>如何保证消息的顺序性：</h2><p>顺序消息是指消息的生产顺序和消费顺序相同。在有些业务逻辑下，必须保证消息顺序消费。</p>
+<p>顺序消息分为全局顺序消息和局部顺序消息：</p>
+<ul>
+<li>全局顺序消息是指某个Topic下的所有消息都要保证顺序；</li>
+<li>部分顺序消息只要保证每一组消息被顺序消费即可，比如，同一个订单ID的消息需要被顺序消费。</li>
+</ul>
+<h3 id="全局顺序消息的实现："><a href="#全局顺序消息的实现：" class="headerlink" title="全局顺序消息的实现："></a>全局顺序消息的实现：</h3><p><strong>RocketMQ默认情况下不保证顺序，比如创建一个Topic，默认8个写队列，8个读队列，这时一条消息可能被写入任意一个队列里</strong>；</p>
+<p>在数据的读取过程中，可能有多个Consumer，每个Consumer也可能启动多个线程进行并行处理，所以消息被哪个Concumer消费，被消费的顺序和写入的顺序是否一致不确定。</p>
+<p>要保证全局顺序消息，<strong>首先要将Topic的读写队列数量设置为1，然后Producer Consumer的并发设置也得是1</strong>。简单来说，<strong>为了保证Topic全局消息有序，只能消除所有的并发处理，各部分都设置为单线程处理</strong>，这时候就会完全牺牲RocketMQ的高并发、高吞吐的特性了。</p>
+<h3 id="部分顺序消息的实现："><a href="#部分顺序消息的实现：" class="headerlink" title="部分顺序消息的实现："></a><strong>部分顺序消息的实现：</strong></h3><p>生产端需要把同订单ID的消息发送到同一个 Message Queue；在消费过程中，要做到同一个Message Queue读取的消息顺序处理–即消费者端不能并发处理顺序消息，这样才能达到部分有序。</p>
+<h2 id="如何避免消息重复消费"><a href="#如何避免消息重复消费" class="headerlink" title="如何避免消息重复消费"></a>如何避免消息重复消费</h2><p>RocketMQ 确保消息一定投递，保证消息不丢失，但有可能造成消息的重复。</p>
+<p><strong>处理消息重复问题</strong>，主要有由业务端自己保证，主要方式分为两种：<strong>业务幂等</strong> 和 <strong>消息幂等</strong></p>
+<p>（1）<strong>业务幂等</strong>：保证消费逻辑的幂等性，也就是多次调用和一次调用的效果是一样的。</p>
+<p>（2）<strong>消息去重：</strong>在消息生产时，MQ内部针对每条生产者发送的消息生成一个唯一ID，作为去重和幂等的依据（消息投递失败并重传），避免重复的消息进入队列。在消息消费时，要求消息体中也要有一个全局唯一ID作为去重和幂等的依据，避免同一条消息被重复消费。</p>
+<h2 id="如何处理消息积压："><a href="#如何处理消息积压：" class="headerlink" title="如何处理消息积压："></a>如何处理消息积压：</h2><h3 id="第一种方法，消费者扩容："><a href="#第一种方法，消费者扩容：" class="headerlink" title="第一种方法，消费者扩容："></a>第一种方法，消费者扩容：</h3><p>适用于当前主题<strong>Topic消息队列数量 大于 消费者数量</strong>的情形。通过增加消费者来扩容，从而提高消费能力，尽快消费积压的消息。通过增加消费者，可以使消息队列分配给更多的消费者进行并行消费，加快消息处理速度。</p>
+<h3 id="第二种方法，消息迁移Queue扩容："><a href="#第二种方法，消息迁移Queue扩容：" class="headerlink" title="第二种方法，消息迁移Queue扩容："></a>第二种方法，消息迁移Queue扩容：</h3><p>适用于当前主题<strong>Topic消息队列数量 小于等于 消费者数量</strong>的情形。这种情况下，添加消费者数量不够有效。这时需要考虑扩容消息队列。</p>
+<p>一种方法是，创建一个临时主题，在<strong>临时主题上设置更多的消息队列</strong>。然后将<strong>部分消费者用于将消息从原主题转发到临时主题</strong>，这个过程不需要进行业务处理，只是将消息转发，因此速度很快。接下来，使用扩容后的消费者来消费临时主题中的消息。当所有积压消息被消费完毕后，恢复到原始状态。</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240523150236245.png" alt="image-20240523150236245" style="zoom: 50%;" />
       
     </div>
 
