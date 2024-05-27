@@ -1105,7 +1105,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-26 20:06:27" itemprop="dateModified" datetime="2024-05-26T20:06:27+08:00">2024-05-26</time>
+                <time title="修改时间：2024-05-27 22:10:02" itemprop="dateModified" datetime="2024-05-27T22:10:02+08:00">2024-05-27</time>
               </span>
 
           
@@ -1366,7 +1366,7 @@
 </li>
 </ul>
 <h3 id="（6）关于Synchronized关键字的一些其他内容："><a href="#（6）关于Synchronized关键字的一些其他内容：" class="headerlink" title="（6）关于Synchronized关键字的一些其他内容："></a>（6）关于Synchronized关键字的一些其他内容：</h3><ul>
-<li>synchronized在发生异常的时候会自动释放占有的锁，因此不会发生死锁；</li>
+<li>synchronized在发生<strong>异常的时候会自动释放占有的锁</strong>，因此<strong>不会发生死锁</strong>；</li>
 <li>synchronized修饰的方法在抛出异常的时候，<strong>会自动释放锁</strong>。</li>
 <li>synchronized实现的是<strong>非公平锁</strong>。</li>
 </ul>
@@ -1399,7 +1399,7 @@
 <p>⭐一句话总结<strong>轻量级锁的原理</strong>：<strong>将对象的mark word复制到当前现成的lock record中，并将对象的mark word变更为指向lock record的指针。</strong></p>
 <p><strong>轻量级锁的获取：</strong></p>
 <ul>
-<li>进行<strong>加锁操作时</strong>，jvm会<strong>判断锁是否已经是重量级锁</strong>。<strong>如果不是</strong>，则会在当前线程栈帧之中<strong>划分出一块空间，作为该锁的锁记录lock record。并且将锁对象的mark word复制到该锁的lock record中；</strong></li>
+<li>进行<strong>加锁操作时</strong>，jvm会<strong>判断锁是否已经是重量级锁</strong>。<strong>如果不是</strong>，则会在<strong>当前线程栈帧</strong>之中<strong>划分出一块空间，作为该锁的锁记录lock record。并且将锁对象的mark word复制到该锁的lock record中；</strong></li>
 <li><strong>复制成功后</strong>，jvm使用<strong>CAS操作</strong>将锁对象头mark word更改为指向lock record的<strong>指针</strong>。并且将<strong>lock record中的owner指针指向锁对象的mark word。</strong><ul>
 <li><strong>如果更新成功，</strong>则当前线程持有该锁，并且锁对象<strong>mark word的锁标志置为“00”</strong>，即<strong>表示此对象正处于轻量级锁的状态。</strong></li>
 <li>如果更新<strong>失败</strong>，需要<strong>判断当前对象的mark word是否指向了当前线程的栈帧</strong>。如果是，则表示该线程已经获取到了当前对象的锁，这是一次<strong>重入</strong>，直接执行同步代码块；如果<strong>不是</strong>，则<strong>表示存在竞争，当前线程通过自旋尝试获取锁，自旋超过一定次数，轻量级锁升级为重量级锁。</strong></li>
@@ -1411,7 +1411,7 @@
 <p><strong>节点类Entry&lt;K,V&gt;<strong>，这个</strong>key不是ThreadLocal对象本身，而是它的一个弱引用</strong>，value就是存放的泛型值。</p>
 <p>每个线程在往ThreadLocal里设置值的时候，都是往自己的ThreadLocalMap中保存，取也是从这里取，从而实现了线程隔离。</p>
 <p><strong>ThreadLocal本身不存储值，它只是作为一个key来让线程往ThreadLocalMap中存取值</strong>。</p>
-<h3 id="ThreadLocal内存泄漏"><a href="#ThreadLocal内存泄漏" class="headerlink" title="ThreadLocal内存泄漏"></a>ThreadLocal内存泄漏</h3><p>因为TheadLocalMap中的<strong>key，是ThreadLocal对象的一个弱引用，而弱引用很容易被回收</strong> （弱引用的回收条件：不管内存够不够，都有可能回收），所以一旦key被jvm回收了，这个<strong>map只有value没有key了，就造成了内存泄露</strong>的问题。</p>
+<h3 id="ThreadLocal内存泄漏"><a href="#ThreadLocal内存泄漏" class="headerlink" title="ThreadLocal内存泄漏"></a>ThreadLocal内存泄漏</h3><p>因为<strong>TheadLocalMap</strong>中的<strong>key，是ThreadLocal对象的一个弱引用，而弱引用很容易被回收</strong> （弱引用的回收条件：不管内存够不够，都有可能回收），所以一旦key被jvm回收了，这个<strong>map只有value没有key了，就造成了内存泄露</strong>的问题。</p>
 <p><strong>解决方法就是</strong>：在我们使用完ThreadLocal后，<strong>及时调用remove()方法释放内存空间</strong>。</p>
 <p><strong>为什么key要设计成弱引用</strong>？那就是因为<strong>如果是强引用</strong>，即使线程不再使用某个ThreadLocal对象，该对象也没办法被回收，<strong>还是会造成内存泄漏</strong>。</p>
 <h3 id="内存泄漏与内存溢出的区别"><a href="#内存泄漏与内存溢出的区别" class="headerlink" title="内存泄漏与内存溢出的区别"></a>内存泄漏与内存溢出的区别</h3><ul>
@@ -1422,7 +1422,7 @@
 <ul>
 <li>元素数组：是一个table数组，存储Entry类型的元素（就是存放每一个节点），对于每个Entry，key是Thread对象的弱引用，value是存储的object对象。</li>
 <li>散列方法：这里的散列方法就是将 <strong>key映射到 table数组的相应下标</strong>，其使用的是哈希取余法，取出key的threadlocalMapHashCode，然后对数组长度进行取余。<ul>
-<li>没创建一个threadLocal对象，threadlocalMapHashCode就会新增一个 斐波那契数（黄金分割数），它可以让hash分布非常均匀。</li>
+<li>每创建一个threadLocal对象，<strong>threadlocalMapHashCode就会新增一个 斐波那契数</strong>（黄金分割数），它可以<strong>让hash分布非常均匀</strong>。</li>
 </ul>
 </li>
 </ul>
@@ -1480,7 +1480,7 @@
 <li>提高线程的可管理性。</li>
 </ul>
 <p>线程池一般用于执行多个不相关联的耗时任务，没有多线程的情况下，任务顺序执行，使用了线程池的话可以让多个不相关的任务同时执行。</p>
-<h3 id="ThreadPoolExecutor类"><a href="#ThreadPoolExecutor类" class="headerlink" title="ThreadPoolExecutor类"></a>ThreadPoolExecutor类</h3><p>ThreadPoolExecutor类是<strong>Executor</strong>框架最核心的类。其中有<strong>最重要的三个参数</strong>：</p>
+<h3 id="ThreadPoolExecutor类"><a href="#ThreadPoolExecutor类" class="headerlink" title="ThreadPoolExecutor类"></a>ThreadPoolExecutor类</h3><p>ThreadPoolExecutor类是<strong>Executor</strong>框架<strong>最核心的类</strong>。其中有<strong>最重要的三个参数</strong>：</p>
 <ul>
 <li><strong>corePoolSize</strong>：任务队列未达到最大容量时，最大可以同时运行线程的线程数量。</li>
 <li><strong>maximumPoolSize</strong>：任务队列中存放的任务达到队列容量的时候，当前可以同时运行的线程数量变为最大线程数。</li>
@@ -1495,10 +1495,10 @@
 </ul>
 <p><strong>ThreadPoolExecutor拒绝策略：</strong></p>
 <ul>
-<li>AbortPolicy：抛出RejectedExecutionException 异常来拒绝新任务的处理。</li>
-<li>CallerRunsPolicy：调用自己的线程运行任务，也就是直接在调用execute方法的线程中运行被拒绝的任务。这种策略会降低任务的提交速度，但是可以保证任务的执行。</li>
-<li>DiscardPolicy：不处理任务，直接丢弃掉。</li>
-<li>DiscardOldestPolicy：此策略将丢弃最早的未处理的任务请求。</li>
+<li><strong>AbortPolicy</strong>：<strong>抛出</strong>RejectedExecutionException <strong>异常</strong>来拒绝新任务的处理。</li>
+<li><strong>CallerRunsPolicy</strong>：调用自己的线程运行任务，也就是<strong>直接在调用execute方法的线程中运行被拒绝的任务</strong>。这种策略会降低任务的提交速度，但是可以保证任务的执行。</li>
+<li><strong>DiscardPolicy</strong>：不处理任务，<strong>直接丢弃掉</strong>。</li>
+<li><strong>DiscardOldestPolicy</strong>：此策略将<strong>丢弃最早的未处理的任务请求</strong>。</li>
 </ul>
 <h3 id="线程池创建的两种方式（ThreadPoolExecutor-amp-Executors）："><a href="#线程池创建的两种方式（ThreadPoolExecutor-amp-Executors）：" class="headerlink" title="线程池创建的两种方式（ThreadPoolExecutor &amp; Executors）："></a>线程池创建的两种方式（ThreadPoolExecutor &amp; Executors）：</h3><p>第一种：通过ThreadPoolExecutor构造函数创建 （推荐）</p>
 <p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240521155821330.png" alt="image-20240521155821330"></p>
@@ -1536,7 +1536,7 @@
 <li>BeanPostProcessor后置处理</li>
 </ul>
 </li>
-<li>使用中</li>
+<li><strong>使用</strong>中</li>
 <li><strong>（销毁）</strong>销毁<ul>
 <li>是否实现DisposableBean接口</li>
 <li>是否配置自定义的destory-method</li>
@@ -1583,8 +1583,27 @@
 <li><strong>自己吞了异常：</strong>在事务方法中手动try catch了异常，这种情况下事务不会正常回滚。</li>
 <li><strong>手动抛出了别的异常：</strong>即使开发者没有手动捕获异常，但是抛的异常不正确，spring事务也不会回滚。spring事务，默认情况下只会回滚 runtimeException和 error，对于普通的Exception（非运行时异常），它不会回滚。</li>
 </ul>
-<h2 id="4-IOC"><a href="#4-IOC" class="headerlink" title="4. IOC"></a>4. IOC</h2><p><strong>IOC，控制反转</strong>，由容器负责控制对象的生命周期和对象之间的关系，IOC最重要的作用就是 <strong>解耦</strong>。</p>
-<p><strong>DI，依赖注入</strong>，容器在实例化对象的时候把它依赖的类注入给它。DI可以理解为 IOC设计思想的实现。</p>
+<h2 id="4-IOC"><a href="#4-IOC" class="headerlink" title="4. IOC"></a>4. IOC</h2><p><strong>IOC，控制反转</strong>，是一种是设计思想，由容器负责控制对象的生命周期和对象之间的关系，IOC最重要的作用就是 <strong>解耦</strong>。</p>
+<p><strong>有了IOC容器后，把创建和查找依赖对象的控制权交给了容器，由容器进行注入组合对象，所以对象与对象之间是松散耦合，这样也方便测试，利于功能复用。更重要的是使得程序的整个体系结构变得非常灵活。</strong></p>
+<p><strong>IOC配置的三种方式：</strong></p>
+<ul>
+<li><strong>XML配置</strong>：就是将bean的信息配置在.xml文件里，通过spring加载文件为我们创建bean。早期的SSM项目出现的比较多。<ul>
+<li>优点：可以使用于任何场景，结构清晰，通俗易懂。</li>
+<li>缺点：配置繁琐，不易维护，扩展性差。</li>
+</ul>
+</li>
+<li><strong>Java配置</strong>：将类的创建交给我们配置的JavcConfig类来完成，Spring只负责维护和管理，采用纯Java创建方式。<ul>
+<li>优点：适用于任何场景，配置方便，因为是纯Java代码，扩展性高，十分灵活。</li>
+<li>缺点：由于是采用Java类的方式，声明不明显，如果进行大量配置，可读性比较差。</li>
+</ul>
+</li>
+<li><strong>注解配置</strong>：通过在类上加注解的方式，来声明一个类交给Spring管理，Spring会自动扫描带有@Component，@Controller，@Service，@Repository这四个注解的类，然后帮我们创建并管理，前提是需要先配置Spring的注解扫描器。<ul>
+<li>优点：开发便捷，通俗易懂，方便维护。</li>
+<li>缺点：具有局限性，对于一些第三方资源，无法添加注解。只能采用XML或JavaConfig的方式配置。</li>
+</ul>
+</li>
+</ul>
+<p><strong>DI，依赖注入</strong>，容器在实例化对象的时候把它依赖的类注入给它。<strong>DI可以理解为 IOC设计思想的实现</strong>。</p>
 <h3 id="ApplicationContext-amp-BeanFactory"><a href="#ApplicationContext-amp-BeanFactory" class="headerlink" title="ApplicationContext &amp; BeanFactory"></a>ApplicationContext &amp; BeanFactory</h3><p><strong>SPring通过 ApplicationContext来设计容器，它是BeanFactory的子类，对它进行了补充实现。</strong></p>
 <p><strong>BeanFactory</strong>可以理解为HashMap ,一般只有get，put两个功能，所以被称为 <strong>低级容器</strong>。</p>
 <p>但是ApplicationContext多了很多功能，它继承了多个接口，那为何要定义这个多接口呢，其实每个接口都有他使用的场合，它主要是为了区分 spring内部在操作过程中对象的传递和转化的过程中，对对象的数据访问所做的限制：</p>
@@ -1596,17 +1615,28 @@
 <p><strong>这三个接口共同定义了 Bean 的集合、Bean 之间的关系、以及 Bean 行为。</strong></p>
 <h3 id="BeanDefination"><a href="#BeanDefination" class="headerlink" title="BeanDefination"></a>BeanDefination</h3><p>在BeanFactory容器中，每个注入对象都对应一个BeanDefinition对象，该实例对象负责保存注入对象的所有必要信息，包括其所属的class类名，是否是抽象类，构造方法以及其他属性等。</p>
 <p>当客户端向BeanFactory请求相应对象的时候，BeanFactory会通过这些信息向客户端返回一个完备可用的对象实例，BeanDefinition实例的信息是通过读取xml文件得到的。</p>
-<h3 id="DI"><a href="#DI" class="headerlink" title="DI"></a>DI</h3><p>如果我们使用的是@Autowired 注入的时候，在单例池中查找，先byType进行查找，如果有多个结果不知道该注入哪个，就继续byName再做查找，如果byName还是找不到，如果我们声明了这个依赖是一个强制依赖，则会报错；否则不报错。</p>
+<h3 id="DI（依赖注入）"><a href="#DI（依赖注入）" class="headerlink" title="DI（依赖注入）"></a>DI（依赖注入）</h3><p><strong>依赖注入的三种方式：</strong></p>
+<ul>
+<li><strong>setter方式</strong>：<ul>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240527220340700.png" alt="image-20240527220340700"></li>
+</ul>
+</li>
+<li><strong>构造器方式</strong>：<ul>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240527220525316.png" alt="image-20240527220525316"></li>
+</ul>
+</li>
+<li><strong>注解注入</strong>（**@Autowired &amp; @Resource**）</li>
+</ul>
+<p>如果我们使用的是@Autowired 注入的时候，在单例池中查找，先byType进行查找，如果有多个结果不知道该注入哪个，就继续byName再做查找，如果byName还是找不到，如果我们声明了这个依赖是一个强制依赖，则会报错；否则不报错。</p>
 <p>同样的，如果byType的时候，从单例池中只有一个bean，那么就使用该bean进行注入，不管beanName对不对的上。</p>
 <p>如果我们使用的是@Resource注解（没有指定name），那么直接byName进行查找，如果查找不到就会byType查找。</p>
 <p>如果我们使用的是@Resource注解（指定了name），那么直接byName进行查找，如果查找不到就直接报错。</p>
-<h2 id="5-AOP"><a href="#5-AOP" class="headerlink" title="5. AOP"></a>5. AOP</h2><p>什么是AOP？有没有用过AOP？</p>
-<p>AOP称为面向切面编程，用于将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块，这个模块被命名为”切面“Aspect，减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。</p>
+<h2 id="5-AOP"><a href="#5-AOP" class="headerlink" title="5. AOP"></a>5. AOP</h2><h3 id="什么是AOP？有没有用过AOP？"><a href="#什么是AOP？有没有用过AOP？" class="headerlink" title="什么是AOP？有没有用过AOP？"></a>什么是AOP？有没有用过AOP？</h3><p>AOP称为面向切面编程，用于将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块，这个模块被命名为”切面“Aspect，减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。</p>
 <p>AOP常见使用场景：</p>
 <ul>
 <li>记录操作日志</li>
 <li>缓存数据</li>
-<li>Spring事务</li>
+<li><strong>Spring事务</strong></li>
 </ul>
 <h2 id="6-Spring-Bean"><a href="#6-Spring-Bean" class="headerlink" title="6. Spring Bean"></a>6. Spring Bean</h2><h3 id="spring-中-bean的作用域有哪些？"><a href="#spring-中-bean的作用域有哪些？" class="headerlink" title="spring 中 bean的作用域有哪些？"></a>spring 中 bean的作用域有哪些？</h3><ul>
 <li><strong>singleton</strong>：唯一bean实例，<strong>Spring中的bean默认都是单例的</strong>。</li>
@@ -1902,15 +1932,15 @@
 <li>按<strong>字段个数</strong>分类：唯一索引、联合索引。</li>
 </ul>
 <h3 id="B-树索引（主键索引-or-二级索引）"><a href="#B-树索引（主键索引-or-二级索引）" class="headerlink" title="B+树索引（主键索引 or 二级索引）"></a>B+树索引（主键索引 or 二级索引）</h3><ul>
-<li>多叉树、叶子节点才存放数据、非叶子节点只存放索引</li>
+<li>多叉树、<strong>叶子节点才存放数据、非叶子节点只存放索引</strong></li>
 <li>每个节点中的数据是按照主键顺序存放的。</li>
-<li>叶子节点之间通过双向链表连接。</li>
-<li>对主键索引来说，叶子节点存放的就是实际数据。</li>
-<li>对二级索引来说，叶子节点存放的是主键值，而不是实际数据。<strong>回表就是指</strong>需要查询二级索引树和主键索引树两个B+树才能查到数据。</li>
+<li>叶子节点之间通过<strong>双向链表</strong>连接。</li>
+<li>对<strong>主键索引</strong>来说，<strong>叶子节点存放的就是实际数据</strong>。</li>
+<li>对<strong>二级索引</strong>来说，<strong>叶子节点存放的是主键值</strong>，而不是实际数据。<strong>回表就是指</strong>需要查询二级索引树和主键索引树两个B+树才能查到数据。</li>
 <li>当查到的数据在二级索引的叶子节点就能找到时，此时就<strong>不用再回表查询</strong>了。<strong>这被称为覆盖索引</strong></li>
-<li>相比于B树，B+树更适合于范围查询，因为其叶子节点用双向链表相连；而且B树的非叶子节点也要存储数据，B+树单节点数据量更小。</li>
-<li>相比于二叉树，B+树能保证高度始终在3-4层左右，对IO更友好。</li>
-<li>相比于Hash，查询复杂度o(1)优于B+树，但hash不适合范围查询。</li>
+<li>相比于B树，<strong>B+树更适合于范围查询</strong>，因为其<strong>叶子节点用双向链表相连</strong>；而且<strong>B树的非叶子节点也要存储数据</strong>，B+树单节点数据量更小。</li>
+<li>相比于二叉树，<strong>B+树能保证高度始终在3-4层左右，对IO更友好</strong>。</li>
+<li>相比于Hash，查询复杂度o(1)优于B+树，但<strong>hash不适合范围查询</strong>。</li>
 </ul>
 <p><strong>B+树索引的优势</strong>：相比于B树和二叉树来说，最大的优势在于查询效率高，即使在数据量很大的情况下，<strong>磁盘的IO次数依然维持在3-4次</strong>。</p>
 <h3 id="联合索引-amp-索引下推优化"><a href="#联合索引-amp-索引下推优化" class="headerlink" title="联合索引 &amp; 索引下推优化"></a>联合索引 &amp; 索引下推优化</h3><ul>
@@ -1973,8 +2003,8 @@
 </ul>
 </li>
 <li>对聚簇索引的理解：<ul>
-<li>聚簇索引具有唯一性：由于聚簇索引是将索引和数据放在一块，所以一个表仅有一个聚簇索引。</li>
-<li>（1）聚簇索引默认是主键。（2）如果表中没有定义主键，InnoDB会选择第一个唯一的非空索引代替。（3）如果没有这样的索引，InnoDB 会隐式定义一个主键作为聚簇索引。</li>
+<li><strong>聚簇索引具有唯一性</strong>：由于聚簇索引是将索引和数据放在一块，所以一个表仅有一个聚簇索引。</li>
+<li>⭐（1）聚簇索引<strong>默认是主键</strong>。（2）如果表中没有定义主键，InnoDB会<strong>选择第一个唯一的非空索引</strong>代替。（3）如果没有这样的索引，InnoDB 会<strong>隐式定义一个主键作为聚簇索引。</strong></li>
 </ul>
 </li>
 </ul>
@@ -2133,11 +2163,11 @@
 <li>事务提交时，只用<strong>先将redo log持久化到磁盘</strong>中就行，（内存中的脏页是在合适的时机进行落盘的）。<strong>哪怕系统崩溃发生内存掉电重启，根据磁盘中redo log中的记录进行恢复即可</strong>。</li>
 </ul>
 <h3 id="redo-log-和-undo-log的区别"><a href="#redo-log-和-undo-log的区别" class="headerlink" title="redo log 和 undo log的区别"></a>redo log 和 undo log的区别</h3><ul>
-<li>这俩日志都是InnoDB引擎的日志；</li>
-<li>redo log是重做日志，记录了此次事务完成后的状态，记录的是更新后的值；</li>
-<li>undo log是回滚日志，记录了此次事务开始前的状态，记录的是更新前的值；</li>
+<li>这俩日志都是<strong>InnoDB引擎</strong>的日志；</li>
+<li><strong>redo log是重做日志</strong>，记录了此次事务<strong>完成后</strong>的状态，记录的是更新后的值；</li>
+<li><strong>undo log是回滚日志</strong>，记录了此次事务<strong>开始前</strong>的状态，记录的是更新前的值；</li>
 <li>如果事务提交之前发生崩溃，会通过undo log回滚事务；如果事务提交之后发生崩溃，会通过redo log恢复事务。</li>
-<li>redo log保证了持久性；而undo log保证了原子性；</li>
+<li><strong>redo log保证了持久性；而undo log保证了原子性</strong>；</li>
 </ul>
 <h3 id="bin-log与-redo-log的区别"><a href="#bin-log与-redo-log的区别" class="headerlink" title="bin log与 redo log的区别"></a>bin log与 redo log的区别</h3><ol>
 <li><strong>适用对象不同：</strong></li>
@@ -2465,7 +2495,7 @@
 <ul>
 <li>从服务器回复网络后，会发送<strong>psync命令</strong>给主服务器，此时psync里面的offset不是-1；</li>
 <li>主服务器接收到该命令后，会发送一个响应，告诉从服务器接下来将会以 <strong>增量复制</strong> 的方式进行同步；</li>
-<li>然后，主服务器将主从断线期间，主服务器接收到的写命令发送给从服务器，然后从服务器执行这些命令。</li>
+<li>然后，主服务器将<strong>主从断线期间</strong>，<strong>主服务器接收到的写命令发送给从服务器</strong>，然后<strong>从服务器执行</strong>这些命令。</li>
 </ul>
 <p><strong>Redis是异步复制，主节点每次收到写命令后，先写到内部的缓冲区，然后异步发送给从节点。</strong></p>
 <p><strong>⭐关于replication_buffer⭐</strong></p>
@@ -2475,8 +2505,8 @@
 <h5 id="如何判断Redis某个节点是否正常工作"><a href="#如何判断Redis某个节点是否正常工作" class="headerlink" title="如何判断Redis某个节点是否正常工作"></a>如何判断Redis某个节点是否正常工作</h5><p>节点之间，通过互相检测心跳来判断节点是否正常工作。如果有一半以上的节点没有收到一个节点的心跳，集群就认为该节点挂了。会断开与该节点的连接。</p>
 <p>Redis主从节点之间发送的心跳频率是不一样的，而且作用也有区别：</p>
 <ul>
-<li>Redis主节点每10秒向从节点发送一次 ping指令，用于判断从节点的存活状态。</li>
-<li>从节点每1秒就向主节点汇报一次，汇报的内容就是自己同步的偏移量offset。汇报的目的有两个：<ul>
+<li>Redis<strong>主节点每10秒</strong>向从节点发送一次 ping指令，用于判断从节点的存活状态。</li>
+<li><strong>从节点每1秒</strong>就向主节点汇报一次，汇报的内容就是自己同步的偏移量offset。汇报的目的有两个：<ul>
 <li>检测主节点状态。</li>
 <li>上报偏移量用来检查从节点数据有没有丢失，如果从节点数据丢失，再从主节点的复制缓冲区中拉取丢失数据。</li>
 </ul>
