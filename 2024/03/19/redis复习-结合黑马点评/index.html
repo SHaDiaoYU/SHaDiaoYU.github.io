@@ -58,7 +58,7 @@
 <meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240403140208717.png">
 <meta property="og:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240403140306245.png">
 <meta property="article:published_time" content="2024-03-19T12:30:25.389Z">
-<meta property="article:modified_time" content="2024-05-10T13:46:00.854Z">
+<meta property="article:modified_time" content="2024-05-28T08:51:53.789Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240406200855325.png">
@@ -211,7 +211,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-10 21:46:00" itemprop="dateModified" datetime="2024-05-10T21:46:00+08:00">2024-05-10</time>
+                <time title="修改时间：2024-05-28 16:51:53" itemprop="dateModified" datetime="2024-05-28T16:51:53+08:00">2024-05-28</time>
               </span>
 
           
@@ -582,7 +582,7 @@
 <li><strong>不可重入：</strong>同一个线程无法多次获取同一把锁。</li>
 <li><strong>不可重试</strong>： 获取锁只尝试1次就返回了，没有重试机制。</li>
 <li><strong>超时释放</strong>：锁超时释放虽然可以避免死锁，但如果是业务执行耗时较长，也会导致所释放，存在安全隐患。</li>
-<li><strong>主从一致性：</strong>如果redis提供了主从集群，主从同步存在延迟，当主宕机时，如果从同步主中锁数据，则会出现锁实现。</li>
+<li><strong>主从一致性：</strong>如果redis提供了主从集群，主从同步存在延迟，当主宕机时，如果从同步主中锁数据，则会出现锁失效。</li>
 </ul>
 </li>
 <li><strong>Redission：</strong>redission是一个在redis基础上实现的java驻内存数据网格。它<strong>不仅提供了一系列的分布式地常用Java对象，还提供了许多分布式服务，其中就包含了各种分布式锁的实现。</strong>（redis下各种分布式工具集合）</li>
