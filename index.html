@@ -145,6 +145,236 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2024/08/29/%E5%AE%9E%E4%B9%A0%E5%86%85%E5%AE%B9%E6%8F%8F%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/08/29/%E5%AE%9E%E4%B9%A0%E5%86%85%E5%AE%B9%E6%8F%8F%E8%BF%B0/" class="post-title-link" itemprop="url">实习内容描述</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-08-29 14:29:09" itemprop="dateCreated datePublished" datetime="2024-08-29T14:29:09+08:00">2024-08-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-09-01 16:47:56" itemprop="dateModified" datetime="2024-09-01T16:47:56+08:00">2024-09-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Prometheus告警全技术流程："><a href="#Prometheus告警全技术流程：" class="headerlink" title="Prometheus告警全技术流程："></a>Prometheus告警全技术流程：</h2><p>使用telegraf进行指标采集。原因：Prometheus官方有许多exporter，但是每个服务都需要一个exporter，项目多了管理会非常麻烦，所以使用了influxdb旗下的telegraf作为客户端数据收集器。</p>
+<p>具体监控项有nginx，mysql，es，redis，mq等。telegraf具体配置内容都是参考网上的。</p>
+<h2 id="webhook-Prehandler告警推送"><a href="#webhook-Prehandler告警推送" class="headerlink" title="webhook-Prehandler告警推送:"></a>webhook-Prehandler告警推送:</h2><p>具体的推送方式分为短信推送、邮件推送、钉钉群聊机器人推送。</p>
+<p><strong>短信推送和邮件推送负责推送error级别的告警，钉钉机器人负责推送error和warning级别的告警。</strong></p>
+<p>由于AlertManager推送过来的消息有可能很大（钉钉机器人每次接受的请求最大不能超过2KB，否则报错），因此，要么对消息内容进行压缩，要么对发过来的json进行分割，当然分割后不能破坏原有的结构。这些是后话了，随后再写。</p>
+<p>引入RabbitMq的原因之一，企业微信或钉钉群聊机器人有调用频率限制，比如钉钉，每个机器人每分钟最高处理20条消息。使用消息队列可以做流量削峰。</p>
+<h3 id="短信-amp-邮件推送："><a href="#短信-amp-邮件推送：" class="headerlink" title="短信&amp;邮件推送："></a>短信&amp;邮件推送：</h3><p>引入mq后，虽然可以实现消息发送，但是还比较脆弱，例如：mq突然崩了、邮件发送失败了、重启mq服务出现消息重复消费，这时就需要做一些处理。</p>
+<p>短信以及邮件需要保证消息不丢失，这里采用了消息队列保证消息一定会被消费。</p>
+<p>同时短信内容不宜过长，因此用短信推送的内容需要做压缩处理。还可能涉及到一些大JSON，这也需要做分片处理。</p>
+<p><strong>比较核心的一些类：</strong></p>
+<p>SendMailUtil：发送邮件工具类；ProduceServiceImpl：生产者，发送消息；ConsumerMailService：消费者，消费消息，发送邮件。</p>
+<p><strong>rabbitMq和mail的一些核心配置：</strong></p>
+<p>rabbitMq：主要是开启confirm回调、开启returnedMessage回调、设置手动确认。</p>
+<ul>
+<li>开启confirm回调的效果就是，当生产者向mq发送消息时，如果消息成功到达了交换器（Exchange），rabbitMq会异步返回一个ack给生产者，表示消息是否成功到达了exchange。（注意：开启confirm回调仅能确认消息是否到达exchange，并不确认消息是否到达queue。因此需要下面的配置）。</li>
+<li>开启returnedMessage回调的效果是，如果消息成功到达exchange，但是没有到达queue时，会触发rabbitMq返回机制，在返回机制中，消息会退回给生产者（或丢弃，这由是否配置mandatory&#x3D;true来决定的）。这个机制适用于对消息可靠性高的场景。</li>
+</ul>
+<h3 id="对失败消息进行处理，保证消息能100-发送出去"><a href="#对失败消息进行处理，保证消息能100-发送出去" class="headerlink" title="对失败消息进行处理，保证消息能100%发送出去"></a>对失败消息进行处理，保证消息能100%发送出去</h3><p><strong>引入数据库来记录消息的发送&#x2F;消费情况。</strong></p>
+<p>新建一张表，这张表的字段包括消息<strong>id、消息体（json格式）、exchange交换机、routing_key路由键、status状态（投递中、投递成功、投递失败、已消费）、重试次数、下一次重试时间、创建时间、更新时间。</strong></p>
+<p><strong>具体业务流程就是：</strong></p>
+<ul>
+<li>改造发送方：消息对象在发送到mq之前，先写入数据库一条记录（默认状态是投递中），随后往mq中投递，如果收到ack就更新状态（投递成功 or 失败）。</li>
+<li>改造消费者，<strong>每次消费的时候，从数据库中查询，如果消息已经被消费，不用再重复发送数据。</strong>这样即可保证，如果rabbitMQ服务器，即使重启之后重新推送消息，通过数据库进行判断，也不会重复消费而发生业务异常。</li>
+</ul>
+<p><strong>利用定时任务对消息投递失败进行补偿：</strong></p>
+<p>当rabbitMq服务器挂掉之后，生成者就无法正常进行投递数据，此时因为消息已经被记录到数据库，因此利用定时任务查询出没有投递成功的消息，进行补偿投递（这里设置为每10s执行一次定时任务）。</p>
+<h2 id="消息预处理"><a href="#消息预处理" class="headerlink" title="消息预处理"></a>消息预处理</h2><p>预处理的工作包括，时间格式的转变、vm_uuid到ip的转变、消息压缩、大JSON拆分。重点的功能在后三个。</p>
+<p><strong>vm_uuid转换为ip：</strong></p>
+<p>为什么要有这么一个功能，是因为告警请求中的labels中只有vm_uuid和宿主机的ip，这些内容对于定位服务没有大的帮助。</p>
+<p>具体实现：首先运维人员抓取vm_uuid和实例ip的映射关系，把他们整理成csv文件。然后用Java的CSVReader去做处理，这里就是把这些映射关系全部放到一个全局的Map中去，这样避免了多次IO从而影响响应时间。</p>
+<p><strong>消息压缩：</strong></p>
+<p>比如SMS短信发送，短信内容限制不能超过500字，并且发送频率也有限制，因此短信发送的都是严重级别的告警信息。并且还需要进行压缩。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2024/06/19/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/19/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">计组学习笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-06-19 16:23:41" itemprop="dateCreated datePublished" datetime="2024-06-19T16:23:41+08:00">2024-06-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-06-26 16:30:06" itemprop="dateModified" datetime="2024-06-26T16:30:06+08:00">2024-06-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="一、计算机系统概述"><a href="#一、计算机系统概述" class="headerlink" title="一、计算机系统概述"></a>一、计算机系统概述</h1><h2 id="1-1-计算机发展历程"><a href="#1-1-计算机发展历程" class="headerlink" title="1.1 计算机发展历程"></a>1.1 计算机发展历程</h2><ol>
+<li>硬件发展历程：第一代电子管、第二代晶体管、第三代集成电路、第四代超大规模集成电路。</li>
+<li><strong>机器字长：</strong>指计算机进行一次整数运算所能处理的二进制数据的位数。</li>
+<li>软件发展历程：机器语言 —-&gt;汇编语言 ——&gt;高级语言</li>
+</ol>
+<h2 id="1-2-计算机系统组成"><a href="#1-2-计算机系统组成" class="headerlink" title="1.2 计算机系统组成"></a>1.2 计算机系统组成</h2><h3 id="1-2-1-冯诺依曼机的特点"><a href="#1-2-1-冯诺依曼机的特点" class="headerlink" title="1.2.1 冯诺依曼机的特点"></a>1.2.1 冯诺依曼机的特点</h3><ul>
+<li>采用存储程序的工作方式；</li>
+<li>硬件系统由运算器、存储器、控制器、输入设备和输出设备组成（以运算器为中心，现代计算机结构以存储器为中心）；</li>
+<li>指令和数据同等地位，保存在存储器中；</li>
+<li>指令和数据均由二进制代码表示；</li>
+<li>指令由操作码和地址码组成。</li>
+</ul>
+<h3 id="1-2-2-计算机的各个功能部件："><a href="#1-2-2-计算机的各个功能部件：" class="headerlink" title="1.2.2 计算机的各个功能部件："></a>1.2.2 计算机的各个功能部件：</h3><p>（1）<strong>输入设备&#x2F;输出设备；</strong></p>
+<p>（2） <strong>存储器：</strong>存储器分为<strong>主存（理解为内存）和辅存（理解为硬盘）</strong>。存储器包括<strong>存储体</strong>，以及两个寄存器：<strong>MAR存储地址寄存器、MDR存储数据寄存器</strong>；</p>
+<ul>
+<li><strong>MAR用于寻址</strong>，其<strong>位数</strong>反映了<strong>存储单元的数量</strong>；</li>
+<li><strong>MDR用于暂存要读&#x2F;写的数据</strong>。其<strong>位数 &#x3D; 存储字长</strong>；</li>
+<li>需要了解概念：<strong>存储元、存储单元、存储字、存储字长、地址；</strong></li>
+</ul>
+<p>（3） <strong>运算器：</strong>用于<strong>进行算术运算和逻辑运算</strong>。其包括如下部分：</p>
+<ul>
+<li><strong>算数逻辑单元ALU（核心）：运算器的核心，</strong>用电路实现各种算数运算、逻辑运算；</li>
+<li><strong>累加器ACC：</strong>存放操作数、运算的结果；</li>
+<li><strong>乘商寄存器MQ：</strong>进行乘除的时候用得到；</li>
+<li><strong>通用寄存器X：</strong>通用寄存器，存放操作数；</li>
+</ul>
+<p>（4） <strong>控制器：</strong>计算机的<strong>指挥中心</strong>，由<strong>程序计数器PC、指令寄存器IR、控制单元CU组成</strong>：</p>
+<ul>
+<li><strong>程序计数器PC：</strong> 存放下一条指令的地址；</li>
+<li><strong>指令寄存器IR：</strong>存放当前执行的指令；</li>
+<li><strong>控制单元CU（核心）：</strong>分析指令，给出控制信号；</li>
+</ul>
+<p>简单概括，<strong>计算机运行指令的工作过程如下：</strong></p>
+<ul>
+<li>初始：把指令、数据存入内存，PC指向第一条指令；</li>
+<li>从主存中取指令放入指令寄存器IR，PC自动加一、控制单元CU分析指令、CU指挥其他部件执行指令。</li>
+</ul>
+<h2 id="1-3-计算机的性能指标（本章重点）"><a href="#1-3-计算机的性能指标（本章重点）" class="headerlink" title="1.3 计算机的性能指标（本章重点）"></a>1.3 计算机的性能指标（本章重点）</h2><p>（1）<strong>机器字长：</strong>“XX位机器”中的位数就代表机器字长，这里首先说明一下<strong>字长</strong>，字长就是<strong>计算机进行一次整数运算所能处理的二进制位数</strong>，其反映了计算机处理信息的能力。也有必要说明<strong>字，字长，机器字长，指令字长，存储字长之间的关系</strong>，它们的区别和联系如下：</p>
+<ul>
+<li><strong>字和字长的概念不同</strong>。<strong>字</strong>用来表示被处理信息的单位，<strong>用来衡量数据类型的宽度</strong>，如<strong>x86中一个字定义为16位</strong>；</li>
+<li>字长也指CPU内部用于整数运算的数据通路的宽度，因此<strong>字长等于CPU内部用于整数运算的运算器位数和通用寄存器宽度</strong>；</li>
+<li><strong>指令字长：</strong>一个指令字中包含的二进制位数；</li>
+<li><strong>存储字长：</strong>一个存储单元存储的二进制位数；</li>
+<li><strong>字长必须是字节的整数倍</strong>；</li>
+</ul>
+<p>（2）<strong>数据通路带宽：</strong>其实就是数据总线宽度。</p>
+<p>（3）<strong>主存容量：</strong>指主存能存信息的最大容量，用<strong>字节</strong>或<strong>字长*字数</strong>来表示。</p>
+<p>（4）<strong>吞吐量：</strong>单位时间内处理请求的数量。</p>
+<p>（5）<strong>响应时间：</strong>用户向计算机发送一个请求，到系统对该请求做出响应并获得所需结果的等待时间。</p>
+<p>（6）<strong>时钟周期：</strong>机器内部主时钟脉冲信号的宽度，它是CPU工作的最小时间单位。</p>
+<p>（7） <strong>主频：</strong>主时钟的频率，即<strong>时钟周期的倒数</strong>。</p>
+<p>（8）<strong>CPI （cycle per Instruction）：</strong>执行一条指令所需的时钟周期数。不同指令的时钟周期数可能不同，因此对于一个程序或一台机器来说，其CPI指所有指令的平均周期数，是一个平均值。</p>
+<p>（9）<strong>IPS （instruction per second）：</strong>即每秒可执行的指令数。<strong>IPS &#x3D; 主频&#x2F;CPI</strong>。</p>
+<ul>
+<li><strong>MIPS：</strong>每秒可执行几百万条指令数。 <strong>MIPS &#x3D; IPS &#x2F; 10^6</strong> 。</li>
+<li><strong>MFLOPS：</strong>每秒执行几百万次浮点数操作。</li>
+</ul>
+<p>（10）<strong>CPU执行时间</strong>：指运行一个程序所花费的时间。 其等于：<strong>（程序所需指令数 * CPI ）&#x2F; 主频</strong></p>
+<ul>
+<li><strong>CPU的性能取决于三个要素：主频、CPI、指令条数。</strong></li>
+</ul>
+<p>（11）<strong>基准程序：</strong>专门用于性能评价的一组程序。</p>
+<ul>
+<li>基准程序中的语句存在频度的差异，因此<strong>运行结果并不能完全说明问题</strong>。</li>
+</ul>
+<h1 id="二、数据的表示和运算"><a href="#二、数据的表示和运算" class="headerlink" title="二、数据的表示和运算"></a>二、数据的表示和运算</h1><h2 id="2-1-1-无符号整数的表示和运算"><a href="#2-1-1-无符号整数的表示和运算" class="headerlink" title="2.1.1 无符号整数的表示和运算"></a>2.1.1 无符号整数的表示和运算</h2><p>（1）计算机如何做无符号整数的减法：</p>
+<ul>
+<li>被减数不变，减数 全部位 按位取反、末位加一，减法变加法（取补码）；</li>
+<li>从最低位开始，按位相加，并向更高位进位。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2024/05/08/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0-%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D-%E5%85%AB%E8%82%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -176,7 +406,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-20 20:03:19" itemprop="dateModified" datetime="2024-05-20T20:03:19+08:00">2024-05-20</time>
+                <time title="修改时间：2024-08-26 17:07:16" itemprop="dateModified" datetime="2024-08-26T17:07:16+08:00">2024-08-26</time>
               </span>
 
           
@@ -192,7 +422,11 @@
       
           <p>项目介绍：</p>
 <p>项目架构：</p>
-<h1 id="项目点："><a href="#项目点：" class="headerlink" title="项目点："></a>项目点：</h1><h2 id="为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access-key-amp-secret-key以鉴权，保证调用的安全性、可溯源性。"><a href="#为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access-key-amp-secret-key以鉴权，保证调用的安全性、可溯源性。" class="headerlink" title="为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access key &amp; secret key以鉴权，保证调用的安全性、可溯源性。"></a>为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access key &amp; secret key以鉴权，保证调用的安全性、可溯源性。</h2><p>为用户分配两个密钥，access key &amp; secret key，类似用户名和密码（通过acckey，能得到secret key），以此作为用户信息的唯一标识，这两个密钥是无状态的（复杂无序无规律）。</p>
+<h1 id="项目点："><a href="#项目点：" class="headerlink" title="项目点："></a>项目点：</h1><h2 id="Sa-Token鉴权。"><a href="#Sa-Token鉴权。" class="headerlink" title="Sa-Token鉴权。"></a>Sa-Token鉴权。</h2><p>这一部分放在gateway网关内完成。</p>
+<p>首先是权限划分，每个用户有一个权限&#x2F;角色列表，持久化的时候会将该列表序列化成JSON保存，取的时候进行反序列化。</p>
+<p>在Sa-Token中，角色和权限可以分开验证。</p>
+<p>鉴权失败，不能将异常显示给用户看，这里文档建议创建一个全局异常拦截器，统一返回给前端的格式。</p>
+<h2 id="为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access-key-amp-secret-key以鉴权，保证调用的安全性、可溯源性。"><a href="#为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access-key-amp-secret-key以鉴权，保证调用的安全性、可溯源性。" class="headerlink" title="为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access key &amp; secret key以鉴权，保证调用的安全性、可溯源性。"></a>为防止接口被恶意调用，涉及API签名认证算法，为用户分配唯一access key &amp; secret key以鉴权，保证调用的安全性、可溯源性。</h2><p>为用户分配两个密钥，access key &amp; secret key，类似用户名和密码（通过acckey，能得到secret key），以此作为用户信息的唯一标识，这两个密钥是无状态的（复杂无序无规律）。</p>
 <p>因为请求有可能被拦截，所以<strong>密钥不能直接放在header里面明文传输</strong>。所以这里有两个密钥，<strong>acc key是放在请求体中（签名也放在请求体中），可以进行明文传输。后端根据acc key来查找secret key，然后生成签名sign。</strong></p>
 <p>然后<strong>将生成的sign与 传递过来的签名进行对比</strong>，以进行用户鉴权。</p>
 <h3 id="签名的做法："><a href="#签名的做法：" class="headerlink" title="签名的做法："></a>签名的做法：</h3><p><strong>将 用户参数、密钥组合</strong>，通过签名生成算法（md5，sha1等，<strong>这里使用md5</strong>）进行加密，得到一个不可解密的值。</p>
@@ -1105,7 +1339,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-05-28 22:27:30" itemprop="dateModified" datetime="2024-05-28T22:27:30+08:00">2024-05-28</time>
+                <time title="修改时间：2024-08-31 21:43:27" itemprop="dateModified" datetime="2024-08-31T21:43:27+08:00">2024-08-31</time>
               </span>
 
           
@@ -1138,12 +1372,12 @@
 <li>数据库的查询结果可能是null，因为自动拆箱，使用基本数据类型进行接受会有NPE风险。</li>
 <li>在三目运算（b?x:y）中，当 x和y的类型不一致时，会发生自动拆箱，将x,y全部转换为基本类型，在自动拆箱的过程中有可能NPE。</li>
 </ul>
-<h2 id="String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？"><a href="#String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？" class="headerlink" title="String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？"></a>String，StringBuffer和StringBuilder的区别是什么？String为什么时不可变的？</h2><ul>
+<h2 id="String，StringBuffer和StringBuilder的区别是什么？String为什么是不可变的？"><a href="#String，StringBuffer和StringBuilder的区别是什么？String为什么是不可变的？" class="headerlink" title="String，StringBuffer和StringBuilder的区别是什么？String为什么是不可变的？"></a>String，StringBuffer和StringBuilder的区别是什么？String为什么是不可变的？</h2><ul>
 <li><p>可变性：String是不可变的，StringBuffer和StringBuilder是可变的；</p>
 </li>
 <li><p>线程安全性：String和StringBuffer是线程安全的，可以被多个线程安全的使用，StringBuilder不是线程安全的</p>
 </li>
-<li><p>StringBuffer的性能相对较低，因为它的所有公共方法都是同步的，这意味着在多线程环境下会有性能开销。</p>
+<li><p><strong>StringBuffer</strong>的性能相对较<strong>低</strong>，因为它的<strong>所有公共方法都是同步的</strong>，这意味着在多线程环境下会有性能开销。</p>
 <p>StringBuilder的性能优于StringBuffer，但因为它的方法都不是同步的，因此在单线程环境下更有效。</p>
 </li>
 <li><p>String实现了serializable接口，可以被序列化。</p>
@@ -1183,7 +1417,7 @@
 </li>
 </ul>
 <h2 id="Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）"><a href="#Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）" class="headerlink" title="Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）"></a>Java反射？反射有什么优缺点？你是怎么理解反射的（为什么框架需要反射？）</h2><ul>
-<li>反射机制是在运行时，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意对象，都能调用它的任意一个方法。在Java中，只要给定类的名字，就可以通过反射机制来获得类的所有信息。这种动态获取的信息以及动态调用对象的方法的功能称为java的反射机制。</li>
+<li>反射机制是在<strong>运行时</strong>，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意对象，都能调用它的任意一个方法。在Java中，只要给定类的名字，就可以通过反射机制来获得类的所有信息。这种动态获取的信息以及动态调用对象的方法的功能称为java的反射机制。</li>
 <li>反射机制的优缺点：<ul>
 <li>优点：能够运行时动态获取类的实例，提高灵活性和通用性；可以使用反射编写更加通用的代码，减少组件之间的耦合；反射是实现动态代理机制的基础。</li>
 <li>缺点：使用反射基本是解释执行，对执行速度有影响。</li>
@@ -1212,7 +1446,7 @@
 <li>Java 泛型的主要目的是<strong>在编译时捕获类型错误</strong>，并在编译时发现这些错误，从而避免在运行时抛出类型转换异常。它提供了编译时类型安全检查，使得代码更加健壮、可读性更高，并且减少了强制类型转换的需要。</li>
 <li>Java 中的泛型是通过类型擦除实现的，这意味着在编译时会将泛型信息擦除掉，以确保与旧版 Java 代码的兼容性。这也导致了一些泛型相关的限制和局限性。（在运行时无法获取泛型类型的信息，在运行时，数组的元素类型必须是具体的非泛型类型）。</li>
 <li>泛型的限制：<ul>
-<li>类型擦除：这意味着在编译后，泛型信息会被擦除掉，因此在运行时无法获取泛型类型的具体信息，这限制了对泛型类型的操作和反射行为。</li>
+<li>类型擦除：这意味着在<strong>编译后，泛型信息会被擦除掉</strong>，因此在运行时无法获取泛型类型的具体信息，这限制了对泛型类型的操作和反射行为。</li>
 <li>无法创建参数化类型的数组：例如<code>new ArrayList&lt;String&gt;[]  </code> 是非法的。这是因为在运行时无法获取泛型类型的信息。</li>
 <li>在静态上下文（如静态方法或静态初始化块）中无法引用泛型类型的类型参数：因为类型参数是实例化时才确定的，而静态成员在类加载时就已经存在，此时无法确定类型参数的具体值。</li>
 <li>不能使用基本类型作为类型参数。</li>
@@ -1227,7 +1461,7 @@
 <li><h3 id="内部类了解么？匿名内部类了解么？"><a href="#内部类了解么？匿名内部类了解么？" class="headerlink" title="内部类了解么？匿名内部类了解么？"></a>内部类了解么？匿名内部类了解么？</h3><ul>
 <li><p>内部类：如果A类需要直接访问B类中的成员，而B类又需要建立A类的对象，这时为了方便设计和访问，直接将A类定义在B类中就可以了。A类就称为内部类。</p>
 </li>
-<li><p>内部类可以直接访问外部类的成员。但是外部类访问内部类时，必须先创建内部类对象。</p>
+<li><p><strong>内部类可以直接访问外部类的成员。但是外部类访问内部类时，必须先创建内部类对象</strong>。</p>
 </li>
 <li><p>内部类定义在外部类的成员位置上，可以使用一些成员修饰符如private，static。不同的修饰有不同的情况：</p>
 <ul>
@@ -1284,11 +1518,11 @@
 <h1 id="Java集合"><a href="#Java集合" class="headerlink" title="Java集合"></a>Java集合</h1><h2 id="几种集合的数据结构："><a href="#几种集合的数据结构：" class="headerlink" title="几种集合的数据结构："></a>几种集合的数据结构：</h2><ul>
 <li>HashMap：哈希表 + 链表 ，无序，允许键和值为null，线程不安全</li>
 <li>LinkedHashMap： 哈希表 + 双向链表，保持插入顺序或访问顺序。</li>
-<li>TreeMap： 基于红黑树实现的有序Map</li>
+<li>TreeMap： <strong>基于红黑树</strong>实现的<strong>有序</strong>Map</li>
 <li>Hashtable：基于哈希表实现的map，线程安全</li>
 <li>concurrentHashMap：基于哈希表实现的线程安全的 Map，支持高并发操作。</li>
-<li>ArrayList：底层基于数组</li>
-<li>LinkedList：底层基于双向链表</li>
+<li>ArrayList：底层<strong>基于数组</strong></li>
+<li>LinkedList：底层<strong>基于双向链表</strong></li>
 </ul>
 <h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><ul>
 <li>1.7之前，数组 +链表</li>
@@ -1329,9 +1563,9 @@
 </ul>
 <p><strong>volatile不能保证原子性，只能保证单次的读&#x2F;写操作具有原子性。</strong></p>
 <h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2><h3 id="（1）synchronized的三种用法："><a href="#（1）synchronized的三种用法：" class="headerlink" title="（1）synchronized的三种用法："></a><strong>（1）synchronized的三种用法：</strong></h3><ul>
-<li>修饰实例方法：这种方式相当于 synchronized（this对象），进入同步代码块之前需要获得 当前对象实例的锁；</li>
-<li>修饰静态方法：这种用法会作用于类的所有对象实例，进入同步块之前要获得当前 class的锁；</li>
-<li>修饰代码块： synchronized(类.class) 表示进⼊同步 代码前要获得 当前 class 的锁；</li>
+<li><strong>修饰实例方法</strong>：这种方式相当于 synchronized（this对象），进入同步代码块之前需要获得 当前对象实例的锁；</li>
+<li><strong>修饰静态方法</strong>：这种用法会作用于类的所有对象实例，进入同步块之前要获得当前 class的锁；</li>
+<li><strong>修饰代码块</strong>： synchronized(类.class) 表示进⼊同步 代码前要获得 当前 class 的锁；</li>
 </ul>
 <h3 id="（2）synchronized-怎么保持可见性的："><a href="#（2）synchronized-怎么保持可见性的：" class="headerlink" title="（2）synchronized 怎么保持可见性的："></a><strong>（2）synchronized 怎么保持可见性的：</strong></h3><ul>
 <li>线程加锁前，清空工作内存中共享变量的值，从而从主存中读取最新的共享变量值；</li>
@@ -1372,13 +1606,13 @@
 </ul>
 <h2 id="Synchronize-与-ReentrantLock之间的区别："><a href="#Synchronize-与-ReentrantLock之间的区别：" class="headerlink" title="Synchronize 与 ReentrantLock之间的区别："></a>Synchronize 与 ReentrantLock之间的区别：</h2><ul>
 <li><strong>synchronized</strong> 是java语言的关键字，<strong>基于JVM实现</strong>；<strong>ReentrantLock</strong>是<strong>基于JDK</strong>的API层面实现的。</li>
-<li>1.6锁优化之前，synchronized比不上reentrantLock，1.6开始，synchronized增加了适应性自旋、锁消除等，二者性能就差不多了。</li>
+<li><strong>性能差距</strong>：1.6锁优化之前，synchronized比不上reentrantLock，1.6开始，synchronized增加了适应性自旋、锁消除等，二者性能就差不多了。</li>
 <li><strong>ReentrantLock实现了一些高级功能，比如等待可中断（当持有锁的线程长期不是放锁的时候，正在 等待的线程可以选择放弃等待，改为处理其他事情）、可实现公平锁、可实现选择性通知。</strong></li>
 <li><strong>ReentrantLock需要手工声明来加锁和释放锁</strong>，一般跟finally配合释放锁。而 <strong>synchronized不用手动释放锁</strong>。</li>
 <li><strong>ReentrantLock可以同时绑定多个Condition对象</strong></li>
 <li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240520214928221.png" alt="image-20240520214928221"></li>
 </ul>
-<h2 id="锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁"><a href="#锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁" class="headerlink" title="锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)"></a>锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)</h2><p>jdk1.6中，为了减少获取锁和释放锁带来的性能消耗，引入了偏向锁和轻量级锁，锁状态变为了四种。锁的状态会随着竞争激烈程度而升级。并且锁只能升级不能降级（为了提高获取&#x2F;释放锁的效率）。锁升级顺序如下:</p>
+<h2 id="锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁"><a href="#锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁" class="headerlink" title="锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)"></a>锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)</h2><p>jdk1.6中，<strong>为了减少获取锁和释放锁带来的性能消耗</strong>，引入了偏向锁和轻量级锁，锁状态变为了四种。锁的状态会随着竞争激烈程度而升级。并且锁只能升级不能降级（为了提高获取&#x2F;释放锁的效率）。锁升级顺序如下:</p>
 <p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240518144521730.png" alt="image-20240518144521730"></p>
 <h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><p>引入偏向锁的目的：<strong>减少只有一个线程执行同步代码块时的性能消耗</strong>。（没有其他线程竞争，只有1个线程获取到锁）</p>
 <p>⭐一句话总结<strong>偏向锁原理：使用CAS操作将当前线程的ID记录到对象头的mark word中。</strong>具体流程如下：</p>
@@ -1434,7 +1668,7 @@
 <li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240520165516148.png" alt="image-20240520165516148"></li>
 <li>AQS使用一个<strong>volatile修饰的int类型变量state来表示同步状态</strong>，state的初值为0，表示锁处于未锁定状态。volatile保证了变量在多线程之间的可见性，<strong>修改state值时通过CAS机制来保证修改的原子性</strong>。</li>
 <li><strong>获取state的方式分为两种，（1）独占方式tryAcquire()（2）共享方式tryAcquireShared()：</strong><ul>
-<li>**独占方式tryAcquire()**：只有一个线程能够访问执行，又根据是否按队列的顺序分为公平锁和非公平锁。</li>
+<li><strong>独占方式tryAcquire()<strong>：只有一个线程能够访问执行，又根据是否按队列的顺序</strong>分为公平锁和非公平锁</strong>。</li>
 <li><strong>共享方式tryAcquireShared(</strong>)：多个线程可以同时访问执行，ReentrantReadWriteLock可以看成是组合模式，允许多个线程同时对某一资源进行读。</li>
 <li><strong>tryAcquire()和tryAcquireShared()是抽象方法，需要子类自行实现</strong>。</li>
 </ul>
@@ -1530,7 +1764,7 @@
 <li><strong>（属性赋值）</strong>设置属性（为Bean设置相关属性和依赖、或者说依赖注入）</li>
 <li><strong>（初始化）</strong>初始化Initialization：<ul>
 <li>检查Aware的相关接口并设置相关依赖。如果实现了BeanAware接口，调用setBeanName()方法，传入Bean的名字。</li>
-<li>BeanPostProcessor前置处理；如果实现了 BeanFactoryAware 接⼝，调⽤ setBeanFactory() ⽅法，传⼊ BeanFactory 对 象的实例。 类似，如果实现了其他 *.Aware 接⼝，就调⽤相应的⽅法。</li>
+<li>BeanPostProcessor前置处理；如果实现了 BeanFactoryAware 接⼝，调⽤ setBeanFactory() ⽅法，传⼊ BeanFactory 对象的实例。 类似，如果实现了其他 *.Aware 接⼝，就调⽤相应的⽅法。</li>
 <li>检查是否实现InitializationBean接口；如果 Bean 实现了 InitializingBean 接⼝，执⾏ afterPropertiesSet() ⽅法。</li>
 <li>检查是否配置自定义的init-method；如果 Bean 在配置⽂件中的定义包含 init-method 属性，执⾏指定的⽅法。</li>
 <li>BeanPostProcessor后置处理</li>
@@ -1543,6 +1777,32 @@
 </ul>
 </li>
 <li>结束。</li>
+</ul>
+<h2 id="2-SpringBoot启动流程"><a href="#2-SpringBoot启动流程" class="headerlink" title="2. SpringBoot启动流程"></a>2. SpringBoot启动流程</h2><ul>
+<li><strong>第一步，加载启动类</strong>：<ul>
+<li>SpringBoot项目启动时，会<strong>在当前工作目录下寻找有 @SpringBootApplication注解标识的类</strong>，并把这个类<strong>作为应用程序的入口点</strong>。如果<strong>找不到</strong>这样的主类，<strong>则会打印错误信息并退出</strong>。</li>
+</ul>
+</li>
+<li><strong>第二步，加载配置文件</strong>：<ul>
+<li>SpringBoot会自动<strong>扫描当前项目的resource目录</strong>，并<strong>加载其中</strong>的application.properties 或 application.yaml<strong>等配置文件</strong>。这些配置文件中包含了应用程序的各种参数，例如数据库连接信息、日志级别等。</li>
+</ul>
+</li>
+<li><strong>第三步，初始化ApplicationContext</strong><ul>
+<li>SpringBoot会<strong>创建一个SpringApplication对象</strong>，<strong>调用其run方法来初始化ApplicationContext</strong>。整个过程中，<strong>SpringBoot会读取配置文件中的参数，并将它们转换成Environment对象中的属性</strong>。同时，它还会<strong>扫描当前项目中所有的Bean，并将它们注册到ApplicationContext中</strong>。</li>
+</ul>
+</li>
+<li><strong>第四步，启动内嵌的web服务器</strong><ul>
+<li>SpringBoot内置Tomcat和Jetty等web服务器。当<strong>SpringBoot应用程序启动时，它会根据配置文件中的信息自动创建Tomcat或Jetty等web容器，并将Spring容器注册到web容器中</strong>，使得SpringBoot应用程序<strong>可以直接以web应用程序的形式运行</strong>。</li>
+</ul>
+</li>
+<li><strong>第五步，启动应用程序：</strong><ul>
+<li>根<strong>据之前创建好的Spring容器以及Web服务器，启动相应的线程进行服务处理</strong>。</li>
+</ul>
+</li>
+<li><strong>第六步，监听应用程序的状态</strong>：<ul>
+<li>SpringBoot会<strong>监听应用程序的状态，并根据需要进行相应的操作。</strong>例如，当应用程序退出时，它会打印出详细的日志信息，并将应用程序的上下文环境恢复到初始状态。</li>
+</ul>
+</li>
 </ul>
 <h2 id="2-Spring循环依赖"><a href="#2-Spring循环依赖" class="headerlink" title="2. Spring循环依赖"></a>2. Spring循环依赖</h2><ul>
 <li><strong>只有单例Bean才会存在循环依赖</strong>。</li>
@@ -1610,7 +1870,7 @@
 <ul>
 <li>ListableBeanFactory 接口：表示这些 Bean 是可列表的。</li>
 <li>HierarchicalBeanFactory 接口：表示的是这些 Bean 是有继承关系的，也就是每个Bean 有可能有父 Bean。</li>
-<li>AutowireCapableBeanFactory 接口：定义 Bean 的自动装配规则。</li>
+<li>AutowireCapableBeanFactory 接口：定义 Bean 的<strong>自动装配规则</strong>。</li>
 </ul>
 <p><strong>这三个接口共同定义了 Bean 的集合、Bean 之间的关系、以及 Bean 行为。</strong></p>
 <h3 id="BeanDefination"><a href="#BeanDefination" class="headerlink" title="BeanDefination"></a>BeanDefination</h3><p>在BeanFactory容器中，每个注入对象都对应一个BeanDefinition对象，该实例对象负责保存注入对象的所有必要信息，包括其所属的class类名，是否是抽象类，构造方法以及其他属性等。</p>
@@ -1652,6 +1912,65 @@
 <li>在bean对象中尽量避免定义可变的成员变量（不太现实）；</li>
 <li>在类中<strong>定义一个ThreadLocal成员变量，</strong>将需要的可变成员变量保存在ThreadLocal中（推荐的方式）</li>
 </ul>
+<h2 id="8-Spring中使用了哪些设计模式"><a href="#8-Spring中使用了哪些设计模式" class="headerlink" title="8. Spring中使用了哪些设计模式"></a>8. Spring中使用了哪些设计模式</h2><ul>
+<li><p><strong>工厂模式（IOC用到的）</strong>：Spring使用工厂模式，通过<strong>BeanFactory</strong>和 <strong>ApplicationContext</strong> 创建bean对象。</p>
+<ul>
+<li><strong>BeanFactory</strong>：提供了最基本的依赖注入支持，延迟注入（使用到某个Bean的时候才会进行注入），相比于另一个，占用了更少的内存，启动速度更快。</li>
+<li><strong>ApplicationContext</strong>：提供了一些额外功能。容器启动的时候，不管用没用到，一次性创建所有bean。</li>
+</ul>
+</li>
+<li><p><strong>单例模式</strong>：在系统中，有一些对象我们只需要一个，如线程池、缓存、日志对象、对话框等。如果制造出多个实例就可能会导致一些问题的产生。<strong>Spring中 bean的默认作用域就是singleton的</strong>。</p>
+<ul>
+<li>Spring通过<strong>ConcurrentHashMap</strong>实现<strong>单例注册表</strong>的特殊方式实现单例模式。</li>
+</ul>
+<p><strong>使用单例模式有以下好处</strong>：</p>
+<ul>
+<li><strong>对于频繁使用的对象，可以省略创建对象所花费的时间</strong>，这对于那些重量级对象而言，是非常可观的一笔开销。</li>
+<li><strong>由于new操作的次数减少，因而对系统内存的使用频率也会降低</strong>，这将减轻GC压力，缩短GC停顿时间。</li>
+</ul>
+</li>
+<li><p><strong>代理模式（AOP用到的）</strong>：如果要代理的对象，<strong>实现了某个接口</strong>，那么springAOP会使用<strong>JDK Proxy</strong>，去创建代理对象；对于<strong>没有实现接口</strong>的对象，会使用<strong>cglib生成一个被代理对象的子类</strong>来作为代理。当然也可以使用<strong>AspectJ</strong>，AspectJ可以算得上Java生态系统中最完整的AOP框架了。<strong>SpringAOP 已经集成了 AspectJ AOP了</strong></p>
+<p><strong>SpringAOP 和 AspectJ AOP 有什么区别？</strong></p>
+<ul>
+<li>SpringAOP 属于运行时增强，而Aspect J属于编译时增强；</li>
+<li>SpringAOP 基于代理，而AspectJ 基于字节码操作；</li>
+<li>如果切面较少，那么两者性能差异不大。如果较多的话，最好选择AspectJ，它更快一点。</li>
+</ul>
+</li>
+<li><p><strong>模板模式：</strong>一种行为设计模式，它<strong>定义一个操作中的算法的骨架，而将一些步骤延迟到子类中</strong>。模板方法使得子类可以不改变一个算法的结构即可重新定义该算法的某些特定步骤的实现方式。</p>
+<p>jdbcTemplate，hibernateTemplate等以Template结尾的对数据库操作的类，使用到了模板模式。</p>
+<p><strong>一般情况下，都是使用继承方式</strong>来实现模板模式，但是<strong>Spring使用了callback模式与模板方法模式配合</strong>，既达到了代码复用的结果，同时增加了灵活性。</p>
+</li>
+<li><p><strong>观察者模式：</strong>一种对象行为模式。表示的是一种<strong>对象与对象之间具有依赖关系，当一个对象发生改变的时候，这个对象所依赖的对象也会做出反应</strong>。<strong>Spring事件驱动模式</strong>就是观察者模式很经典的一个应用。</p>
+</li>
+<li><p><strong>适配器模式（AOP &amp; SpringMVC用到的）</strong>：我们知道SpringAOP的实现是基于代理模式，但是SpringAOP 的增强或通知（Advice）使用到了适配器模式，与之相关的接口是AdvisorAdapter。</p>
+<p><strong>spring MVC中的适配器模式</strong></p>
+<p>在spring MVC 中，dispatcherServlet 根据请求信息调用HandlerMapping，解析请求对应的Handler。解析到对应的Handler（也就是Controller控制器）后，开始由HandlerAdapter适配器处理。HandlerAdapter作为期望接口，具体的适配器实现类用于对目标类进行适配，controller作为需要适配的类。</p>
+<p><strong>为什么要在springMVC 中使用适配器模式？</strong></p>
+<p>springMVC 中的 controller种类众多，不同类型的controller通过不同的方法来对请求进行处理。如果<strong>不利用适配器模式，DispatcherServlet直接获取对应类型的Controller，需要其自行判断</strong>。这就会使得程序难以维护，也违反了设计模式中的开闭原则—对扩展开放，对修改关闭。</p>
+</li>
+<li><p><strong>装饰器模式：</strong>装饰器模式可以<strong>动态地给对象添加一些额外的属性或行为。相比于使用继承，装饰器模式更加灵活。</strong>JDK中<strong>InputStream类下</strong>有FileInputStream（读文件）、BufferedInputStream（缓存读）都在不修改Input代码的情况下扩展了它的功能。</p>
+<p><strong>Spring中配置DataSource</strong>的时候，DataSource可能是不同的数据库或者数据源。为了在尽量少修改原始类代码的情况下，动态切换不同的数据源，这个时候就要使用装饰器模式。动态地给一个对象添加一些额外的职责。</p>
+</li>
+</ul>
+<h2 id="9-SpringBoot核心配置文件"><a href="#9-SpringBoot核心配置文件" class="headerlink" title="9. SpringBoot核心配置文件"></a>9. SpringBoot核心配置文件</h2><p>springBoot核心配置文件主要有两种：</p>
+<ul>
+<li>bootstrap文件（格式为.properties或者.yaml）；</li>
+<li>application文件（格式为.properties或者.yaml）；</li>
+</ul>
+<h3 id="bootstrap配置文件和application-配置文件的区别："><a href="#bootstrap配置文件和application-配置文件的区别：" class="headerlink" title="bootstrap配置文件和application 配置文件的区别："></a>bootstrap配置文件和application 配置文件的区别：</h3><ul>
+<li>bootstrap由ApplicationContext加载，比application优先加载；</li>
+<li>bootstrap 中的属性不能被覆盖；</li>
+</ul>
+<h3 id="二者的使用场景区别："><a href="#二者的使用场景区别：" class="headerlink" title="二者的使用场景区别："></a>二者的使用场景区别：</h3><ul>
+<li>application主要用于spring Boot项目的自动化配置；</li>
+<li>bootstrap配置文件有以下的应用场景：<ul>
+<li>使用spring cloud config配置中心时，这时需要在bootstrap配置文件中添加连接到配置中心的配置属性来加载外置配置中心的配置信息。</li>
+<li>一些固定的不能被覆盖的属性。</li>
+<li>一些加密&#x2F;解密的场景。</li>
+</ul>
+</li>
+</ul>
 <h1 id="三、计算机网络"><a href="#三、计算机网络" class="headerlink" title="三、计算机网络"></a>三、计算机网络</h1><h2 id="1-TCP三次握手-amp-四次挥手"><a href="#1-TCP三次握手-amp-四次挥手" class="headerlink" title="1. TCP三次握手 &amp; 四次挥手"></a>1. TCP三次握手 &amp; 四次挥手</h2><p><strong>三次握手建立连接</strong>。从client的视角来看：</p>
 <ul>
 <li><strong>第一次握手</strong>： client发送一个带有<code>syn（seq = x）</code>标志的数据包到server端，然后标识自己的状态为<strong>syn_send</strong>已发送状态；</li>
@@ -1671,7 +1990,7 @@
 <li><strong>第一次挥手：</strong> client发送一个<code>FIN（seq = x）</code>的数据包到服务端，用来关闭客户端到服务端的数据传送，然后client进入<strong>FIN-Wait-1</strong>状态；</li>
 <li><strong>第二次挥手</strong>：server收到这个<code>FIN（seq=x）</code>的数据包，然后发送一个<code>ACK（ack = x+1）</code>的数据包到client，随后server进入<strong>Close-wait</strong>状态，client收到这个数据包后进入<strong>FIN-Wait-2</strong>状态；</li>
 <li><strong>第三次挥手</strong>：server发送一个<code>FIN （seq = y）</code>的数据包到client，请求关闭连接，随后server进入<strong>LAST-ACK</strong>状态；</li>
-<li><strong>第四次挥手</strong>：client发送一个<code>ACK (ack=y+1)</code> 的数据包到server，然后client进入到<strong>TIME-Wait</strong>状态，server端在接收到这个数据包后进入<strong>CLOSE</strong>状态。此时如果client等待 <strong>2*MSL</strong>（一个片段在网络中的最大存活时间）没有收到回复，说明server已经正常关闭，随后client也可以关闭连接了。</li>
+<li><strong>第四次挥手</strong>：client发送一个<code>ACK (ack=y+1)</code> 的数据包到server，然后client进入到<strong>TIME-Wait</strong>状态，server端在接收到这个数据包后进入<strong>CLOSE</strong>状态。此时如果<strong>client</strong>等待 <strong>2*MSL</strong>（一个片段在网络中的最大存活时间）没有收到回复，说明server已经正常关闭，随后client也可以关闭连接了。</li>
 </ul>
 <h2 id="TCP与UDP的区别："><a href="#TCP与UDP的区别：" class="headerlink" title="TCP与UDP的区别："></a>TCP与UDP的区别：</h2><ul>
 <li><strong>是否面向连接：</strong> TCP是面向连接的，传送数据前必须先建立连接，结束后释放连接；UDP传送数据前不需要建立连接。</li>
@@ -1698,6 +2017,111 @@
 <li>加密方式：HTTP没有加密，明文传输；HTTPS使用SSL 或TSL协议加密传输的数据，使用公钥加密和私钥解密的方式确保机密性和完整性。</li>
 <li>端口号：HTTP默认80端口；HTTPS默认443端口。</li>
 <li>证书：HTTP不需要证书验证；HTTPS需要使用SSL证书，由可信的第三方机构签发。</li>
+</ul>
+<h2 id="HTTP常见字段有哪些？"><a href="#HTTP常见字段有哪些？" class="headerlink" title="HTTP常见字段有哪些？"></a>HTTP常见字段有哪些？</h2><ul>
+<li><p>Host字段：客户端发送请求时，用来指定服务器的域名。</p>
+</li>
+<li><p>Content-Length：服务器在返回数据时，会有Content-length字段，表示本次响应的数据长度。</p>
+</li>
+<li><p>Connection字段：Connection字段常用于客户端要求服务器使用 HTTP长连接 机制，以便其他请求复用（HTTP长连接的特点是：只要任意一端没有明确提出断开连接，则保持TCP连接状态）。</p>
+</li>
+<li><p>Content-Type字段：用于服务器响应时，告诉客户端本次数据是什么形式。</p>
+<ul>
+<li>Accept字段：客户端在请求的时候，可以使用该字段表明自己可以接受哪些数据格式。</li>
+</ul>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240531161621185.png" alt="image-20240531161621185" style="zoom:67%;" />
+</li>
+<li><p>Content-Encoding字段：该字段说明数据的压缩方法。表示服务器返回的数据使用了什么压缩格式。</p>
+<ul>
+<li>Accept-Encoding字段：用Accept-Encoding字段说明自己可以接收哪些压缩方法。</li>
+<li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240531161658176.png" alt="image-20240531161658176" style="zoom:67%;" /></li>
+</ul>
+</li>
+</ul>
+<h2 id="HTTP1-0，1-1，2-0，3的区别"><a href="#HTTP1-0，1-1，2-0，3的区别" class="headerlink" title="HTTP1.0，1.1，2.0，3的区别"></a>HTTP1.0，1.1，2.0，3的区别</h2><p><strong>1.0默认短连接</strong>，可以强制开启；<strong>1.1默认长连接</strong>；<strong>2.0采用多路复用</strong>。<strong>http3主要有两大变化，传输层基于UDP、使用QUIC保障UDP的可靠性。</strong></p>
+<ul>
+<li><strong>http1.0</strong>：<ul>
+<li>默认使用短连接，每次请求都需要建立一次tcp连接。可以设置Connection：Keep-Alive字段，强制开启长连接。</li>
+</ul>
+</li>
+<li><strong>http1.1：</strong><ul>
+<li>引入了<strong>持久连接</strong>，tcp连接可以被多个请求复用。</li>
+<li><strong>分块传输编码</strong>，即服务端每产生一块数据，就发送一块。</li>
+<li><strong>管道机制</strong>：即在同一个tcp连接里，客户端可以同时发送多个请求。</li>
+</ul>
+</li>
+<li><strong>http2.0：</strong><ul>
+<li><strong>二进制协议</strong>，1.1版本的头信息是文本（ASCII编码），数据体可以为文本也可以为二进制；<strong>2.0中，头信息和数据体都是二进制</strong>。</li>
+<li><strong>完全的多路复</strong>用，在一个连接里，客户端和浏览器都<strong>可以同时发送多个请求或回应</strong>，而且<strong>不用按照顺序一一对应</strong>。</li>
+<li><strong>报头压缩</strong>，HTTP协议不带有状态，每次请求都必须附带上所有信息。<strong>http2.0引入了头信息压缩机制，使用gzip或compress压缩后再发送</strong>。</li>
+<li>服务端推送，<strong>允许服务器未经请求，主动向客户端发送资源</strong>。</li>
+</ul>
+</li>
+<li><strong>http3:</strong><ul>
+<li><strong>使用UDP作为传输层进行通信</strong>；</li>
+<li><strong>在UDP的基础上QUIC协议保证了HTTP3的安全性，在传输的过程就完成了TLS加密握手</strong>；<ul>
+<li>https要建立一个连接，要进行6次交互，先是建立三次握手，然后是TSL的三次握手。<strong>QUIC直接将以往的TCP和TLS的6次交互合并成了3次，减少了交互次数</strong>；</li>
+<li><strong>QUIC有自己的一套机制可以保证传输的可靠</strong>。当某个流发生丢包时，只会阻塞这个流，其他流不会受到影响。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="GET和POST方法都是安全和幂等的么？"><a href="#GET和POST方法都是安全和幂等的么？" class="headerlink" title="GET和POST方法都是安全和幂等的么？"></a>GET和POST方法都是安全和幂等的么？</h2><p><strong>先说明什么是安全和幂等：</strong></p>
+<ul>
+<li>安全性：请求方法不会破坏服务器的资源。</li>
+<li>幂等性：多次执行相同的操作，结果都是相同的。</li>
+</ul>
+<p><strong>GET是安全和幂等的</strong>，因为是<strong>只读</strong>操作，无论操作多少次，服务器上的数据都是安全的。所以<strong>可以对GET请求的结果做缓存</strong>，这个缓存可以做到浏览器本身上，也可以做到代理上（如Nginx），而且<strong>GET请求可以作为书签</strong>。</p>
+<p><strong>POST不是安全和幂等的</strong>，因为是<strong>新增或提交数据</strong>的操作，会修改服务器上的资源。且多次提交数据就会创建多个资源，所以不是幂等的。浏览器<strong>一般不会缓存POST请求</strong>，也<strong>不能把POST请求保存在书签里</strong>。</p>
+<p><strong>那么GET请求可以带body么？</strong></p>
+<p>RFC规范并没有规定GET请求不能带body。实际上任何请求都可以带body。</p>
+<p>另外，RFC中的查询参数也不是GET所独有的，POST请求的URL中也可以有参数的。</p>
+<h2 id="HTTP和RPC的区别："><a href="#HTTP和RPC的区别：" class="headerlink" title="HTTP和RPC的区别："></a>HTTP和RPC的区别：</h2><ul>
+<li><p><strong>HTTP是一种应用层协议，主要强调的是网络通信；RPC是一种用于分布式系统之间通信的协议，强调的是服务间的远程调用。</strong></p>
+</li>
+<li><p><strong>通信方式</strong>：HTTP基于请求-响应模型，客户端发送请求，服务端返回响应；基于方法调用模型，客户端调用远程方法并等待结果。</p>
+</li>
+<li><p><strong>传输协议</strong>：HTTP基于TCP协议，可使用TLS&#x2F;SSL等进行加密；RPC可以使用多种传输协议，如TCP、UDP等。</p>
+</li>
+<li><p><strong>数据格式</strong>：HTTP基于文本，常用的数据格式包括json，xml等；RPC可以使用各种数据格式，如二进制、json、protocol buffers等。</p>
+</li>
+<li><p><strong>接口定义：</strong>HTTP使用restful风格的接口进行定义；RPC使用IDL（接口定义语言）进行接口定义，如protocol buffers、thrift等。</p>
+</li>
+<li><p><strong>跨语言能力</strong>：都支持跨语言通信。可以使用HTTP作为通信协议实现不同语言之间的通信；RPC可以使用IDL生成不同语言的客户端和服务端代码。</p>
+</li>
+<li><p><strong>灵活性</strong>：<strong>HTTP更加灵活</strong>，适用于不同类型的应用场景；<strong>RPC更加高效</strong>，适用于需要高性能和低延迟的分布式系统。</p>
+<h3 id="为什么RPC性能比Http服务性能好："><a href="#为什么RPC性能比Http服务性能好：" class="headerlink" title="为什么RPC性能比Http服务性能好："></a>为什么RPC性能比Http服务性能好：</h3><ul>
+<li><strong>RPC服务序列化是针对二进制协议来做序列化和反序列化，所以性能高。</strong>而HTTP服务是基于文本的序列化和反序列化，需要读一行一行的文本，进行序列化和反序列化，所以性能低。</li>
+<li>RPC服务是自定义的传输协议，传输的报文都是干货。而HTTP服务中包含很多没用的报文内容。</li>
+</ul>
+</li>
+</ul>
+<h1 id="四、操作系统："><a href="#四、操作系统：" class="headerlink" title="四、操作系统："></a>四、操作系统：</h1><h2 id="1-硬件结构："><a href="#1-硬件结构：" class="headerlink" title="1. 硬件结构："></a>1. 硬件结构：</h2><h3 id="冯诺依曼模型-计算机基本结构-："><a href="#冯诺依曼模型-计算机基本结构-：" class="headerlink" title="冯诺依曼模型(计算机基本结构)："></a>冯诺依曼模型(计算机基本结构)：</h3><p>计算机基本结构分为5个部分，分别是 <strong>运算器、控制器、存储器、输入设备、输出设备</strong>。</p>
+<p>运算器、控制器是在中央处理器中的，存储器就是我们常见的内存，输入输出设备则是计算机外界的设备。</p>
+<p>存储单元与输入输出设备通过 <strong>总线</strong> 与CPU相连。</p>
+<h2 id="2-进程管理"><a href="#2-进程管理" class="headerlink" title="2. 进程管理"></a>2. 进程管理</h2><h3 id="进程间通信方式："><a href="#进程间通信方式：" class="headerlink" title="进程间通信方式："></a>进程间通信方式：</h3><ul>
+<li><p><strong>管道：半双工通信</strong>，只能单向传输。分为<strong>无名管道（pipe）</strong>和<strong>有名管道（FIFO）</strong>。无名管道只能用于具有亲缘关系的进程之间通信；有名管道可以用于任意进程之间的通信。</p>
+<ul>
+<li>缺点：通信效率低，不适合频繁交换数据。</li>
+</ul>
+</li>
+<li><p><strong>消息队列：</strong>它是保存在内核中的消息链表。消息被存储在消息队列中，并按照一定的规则进行发送和接收。可以频繁交换数据。</p>
+<ul>
+<li>缺点：消息队列不适合比较大消息的传输；并且消息队列通信过程中，存在用户态与内核态之间的数据拷贝开销。</li>
+</ul>
+</li>
+<li><p><strong>共享内存：</strong>其机制就是，拿出一块虚拟地址空间来，映射到相同的物理内存中。</p>
+</li>
+<li><p><strong>信号量（PV操作）：</strong>如果使用共享内存通信方式，带来新的问题，那就<strong>是如果多个进程同时修改同一个共享内存，很有可能就冲突了</strong>。为了防止多线程竞争导致数据错乱，因此需要保护机制，使得<strong>共享的资源，在任意时刻只能被一个进程访问</strong>。由此引入信号量机制。</p>
+<ul>
+<li><strong>信号量其实是一个整形的计数器</strong>，<strong>主要用于实现进程之间的互斥与同步</strong>，而不是用于缓存进程之间通信的数据。</li>
+</ul>
+</li>
+<li><p><strong>信号：</strong>对于异常情况下的工作模式，就需要用 信号 的方式来通知进程。</p>
+</li>
+<li><p><strong>Socket：</strong>套接字是一种通用的进程间通信机制，不仅可以用于网络通信，还可以用于本地进程之间通信。套接字通信基于网络协议，提供了可靠、灵活的数据传输方式。在本地通信中，套接字可以用于不同进程之间通信，实现进程间数据交换和协作。</p>
+</li>
 </ul>
 <h1 id="四、JVM"><a href="#四、JVM" class="headerlink" title="四、JVM"></a>四、JVM</h1><h2 id="1-JVM内存"><a href="#1-JVM内存" class="headerlink" title="1. JVM内存"></a>1. JVM内存</h2><h3 id="jvm内存组成："><a href="#jvm内存组成：" class="headerlink" title="jvm内存组成："></a>jvm内存组成：</h3><ul>
 <li><strong>方法区</strong>（线程共享区）<ul>
@@ -1732,10 +2156,10 @@
 <li>类加载完成后，为新对象分配内存，分配内存的方法包括<strong>指针碰撞、空闲列表</strong>方法。</li>
 <li>分配完内存，对分配好的内存（除了对象头）进行初始化工作，都初始化为0值。</li>
 <li>接下来设置对象头，对象头包括所属的类、哈希码、GC分代年龄等。</li>
-<li>最后，JVM执行对象的构造函数，对对象的实例变量进行初始化或其他必要操作。</li>
+<li>最后，JVM<strong>执行对象的构造函数</strong>，对对象的实例变量进行<strong>初始化</strong>或其他必要操作。</li>
 </ul>
 <h3 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h3><ul>
-<li>对象头<ul>
+<li><strong>对象头</strong><ul>
 <li>对象运行时数据：<ul>
 <li>哈希码</li>
 <li>GC分代年龄</li>
@@ -1749,8 +2173,8 @@
 <li>如果是数组，还有一个保存自己长度信息的数据</li>
 </ul>
 </li>
-<li>实例化数据，存储对象真正的有效信息。</li>
-<li>对齐填充padding，无实际意义。</li>
+<li><strong>实例化数据，</strong>存储对象真正的有效信息。</li>
+<li><strong>对齐填充padding</strong>，无实际意义。</li>
 </ul>
 <h3 id="对象有哪几种引用类型"><a href="#对象有哪几种引用类型" class="headerlink" title="对象有哪几种引用类型"></a>对象有哪几种引用类型</h3><ul>
 <li>强引用<ul>
@@ -1805,14 +2229,14 @@
 </ul>
 </li>
 <li><strong>空间分配担保</strong><ul>
-<li>在发生Minor GC之前，JVM会先检查<strong>老年代最大可用的连续空间是否大于新生代所有对象的总空间</strong>，如果大于，则说明这一次的Minor GC是安全的，可以进行。</li>
+<li>在<strong>发生Minor GC之前</strong>，JVM会先检查<strong>老年代最大可用的连续空间是否大于新生代所有对象的总空间</strong>，如果大于，则说明这一次的Minor GC是安全的，可以进行。</li>
 <li>如果不安全，则要判断 JVM<strong>是否允许担保失败</strong>。<strong>如果允许</strong>，那么如果<strong>老年代最大可用连续空间大于 过往历次晋升到老年代对象的平均大小，如果大于则可以进行Minor GC</strong> ，<strong>如果小于，或者设置了不允许担保失败，则进行 Full GC</strong></li>
 </ul>
 </li>
 </ul>
 <h3 id="怎么判断一个对象是不是垃圾："><a href="#怎么判断一个对象是不是垃圾：" class="headerlink" title="怎么判断一个对象是不是垃圾："></a><strong>怎么判断一个对象是不是垃圾：</strong></h3><ul>
 <li><strong>引用计数法</strong>：早期的方法，一个对象被引用了计数器就加一，否则减一。如果为0就可以进行回收，<strong>缺点是无法回收相互引用的对象</strong>，造成内存泄漏。</li>
-<li><strong>根可达算法</strong>：在内存中，<strong>从引用根对象向下一直寻找引用</strong>，如果找不到的对象就是垃圾。<ul>
+<li><strong>根可达算法</strong>：在内存中，<strong>从引用根对象向下一直寻找引用</strong>， 。<ul>
 <li><strong>GC Roots一般包含以下</strong>内容：<ul>
 <li><strong>虚拟机栈</strong>中引用的对象；</li>
 <li><strong>本地方法栈</strong>中引用的对象；</li>
@@ -2022,7 +2446,20 @@
 <ul>
 <li>索引结构不会影响单表最大行数，2000W也只是推荐值，<strong>超过了这个值可能会导致B+树层级更高，影响查询性能</strong>。</li>
 </ul>
-<h2 id="2-事务"><a href="#2-事务" class="headerlink" title="2.  事务"></a>2.  事务</h2><h3 id="2-1-事务隔离级别"><a href="#2-1-事务隔离级别" class="headerlink" title="2.1 事务隔离级别"></a>2.1 事务隔离级别</h3><h4 id="四个隔离级别："><a href="#四个隔离级别：" class="headerlink" title="四个隔离级别："></a><strong>四个隔离级别：</strong></h4><ul>
+<h2 id="2-事务"><a href="#2-事务" class="headerlink" title="2.  事务"></a>2.  事务</h2><h3 id="2-0-什么是-事务-amp-事务四大特性ACID"><a href="#2-0-什么是-事务-amp-事务四大特性ACID" class="headerlink" title="2.0 什么是 事务 &amp; 事务四大特性ACID"></a>2.0 什么是 事务 &amp; 事务四大特性ACID</h3><h4 id="什么是事务："><a href="#什么是事务：" class="headerlink" title="什么是事务："></a><strong>什么是事务：</strong></h4><p>事务是指程序中一系列严密的逻辑操作，而且所有的操作必须全部成功完成，否则在每个操作中所做的所有更改都会被撤销。</p>
+<h4 id="事务的四大特性ACID："><a href="#事务的四大特性ACID：" class="headerlink" title="事务的四大特性ACID："></a><strong>事务的四大特性ACID：</strong></h4><ul>
+<li><strong>原子性：</strong>事务的所有操作要么都执行，要么不执行；</li>
+<li><strong>一致性：</strong>事务在执行前后，数据库必须满足一致性约束。只能使数据库从一个一致性状态转变为一致性状态；</li>
+<li><strong>隔离性：</strong>一个事务所进行的修改操作在提交事务时，对其他事务是不可见的；</li>
+<li><strong>持久性：</strong>一旦事务提交，则所做的修改会永久保存到数据库；</li>
+</ul>
+<h4 id="ACID如何保证的："><a href="#ACID如何保证的：" class="headerlink" title="ACID如何保证的："></a>ACID如何保证的：</h4><ul>
+<li><strong>原子性：通过事务日志 或 undo log 来实现。</strong>事务日志记录了事务的所有操作。在事务提交之前，所有的修改操作被写入事务日志，如果失败或回滚，DBMS可以使用事务日志将数据库恢复到事务开始前的状态。</li>
+<li><strong>隔离性：通过 锁机制 或 多版本并发控制MVCC 实现。</strong>锁机制保证一个事务在执行期间，被修改的数据不会被其他事务修改或读取。 MVCC使用版本号或时间戳跟踪事务对数据的修改，在读取操作中可以避免锁的使用，提高并发性能。</li>
+<li><strong>持久性：通过将事务的修改操作持久化到磁盘上来实现的。</strong>在事务提交之后，DBMS会将事务的修改写入数据库的数据文件或日志文件，并确保这些修改在系统故障或崩溃后仍然可以恢复。</li>
+<li><strong>一致性：一致性可以说是原子性、隔离性、持久性的最终目标，也是通过它们来进行保证的。</strong></li>
+</ul>
+<h3 id="2-1-事务隔离级别"><a href="#2-1-事务隔离级别" class="headerlink" title="2.1 事务隔离级别"></a>2.1 事务隔离级别</h3><h4 id="四个隔离级别："><a href="#四个隔离级别：" class="headerlink" title="四个隔离级别："></a><strong>四个隔离级别：</strong></h4><ul>
 <li><p>读未提交（啥都解决不了）</p>
 </li>
 <li><p>读已提交 （解决了脏读）</p>
@@ -2251,7 +2688,19 @@
 <li><strong>表的具体行数</strong>：MyISAM保存了表的总行数，InnoDB没有；</li>
 <li><strong>外键支持</strong>：MyISAM不支持外键，InnoDB支持；</li>
 </ul>
-<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><h2 id="快表quickList-List的数据结构-："><a href="#快表quickList-List的数据结构-：" class="headerlink" title="快表quickList (List的数据结构)："></a>快表quickList (List的数据结构)：</h2><p>快表其实就是 <strong>双向链表 + 压缩列表</strong> 的组合，<strong>一个快表就是一个链表，链表中的每个节点又是一个压缩列表</strong>。所以要先明白压缩列表是啥样的。</p>
+<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><h2 id="Redis渐进式rehash（与HashMap进行对比）"><a href="#Redis渐进式rehash（与HashMap进行对比）" class="headerlink" title="Redis渐进式rehash（与HashMap进行对比）"></a>Redis渐进式rehash（与HashMap进行对比）</h2><ul>
+<li>在redis中，rehash是为了在进行哈希表扩容时，保持对原有哈希表的读写操作的可用性。</li>
+<li>渐进式rehash将<strong>rehash操作分为了多个小步骤</strong>，<strong>每次只迁移少量的键值对</strong>。这样可以将rehash的成本分摊到多次操作中，减少单词操作的耗时。</li>
+<li>在渐进式rehash中，<strong>会维护两个哈希表</strong>，一个是原有的<strong>旧哈希表</strong>，另一个是<strong>新的哈希表</strong>。新的键值对会直接添加到新的哈希表中，而旧哈希表中的键值对则会在后续的操作中逐步迁移到新的哈希表中。</li>
+<li>在迁移完成之前，Redis会同时维护两个哈希表，并在执行读写操作时，根据需要在两个哈希表中进行操作。</li>
+</ul>
+<p><strong>与HashMap扩容过程的对比：</strong></p>
+<ul>
+<li>在HashMap中，当负载因子超过阈值（默认为0.75）时，会触发扩容操作；</li>
+<li>扩容过程涉及重新计算哈希码，重新分配元素等操作。具体来说，HashMap会创建一个新的更大的数组（2倍），将所有元素重新分配到新的数据中，并根据哈希表的结构。</li>
+<li><strong>扩容是一次性完成的</strong>，即将所有元素重新分配到新数组中。</li>
+</ul>
+<h2 id="快表quickList-List的数据结构-："><a href="#快表quickList-List的数据结构-：" class="headerlink" title="快表quickList (List的数据结构)："></a>快表quickList (List的数据结构)：</h2><p>快表其实就是 <strong>双向链表 + 压缩列表</strong> 的组合，<strong>一个快表就是一个链表，链表中的每个节点又是一个压缩列表</strong>。所以要先明白压缩列表是啥样的。</p>
 <p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517145008423.png" alt="image-20240517145008423"></p>
 <h3 id="压缩列表"><a href="#压缩列表" class="headerlink" title="压缩列表"></a>压缩列表</h3><p>压缩列表是为了<strong>减少内存</strong>而开发的。它是由连续内存块组成的顺序型数据结构（类似数组），具体长这样：</p>
 <p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240517145304062.png" alt="image-20240517145304062"></p>
@@ -2324,8 +2773,10 @@
 <ol start="2">
 <li><strong>数据库订阅+消息队列保证key被删除：</strong></li>
 </ol>
-<p>可以<strong>用一个服务去监听数据库的 binlog，获取需要操作的数据。然后用一个公共的服务获取订阅程序传来的信息，进行缓存删除</strong>操作。</p>
+<p>可以<strong>用一个服务（canal）去监听数据库的 binlog，获取需要操作的数据。然后用一个公共的服务获取订阅程序传来的信息，进行缓存删除</strong>操作。</p>
 <p>这种方式降低了对业务的侵入，但是提升了系统的复杂度。</p>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240624220648247.png" alt="image-20240624220648247" style="zoom:50%;" />
+
 <ol start="3">
 <li><strong>⭐延迟双删防止脏数据</strong></li>
 </ol>
@@ -2403,7 +2854,7 @@
 <li>6.0的<strong>多线程是用来处理数据的读写和协议解析</strong>，但是它<strong>执行命令的时候还是单线程的</strong>。</li>
 </ul>
 </li>
-<li><strong>非阻塞的IO多路复用机制</strong>：这里的IO是网络IO，redis采用了IO多路复用模型，通过一个线程来监听多个客户端连接，当有事件发生时才进行处理，这种机制避免了阻塞和线程切换，提高了并发能力。<ul>
+<li><strong>非阻塞的IO多路复用机制</strong>：这里的IO是网络IO，redis采用了IO多路复用模型，通过<strong>一个线程来监听多个客户端连接</strong>，<strong>当有事件发生时才进行处理</strong>，这种机制避免了阻塞和线程切换，提高了并发能力。<ul>
 <li>阻塞IO模型：逐个检查，有一个没完成就得阻塞等待其完成。</li>
 <li>非阻塞IO模型：谁完成了谁就发出通知，老师收到通知后进行处理，然后继续回讲台等。</li>
 </ul>
@@ -2453,7 +2904,7 @@
 <p><strong>优点就是</strong>：在提升恢复速度的同时，大大减少了数据丢失的风险。</p>
 <p><strong>缺点很明显：</strong>可读性差，并且混合日志老版本的redis用不了。</p>
 <h2 id="Redisson分布式锁"><a href="#Redisson分布式锁" class="headerlink" title="Redisson分布式锁"></a>Redisson分布式锁</h2><h3 id="Redisson如何实现分布式锁的？（set指令-lua脚本）"><a href="#Redisson如何实现分布式锁的？（set指令-lua脚本）" class="headerlink" title="Redisson如何实现分布式锁的？（set指令 + lua脚本）"></a>Redisson如何实现分布式锁的？（set指令 + lua脚本）</h3><ul>
-<li><strong>第一步，使用lua脚本执行加锁操作</strong>：lua脚本会<strong>判断锁是否存在</strong>，<strong>如果不存在</strong>，使用hset命令<strong>设置锁的值</strong>，使用pexpire命令<strong>设置锁的过期时间</strong>。<strong>如果锁已经被当前线程持有，则将锁的值加一，并设置锁的过期时间为指定的时间</strong>。</li>
+<li><strong>第一步，使用lua脚本执行加锁操作</strong>：lua脚本会<strong>判断锁是否存在</strong>，<strong>如果不存在</strong>，使用<strong>hset</strong>命令<strong>设置锁的值</strong>，使用<strong>pexpire</strong>命令<strong>设置锁的过期时间</strong>。<strong>如果锁已经被当前线程持有，则将锁的值加一，并设置锁的过期时间为指定的时间</strong>。</li>
 <li><strong>第二步，续约锁的时间：</strong>获取锁成功后，Redisson会<strong>开启一个定时任务</strong>（<strong>就是watch dog</strong>），定期延长锁的过期时间（续约）。这个<strong>定时任务也是通过lua脚本实现</strong>的。</li>
 <li><strong>第三步，释放锁：</strong>当锁的持有者完成任务后，Redission会<strong>调用redis的DEL指令来删除锁的键</strong>，释放锁。</li>
 </ul>
@@ -2532,7 +2983,7 @@
 <ul>
 <li>从节点还没来得及同步主节点，主节点就挂了。这种情况会导致数据的丢失。</li>
 <li>redis有一个配置参数 min-slaves-max-lag，表示一旦所有的从节点数据复制和同步的延迟都超过了 定义的值，那么主节点就会拒绝接受任何请求。</li>
-<li>假设我们给min-slave-max-lag 设置为10s，根据目前主从复制的速度，如果数据同步完成所需要的时间超过10s，就会认为master未来宕机损失的数据要更多，那么master就会拒绝写请求。</li>
+<li>假设我们给min-slave-max-lag 设置为10s，根据目前主从复制的速度，如果数据同步完成所需要的时间超过10s，<strong>就会认为master未来宕机损失的数据要更多，那么master就会拒绝写请求。</strong></li>
 </ul>
 <p><strong>集群脑裂带来的数据丢失：</strong></p>
 <p>1.<strong>脑裂是怎么一回事？</strong></p>
@@ -2711,8 +3162,153 @@
 <p>（2）<strong>消息去重：</strong>在消息生产时，MQ内部针对每条生产者发送的消息生成一个唯一ID，作为去重和幂等的依据（消息投递失败并重传），避免重复的消息进入队列。在消息消费时，要求消息体中也要有一个全局唯一ID作为去重和幂等的依据，避免同一条消息被重复消费。</p>
 <h2 id="如何处理消息积压："><a href="#如何处理消息积压：" class="headerlink" title="如何处理消息积压："></a>如何处理消息积压：</h2><h3 id="第一种方法，消费者扩容："><a href="#第一种方法，消费者扩容：" class="headerlink" title="第一种方法，消费者扩容："></a>第一种方法，消费者扩容：</h3><p>适用于当前主题<strong>Topic消息队列数量 大于 消费者数量</strong>的情形。通过增加消费者来扩容，从而提高消费能力，尽快消费积压的消息。通过增加消费者，可以使消息队列分配给更多的消费者进行并行消费，加快消息处理速度。</p>
 <h3 id="第二种方法，消息迁移Queue扩容："><a href="#第二种方法，消息迁移Queue扩容：" class="headerlink" title="第二种方法，消息迁移Queue扩容："></a>第二种方法，消息迁移Queue扩容：</h3><p>适用于当前主题<strong>Topic消息队列数量 小于等于 消费者数量</strong>的情形。这种情况下，添加消费者数量不够有效。这时需要考虑扩容消息队列。</p>
-<p>一种方法是，创建一个临时主题，在<strong>临时主题上设置更多的消息队列</strong>。然后将<strong>部分消费者用于将消息从原主题转发到临时主题</strong>，这个过程不需要进行业务处理，只是将消息转发，因此速度很快。接下来，使用扩容后的消费者来消费临时主题中的消息。当所有积压消息被消费完毕后，恢复到原始状态。</p>
+<p>一种方法是，创建一个临时主题，在<strong>临时主题上设置更多的消息队列</strong>。然后将<strong>部分消费者用于将消息从原主题转发到临时主题</strong>，这个过程不需要进行业务处理，只是将消息转发，因此速度很快。接下来，使用扩容后的消费者来消费临时主题中的消息。<strong>当所有积压消息被消费完毕后，恢复到原始状态</strong>。</p>
 <img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240523150236245.png" alt="image-20240523150236245" style="zoom: 50%;" />
+
+
+
+
+
+<h1 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h1><h2 id="1-Mybatis和Mybatis-plus的区别"><a href="#1-Mybatis和Mybatis-plus的区别" class="headerlink" title="1. Mybatis和Mybatis-plus的区别"></a>1. Mybatis和Mybatis-plus的区别</h2><p>MP是一个Mybatis的增强工具，只是在Mybatis的基础上做了增强却不做改变，Mybatis-Plus支持所有Mybatis原生的特性，所以引入Mybatis-Plus不会对现有的Mybatis框架产生任何影响。</p>
+<p><strong>二者的区别：</strong></p>
+<p><strong>Mybatis</strong>：</p>
+<ul>
+<li>所有的SQL语句全部需要自己写；</li>
+<li>手动解析实体关系映射转换为MyBatis内部对象注入容器；</li>
+<li>不支持Lambda形式调用；</li>
+</ul>
+<p><strong>Mybatis-Plus</strong>:</p>
+<ul>
+<li>强大的条件构造器，满足各类使用需求</li>
+<li>内置Mapper，通用的service，少量配置即可实现单表大部分CRUD操作；</li>
+<li>支持Lambda形式调用；</li>
+<li>提供了基本的CRUD功能，连SQL语句都不需要写；</li>
+<li>自动解析实体关系映射转换为MyBatis内部对象注入容器；</li>
+</ul>
+<h2 id="2-MyBatis的优缺点"><a href="#2-MyBatis的优缺点" class="headerlink" title="2. MyBatis的优缺点"></a>2. MyBatis的优缺点</h2><p>优点：</p>
+<ul>
+<li>Mybatis封装了JDBC底层访问书库的细节，是我们程序员不需要与JDBC API打交道，就可以访问数据库；</li>
+<li>MyBatis简单易学，开发者直接编写SQL语句，适合对SQL语句性能要求比较高的项目；</li>
+<li>SQL语句封装在配置文件中，便于统一管理与维护，降低了程序的耦合度；</li>
+</ul>
+<h1 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h1><h2 id="1-Eureka和Nacos的区别"><a href="#1-Eureka和Nacos的区别" class="headerlink" title="1. Eureka和Nacos的区别"></a>1. Eureka和Nacos的区别</h2><ul>
+<li><strong>通信方式：</strong><ul>
+<li>Eureka基于HTTP restful API进行通信；Nacos同时支持HTTP 和 TCP两种通信方式，TCP方式效率更高，适用于服务间通信；</li>
+</ul>
+</li>
+<li><strong>服务发现：</strong><ul>
+<li><strong>Eureka基于拉模式</strong>，Eureka client会定期从Server中拉取服务信息；</li>
+<li><strong>Nacos基于推送模式</strong>，Server会实时推送服务信息变化给Client，AP模式下更适合大规模服务；</li>
+<li>Eureka通过注册中心定期拉取服务列表，有缓存，默认每30秒拉取一次。</li>
+<li>Nacos是推送式服务列表更新，注册中心每次服务列表变化都会实时推送给订阅者，服务端和客户端保持心跳连接。</li>
+</ul>
+</li>
+<li><strong>CAP理论：</strong><ul>
+<li>Eureka只支持AP，保证可用性和分区容错性；</li>
+<li>Nacos可以切换AP和CP两种模式。AP用于生产环境，可以保证高可用性和分区容错性，CP模式用于测试环境，可以保证数据一致性和分区容错性；</li>
+</ul>
+</li>
+<li><strong>架构：</strong><ul>
+<li>Eureka采用CS架构，由服务注册中心Eureka Server和服务提供者&#x2F;消费者Eureka Client组成；</li>
+<li>Nacos采用高可用的P2P设计，无主节点，所有的server节点都是同等作用；</li>
+</ul>
+</li>
+</ul>
+<h1 id="分布式理论"><a href="#分布式理论" class="headerlink" title="分布式理论"></a>分布式理论</h1><h2 id="1-CAP原则"><a href="#1-CAP原则" class="headerlink" title="1. CAP原则"></a>1. CAP原则</h2><p>CAP原则是指，在一个分布式系统中，<strong>Consistency （一致性）、Availablity（可用性）、Partition tolerance（分区容错性），最多只能同时满足三个特性中的两个，三者不可兼得</strong>。</p>
+<ul>
+<li><strong>consistency一致性</strong>：<ul>
+<li><strong>更新操作成功并返回客户端后，所有节点在同一时间的数据完全一致</strong>，这就是分布式的一致性。一致性的问题在并发系统中不可避免，对于客户端来说，一致性指的是并发访问时，更新过的数据如何获取的问题。从服务端来看，则是更新复制如何分布到整个系统，以保证数据最终一致。</li>
+</ul>
+</li>
+<li><strong>Availability可用性</strong>：<ul>
+<li>可用性即“read and write always succeed”，即服务一直可用，而且是正常响应时间。好的可用性主要是指系统能够很好的为用户服务，不出现用户操作失败或者访问超时等用户体验不好的情况。</li>
+</ul>
+</li>
+<li><strong>Partition Tolerance分区容错性</strong>：<ul>
+<li>分布式系统在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务。分区容错性要求能够使应用最然是一个分布式系统，但看上去却好像是在一个可以运转正常的整体。比如现在的分布式系统中有某一个或几个机器宕掉了，其他剩下的机器还是能够正常运转满足系统需求，对于用户而言并没有什么体验上的影响。</li>
+</ul>
+</li>
+</ul>
+<h4 id="为什么分布式系统中无法同时保证一致性和可用性？"><a href="#为什么分布式系统中无法同时保证一致性和可用性？" class="headerlink" title="为什么分布式系统中无法同时保证一致性和可用性？"></a>为什么分布式系统中无法同时保证一致性和可用性？</h4><p>首先，对于一个分布式系统而言，分区容错性是一个最基本的要求，因此基本上我们在<strong>设计分布式系统的时候只能从一致性和可用性之间进行取舍。</strong></p>
+<ul>
+<li><strong>如果保证了一致性</strong>：对于节点N1和N2，当向N1中写入数据时，N2上的操作必须被暂停，只有当N1同步数据到N2时才能对 N2进行读写请求。在N2被暂停操作期间，客户端提交的请求要么失败或者超时。这显然与可用性相悖。</li>
+<li><strong>如果保证了可用性</strong>：那就不能暂停N2的读写操作，但是这时N1在写数据啊，这显然也不符合一致性的要求。</li>
+</ul>
+<p>总结来说：<strong>为了保证一致性，不能访问未同步完成的节点，也就失去了部分可用性。为了保证可用性，允许读取所有结点的数据，但是数据可能不一致。</strong></p>
+<h4 id="如何在可用性和一致性之间进行权衡和取舍？"><a href="#如何在可用性和一致性之间进行权衡和取舍？" class="headerlink" title="如何在可用性和一致性之间进行权衡和取舍？"></a>如何在可用性和一致性之间进行权衡和取舍？</h4><p>在分布式系统中，分区容错性必不可少，因为总要假定网络是不可靠的。因此，CAP理论实际上是要在一致性和可用性之间做取舍。</p>
+<ul>
+<li><strong>最终一致思想</strong>：各分支事务分别进行提交，如果有不一致的情况，再想办法恢复数据；</li>
+<li><strong>强一致思想</strong>：各分支事务执行完业务不要提交，等待彼此结果，而后统一提交或回滚；</li>
+</ul>
+<h2 id="2-BASE理论"><a href="#2-BASE理论" class="headerlink" title="2. BASE理论"></a>2. BASE理论</h2><p>BASE理论是 <strong>基本可用（Basically Available）、软状态（Soft State）</strong>和 <strong>最终一致性（Eventually Consistent）</strong>三个短语的缩写。</p>
+<p>BASE是CAP理论中AP方案的延申。核心思想是<strong>即使无法做到强一致性</strong>（CAP中的一致性就是强一致性），但应用<strong>可以采用适合的方式达到最终一致性</strong>。其思想包括三个方面：</p>
+<ul>
+<li><strong>Basically Available基本可用</strong>：基本可用是指分布式系统在<strong>出现不可预知的故障的时候，允许损失部分可用性，但不等于系统不可用</strong>。</li>
+<li><strong>Soft State软状态</strong>：即指允许系统中的数据存在中间状态，并认为该中间状态的存在不会影响系统的整体可用性，即<strong>允许系统在不同节点之间的数据副本之间进行数据同步的过程存在延时</strong>。</li>
+<li><strong>Eventually consistent最终一致性</strong>：强调系统中所有的数据副本，在经过一段时间的同步后，最终能够达到一个一致的状态。其本质是需要<strong>系统保证最终数据能够达到一致，而不需要实时保证系统数据的强一致性。</strong></li>
+</ul>
+<h2 id="分布式一致性算法"><a href="#分布式一致性算法" class="headerlink" title="分布式一致性算法"></a>分布式一致性算法</h2><h3 id="1-Paxos算法"><a href="#1-Paxos算法" class="headerlink" title="1. Paxos算法"></a>1. Paxos算法</h3><p>Paxos算法是基于消息传递且具有高效容错性的一致性算法，目前公认的解决分布式一致性问题最有效的算法之一。</p>
+<p>在Paxos有三类角色：</p>
+<ul>
+<li>Proposer提议者：提议者提出提案，用于投票表决。</li>
+<li>Acceptor接受者：对提案进行投票，并接受达成共识的提案。</li>
+<li>Learner学习者：被告知投票的结果，接受达成共识的提案。</li>
+</ul>
+<p><strong>Paxos算法是一个两阶段的过程，包括 准备阶段 和 接受阶段 两个阶段。</strong></p>
+<p><strong>准备阶段：</strong> </p>
+<ul>
+<li>第一步，提案编号选择：Proposer提议者选择一个提案编号N，这个编号必须是全局唯一且递增的，可以使用时间戳加服务器ID来生成。</li>
+<li>第二步，发送Prepare请求：Proposer向半数以上的Acceptor发送编号为N的Prepare请求。</li>
+<li>第三步，响应处理：Acceptor在收到Prepare请求后，如果他没有收到更高编号的Prepare请求，就会承诺不再接受更低编号的提案，并回应Proposer。</li>
+</ul>
+<p><strong>接受阶段：</strong></p>
+<ul>
+<li>第一步，发送Accept请求：当多个Proposer收到多数Acceptor对Prepare请求的响应后，他将发送一个携带提案内容和提案编号N的Accept请求给所有Acceptor。</li>
+<li>第二步，接受提案：Acceptor在收到Accept请求后，如果该请求的请求编号大于等于他已经响应的Prepare请求中的最大编号，那么他就会接受这个请求。</li>
+<li>第三步，学习结果：一旦提案被多数Acceptor接受，该提案就被认为是选定的，Learner可以从Acceptor那里获取并学习这个决策结果。</li>
+</ul>
+<p>总的来说，Paxos算法通过这两个阶段的交互，确保了即使在部分节点或网络出现问题的情况下，分布式系统也能够就某个值达成一致性。这个过程需要满足一定的条件，以确保最终能够选出一个提案。</p>
+<h3 id="2-Raft算法"><a href="#2-Raft算法" class="headerlink" title="2. Raft算法"></a>2. Raft算法</h3><p>Raft算法也是一个一致性算法，Paxos和Raft的区别在于选举过程不同。Raft算法流程的详细描述如下：</p>
+<p>在raft中，时间被分为一个个任期，每次任期开始都要重新进行选举。</p>
+<p>Raft协议将Server进程分为三个角色：</p>
+<ul>
+<li>leader 领导者；</li>
+<li>follower 跟随者；</li>
+<li>candidate 候选人；</li>
+</ul>
+<p>首先开启一轮大选，大选期间所有 follower都能参与竞选，这时所有follower的角色就变成了 候选人candidate，民主投票选出leader后，就开始这届leader的任期，然后选举结束，所有除leader外的candidate变为follower，听从leader的领导。</p>
+<p>leader的选举过程如下：</p>
+<p>Raft使用心跳触发leader选举，当server启动时，角色初始化为follower，leader向所有follower周期性发送心跳。如果follower在选举时间内没有收到leader的心跳，就会等待一段随机的时间后发起一次leader选举。</p>
+<p>follower将其当前任期term加一，然后转换角色为candidate。它首先给自己投票，并给集群中的其他服务器发送 requestVote RPC。结果有以下三种情况：</p>
+<ul>
+<li>赢得了多数选票，成功选举为leader；</li>
+<li>收到了leader的消息，表示有其他服务器已经抢先当上了leader；</li>
+<li>没有server赢得多数的选票，leader选举失败，等待选举时间超时后，发起下一次选举。</li>
+</ul>
+<p>选举出leader后，leader通过定期向所有follower发送心跳维持其统治。若follower一段时间后没有收到leader的心跳，则认为leader已经挂了，然后发起新的选举过程。</p>
+<h1 id="Maven-amp-Git"><a href="#Maven-amp-Git" class="headerlink" title="Maven &amp; Git"></a>Maven &amp; Git</h1><h2 id="Maven生命周期"><a href="#Maven生命周期" class="headerlink" title="Maven生命周期"></a>Maven生命周期</h2><p>Maven有以下<strong>三个标准的生命周期</strong>：</p>
+<p>1、<strong>Clean生命周期</strong>：</p>
+<ul>
+<li><strong>clean</strong>：删除目标目录中的编译输出文件。这通常是在构建（Build）过程之前执行的，以确保项目从一个干净的状态开始。</li>
+</ul>
+<p>2、<strong>Default生命周期</strong>（也成为Build生命周期）：</p>
+<ul>
+<li><strong>validate 验证</strong>：验证项目的正确性，例如检查项目的版本是否正确。</li>
+<li><strong>compile 编译</strong>：编译项目的源代码。</li>
+<li><strong>test 测试</strong>：运行项目的单元测试。</li>
+<li><strong>package 打包</strong>：将编译后的代码打包成可分发的格式，例如jar或者war。</li>
+<li><strong>verify 检查</strong>：对项目进行额外的检查以确保质量。</li>
+<li><strong>install 安装</strong>：将项目的构建结果安装到本地Maven仓库中，以供其他项目使用。</li>
+<li><strong>deploy 部署</strong>：将项目的构建结果复制到远程仓库，以供其他开发人员或团队使用。</li>
+</ul>
+<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240701213354361.png" alt="image-20240701213354361" style="zoom:67%;" />
+
+<p>3、<strong>Site生命周期</strong>：</p>
+<ul>
+<li><strong>site</strong>：生成项目文档和站点信息。</li>
+<li><strong>deploy-site</strong>：将生成的站点信息发布到远程服务器，以便共享文档。</li>
+</ul>
+
       
     </div>
 
@@ -3243,270 +3839,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2023/06/30/Java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/06/30/Java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">Java动态代理知识学习</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-06-30 15:30:10 / 修改时间：16:01:00" itemprop="dateCreated datePublished" datetime="2023-06-30T15:30:10+08:00">2023-06-30</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h1><h4 id="程序为什么需要代理？代理长什么样？"><a href="#程序为什么需要代理？代理长什么样？" class="headerlink" title="程序为什么需要代理？代理长什么样？"></a>程序为什么需要代理？代理长什么样？</h4><ul>
-<li>对象如果嫌自己身上干的事情太多的话，可以通过代理来转移部分职责。</li>
-<li>对象有什么方法想被代理，代理就一定要有对应的方法。</li>
-<li>中介通过实现接口来知道使用哪个样子的代理。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://shadiaoyu.github.io/2023/06/06/SpringBoot%E5%AD%A6%E4%B9%A0-%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/06/06/SpringBoot%E5%AD%A6%E4%B9%A0-%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9/" class="post-title-link" itemprop="url">SpringBoot学习-缓存相关内容</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-06-06 15:26:57" itemprop="dateCreated datePublished" datetime="2023-06-06T15:26:57+08:00">2023-06-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-06-13 15:21:48" itemprop="dateModified" datetime="2023-06-13T15:21:48+08:00">2023-06-13</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="1-SpringBoot缓存技术"><a href="#1-SpringBoot缓存技术" class="headerlink" title="1.SpringBoot缓存技术"></a>1.SpringBoot缓存技术</h4><ul>
-<li><p>springboot提供了缓存技术，方便缓存使用。</p>
-<ul>
-<li>导入坐标：</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-cache<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>在启动类中添加<code>@EnableCaching</code>注解，开启缓存功能。</p>
-</li>
-<li><p>在涉及查询的方法上添加<code>@Cachable(value=缓存空间名称,key=#变量名)</code>，表明该方法返回的结果会放入该名称的缓存空间下。示例如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Cachable(value=&quot;cacheSpace&quot;,key=&quot;#id&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Book <span class="title function_">getById</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> bookMapper.selectById(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p>springboot提供的缓存技术除了提供默认的缓存方案，还可以与其他缓存技术进行整合，统一接口，方便缓存技术的开发与管理。</p>
-<ul>
-<li>这些缓存技术包括 simple(默认)、Generic、Jcache、<strong>Ehcache</strong>、Hazelcast、Infinispan、Couchbase、<strong>Redis</strong>、Caffenine。</li>
-<li>也有未被springboot整合的缓存技术：常用的是<strong>memcached</strong>。</li>
-</ul>
-</li>
-</ul>
-<h4 id="2-缓存使用案例–手机验证码"><a href="#2-缓存使用案例–手机验证码" class="headerlink" title="2.缓存使用案例–手机验证码"></a>2.缓存使用案例–手机验证码</h4><ul>
-<li><p>需求：</p>
-<ul>
-<li>输入手机号获取验证码，组织文档以短信形式发送给用户（页面模拟）</li>
-<li>输入手机号和验证码验证结果。</li>
-</ul>
-</li>
-<li><p>需求分析：</p>
-<ul>
-<li>提供controller，传入手机号，业务层通过手机号计算出独有的6位验证码数据，存入缓存后返回此数据；</li>
-<li>提供controller，传入手机号与验证码，业务层通过手机号从缓存中读取验证码并与输入验证码进行比对，返回比对结果；</li>
-</ul>
-</li>
-<li><p>具体实现示例：</p>
-<ul>
-<li><p>第一步：创建bean，名为 SMSCode:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SMSCode</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String tele; <span class="comment">// 电话号码</span></span><br><span class="line">    <span class="keyword">private</span> String code; <span class="comment">// 验证码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第二步，创建用于生成验证码的工具类CodeUtils:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CodeUtils</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用于补0的数组</span></span><br><span class="line">    <span class="keyword">private</span> String[] patch = &#123;<span class="string">&quot;000000&quot;</span>,<span class="string">&quot;00000&quot;</span>,<span class="string">&quot;0000&quot;</span>,<span class="string">&quot;000&quot;</span>,<span class="string">&quot;00&quot;</span>,<span class="string">&quot;0&quot;</span>,<span class="string">&quot;&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据电话号码生成验证码</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">generator</span><span class="params">(String tele)</span>&#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">hash</span> <span class="operator">=</span> tele.hashCode();</span><br><span class="line">        <span class="comment">// 设置加密码</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">encryption</span> <span class="operator">=</span> <span class="number">20206666</span>;</span><br><span class="line">        <span class="comment">// 与hashcode进行异或以完成加密</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">result</span> <span class="operator">=</span> hash ^ encryption;</span><br><span class="line">        <span class="comment">// 为使验证码不唯一，获取系统当前时间，并与其再次进行异或</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">nowTime</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        result = nowTime ^ result;</span><br><span class="line">        <span class="comment">// 获取后六位即可</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">code</span> <span class="operator">=</span> result % <span class="number">1000000</span>;</span><br><span class="line">        <span class="comment">// 解决code值可能为负的问题</span></span><br><span class="line">        code = code &lt; <span class="number">0</span> ? -code:code;</span><br><span class="line">        <span class="type">String</span> <span class="variable">codeStr</span> <span class="operator">=</span> code + <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> codeStr.length();</span><br><span class="line">        <span class="keyword">return</span>  patch[length] + codeStr;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Cacheable(value = &quot;smsCode&quot;, key = &quot;#tele&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getCodeFromCache</span><span class="params">(String tele)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意，这里把getCodeFromCache方法放在这个工具类之中的原因，是我们需要使用springboot容器统一管理，如果放在service下，@Cacheable注解将会失效，原因是其未被加载至springboot容器内。</p>
-</li>
-<li><p>第三步，新建业务层接口SMSCodeService及其实现类SMSCodeServiceImpl</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SMSCodeService</span> &#123;</span><br><span class="line">    <span class="comment">// 向手机发送验证码</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sendCodeToSMS</span><span class="params">(String tele)</span>;</span><br><span class="line">    <span class="comment">// 校验验证码</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">check</span><span class="params">(SMSCode code)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SMSCodeServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">SMSCodeService</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CodeUtils codeUtils;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">// 只用往缓存内存放验证码以供校验使用，使用下列注解</span></span><br><span class="line">    <span class="meta">@CachePut(value = &quot;smsCode&quot;,key = &quot;#tele&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sendCodeToSMS</span><span class="params">(String tele)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> codeUtils.generator(tele);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">check</span><span class="params">(SMSCode smsCode)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> smsCode.getCode();</span><br><span class="line">        <span class="type">String</span> <span class="variable">cacheCode</span> <span class="operator">=</span> codeUtils.getCodeFromCache(smsCode.getTele());</span><br><span class="line">        <span class="keyword">return</span> code.equals(cacheCode);</span><br><span class="line">       <span class="comment">// return false;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第四步，编写控制层SMSCodeController类用以测试：</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/sms&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SMSCodeController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> SMSCodeService service;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getCode</span><span class="params">(String tele)</span>&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> service.sendCodeToSMS(tele);</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@PostMapping</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">checkCode</span><span class="params">(SMSCode smsCode)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> service.check(smsCode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>完成这些步骤后，在postman中进行测试即可。</p>
-</li>
-</ul>
-<h4 id="3-jetcache缓存方案"><a href="#3-jetcache缓存方案" class="headerlink" title="3. jetcache缓存方案"></a>3. jetcache缓存方案</h4><p>jetcache缓存方案包括 远程缓存方案 和 本地缓存方案 两种。</p>
-<p><strong>（1）jetcache远程缓存方案：</strong></p>
-<ul>
-<li>首先，在pom文件中添加jetcache的坐标。然后，在application.yml中配置jetcache远程方案默认类型为redis，设置主机地址，端口（注意，poolconfig这一项必须配置，至少配置一条，否则初始化的时候会报错。）:</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alicp.jetcache<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jetcache-starter-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jetcache:</span></span><br><span class="line">  <span class="attr">remote:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">redis</span></span><br><span class="line">      <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.153</span><span class="number">.137</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">      <span class="attr">poolconfig:</span></span><br><span class="line">        <span class="attr">maxTotal:</span> <span class="number">50</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>第二步，在启动类中添加<code>@EnableCreateCacheAnnotation</code>注解，这个注解是jetcache启动缓存的主开关。</li>
-<li>定义Cache&lt;K,V&gt;对象，并添加注解@CreateCache，告诉jetcache这是用于进行缓存的对象。name属性定义缓存空间名称，expire属性定义存活时间（默认单位为秒）</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CreateCache(name = &quot;smsCache&quot;,expire = 3600)</span></span><br><span class="line">   <span class="keyword">private</span> Cache&lt;String,String &gt; jetCache;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用put和get方法即可进行缓存存取值：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">sendCodeToSMS</span><span class="params">(String tele)</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> codeUtils.generator(tele);</span><br><span class="line">      jetCache.put(tele,code);</span><br><span class="line">      <span class="keyword">return</span> code;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">check</span><span class="params">(SMSCode smsCode)</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> smsCode.getCode();</span><br><span class="line">      <span class="type">String</span> <span class="variable">cacheCode</span> <span class="operator">=</span> jetCache.get(smsCode.getTele());</span><br><span class="line">        <span class="keyword">return</span> code.equals(cacheCode);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230609143218491.png" alt="image-20230609143218491"></p>
-<ul>
-<li>在redis客户端进行查看，可以看到新添加的缓存。可以看到我们设置的name跟key连到一块了。所以在设置name时最好在后面加上分隔符，比如“smsCode_”，这样可以更好地做区分。</li>
-</ul>
-<p><strong>（2）jetcache本地缓存方案</strong></p>
-<ul>
-<li>首先，添加jetcache本地缓存配置：</li>
-</ul>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jetcache:</span></span><br><span class="line">  <span class="attr">local:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">linkedhashmap</span></span><br><span class="line">      <span class="attr">keyConverter:</span> <span class="string">fastjson</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>然后，设置缓存类型为local（其中有三种类型可选，BOTH代表本地和远程同时缓存；LOCAL代表使用本地缓存；REMOTE代表使用远程缓存）</li>
-</ul>
-<p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230609154601714.png" alt="image-20230609154601714"></p>
-<p><strong>（3）jetcache方法缓存</strong></p>
-<p>这里的方法缓存是指在方法上添加注解使其具有缓存的功能，具体流程如下：</p>
-<ul>
-<li><p>首先，在启动类上添加<code>@EnableMehodCache</code>注解，并配置路径，使用缓存的类必须存在该路径内。同时，该注解必须与@EnableCacheAnnotation 注解配合使用：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="comment">// jetcache启用缓存的主开关</span></span><br><span class="line"><span class="meta">@EnableCreateCacheAnnotation</span></span><br><span class="line"><span class="comment">// 启用方法缓存</span></span><br><span class="line"><span class="meta">@EnableMethodCache(basePackages = &quot;com.jiawei.boot&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BootApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(BootApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第二步，在方法上添加<code>@Cached</code>注解，指明缓存空间名称，关键字，存放时间：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Cached(name=&quot;book_&quot;,key=&quot;#id&quot;,expire = 3600)</span></span><br><span class="line"><span class="keyword">public</span> Book <span class="title function_">getById</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">       <span class="keyword">return</span> bookMapper.selectById(id);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>这之后运行会报一个空指针的异常，这个异常是由于默认使用的方案，而我们没有配置keyConverter引起的。添加该项配置即可：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jetcache:</span></span><br><span class="line">  <span class="attr">remote:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">redis</span></span><br><span class="line">      <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.153</span><span class="number">.137</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">      <span class="attr">keyConverter:</span> <span class="string">fastjson</span></span><br><span class="line">      <span class="attr">poolconfig:</span></span><br><span class="line">        <span class="attr">maxTotal:</span> <span class="number">50</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>再然后，会爆出一个未序列化的异常，这个异常是由于redis没有存储对象的功能，所以我们需要进行序列化对象进行存储。添加Book对象的序列化配置过程如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Book</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>配置中添加：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jetcache:</span></span><br><span class="line">  <span class="attr">remote:</span></span><br><span class="line">    <span class="attr">default:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">redis</span></span><br><span class="line">      <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.153</span><span class="number">.137</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">      <span class="attr">keyConverter:</span> <span class="string">fastjson</span></span><br><span class="line">      <span class="attr">valueEncode:</span> <span class="string">java</span></span><br><span class="line">      <span class="attr">valueDecode:</span> <span class="string">java</span></span><br><span class="line">      <span class="attr">poolconfig:</span></span><br><span class="line">        <span class="attr">maxTotal:</span> <span class="number">50</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>至此问题解决，但是也存在着当数据库进行更新以及删除操作时，缓存的数据需要进行同步的问题，我们为更新和删除操作添加注解，每当进行更新或删除操作时就更新缓存内容：</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 更新方法</span></span><br><span class="line"><span class="meta">@CacheUpdate(name=&quot;book_&quot;,key=&quot;#book.id&quot;,value=&quot;#book&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">update</span><span class="params">(Book book)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> bookMapper.update(book)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 删除方法</span></span><br><span class="line"><span class="meta">@CacheInvalidate(name=&quot;book_&quot;,key=&quot;#id&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">deleteBook</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> bookMapper.deleteById(id)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>设定缓存刷新（单位为秒）使用<code>@CacheRefresh（refresh = 5）</code>注解，此操作请谨慎使用。</li>
-</ul>
-<h4 id="4-J2cache缓存框架"><a href="#4-J2cache缓存框架" class="headerlink" title="4. J2cache缓存框架"></a>4. J2cache缓存框架</h4><p><strong>（1）整合ehcache:</strong></p>
-<ul>
-<li><p>第一步，导入j2cache、ehcache依赖，注意j2cache需要导入两处依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.oschina.j2cache<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>j2cache-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6.0-release<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.oschina.j2cache<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>j2cache-spring-boot2-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.7.5-release<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sf.ehcache<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>ehcache<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第二步，application.yml中添加配置，指定j2cache配置文件路径：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">j2cache:</span></span><br><span class="line">  <span class="attr">config-location:</span> <span class="string">j2cache.properties</span></span><br></pre></td></tr></table></figure>
-
-<p>添加ehcache的配置文件ehcache.xml：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ehcache</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:noNamespaceSchemaLocation</span>=<span class="string">&quot;http://ehcache.org/ehcache.xsd&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">updateCheck</span>=<span class="string">&quot;false&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">defaultCache</span></span></span><br><span class="line"><span class="tag">            <span class="attr">eternal</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">maxElementsInMemory</span>=<span class="string">&quot;1000&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">overflowToDisk</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">diskPersistent</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">timeToIdleSeconds</span>=<span class="string">&quot;60&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">timeToLiveSeconds</span>=<span class="string">&quot;60&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">memoryStoreEvictionPolicy</span>=<span class="string">&quot;LRU&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">ehcache</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>创建j2cache.properties配置文件，这里我们配置一级缓存(ehcache)和二级缓存(redis)，配置内容如下：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1级缓存</span></span><br><span class="line"><span class="attr">j2cache.L1.provider_class</span> = <span class="string">ehcache</span></span><br><span class="line"><span class="attr">ehcache.configXml</span> = <span class="string">ehcache.xml</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 2级缓存</span></span><br><span class="line"><span class="attr">j2cache.L2.provider_class</span> =<span class="string">net.oschina.j2cache.cache.support.redis.SpringRedisProvider</span></span><br><span class="line"><span class="attr">j2cache.L2.config_section</span> = <span class="string">redis</span></span><br><span class="line"><span class="attr">redis.hosts</span> = <span class="string">192.168.153.127:6379</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 1级缓存中的数据如何到达2及缓存</span></span><br><span class="line"><span class="attr">j2cache.broadcast</span> = <span class="string">net.oschina.j2cache.cache.support.redis.SpringRedisPubSubPolicy</span></span><br></pre></td></tr></table></figure>
-
-<p>SpringRedisProvider的位置，（SpringRedisPubSubPolicy在同一级）：</p>
-<img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20230613144723962.png" alt="image-20230613144723962" style="zoom:67%;" />
-</li>
-<li><p>使用：创建CacheChannel对象，进行set和get：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SMSCodeServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">SMSCodeService</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CodeUtils codeUtils;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CacheChannel cacheChannel;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sendCodeToSMS</span><span class="params">(String tele)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> codeUtils.generator(tele);</span><br><span class="line">        cacheChannel.set(<span class="string">&quot;sms&quot;</span>,tele,code);</span><br><span class="line">        <span class="comment">//jetCache.put(tele,code);</span></span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">check</span><span class="params">(SMSCode smsCode)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> smsCode.getCode();</span><br><span class="line">        <span class="type">String</span> <span class="variable">cacheCode</span> <span class="operator">=</span> cacheChannel.get(<span class="string">&quot;sms&quot;</span>,smsCode.getTele()).asString();</span><br><span class="line">          <span class="keyword">return</span> code.equals(cacheCode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -3576,7 +3908,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
