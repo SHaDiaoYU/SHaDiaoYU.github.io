@@ -176,7 +176,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-09-01 16:47:56" itemprop="dateModified" datetime="2024-09-01T16:47:56+08:00">2024-09-01</time>
+                <time title="修改时间：2024-09-02 13:17:27" itemprop="dateModified" datetime="2024-09-02T13:17:27+08:00">2024-09-02</time>
               </span>
 
           
@@ -211,7 +211,7 @@
 <p>新建一张表，这张表的字段包括消息<strong>id、消息体（json格式）、exchange交换机、routing_key路由键、status状态（投递中、投递成功、投递失败、已消费）、重试次数、下一次重试时间、创建时间、更新时间。</strong></p>
 <p><strong>具体业务流程就是：</strong></p>
 <ul>
-<li>改造发送方：消息对象在发送到mq之前，先写入数据库一条记录（默认状态是投递中），随后往mq中投递，如果收到ack就更新状态（投递成功 or 失败）。</li>
+<li>改造发送方：<strong>消息对象在发送到mq之前，先写入数据库一条记录</strong>（默认状态是投递中），随后往mq中投递，如果收到ack就更新状态（投递成功 or 失败）。</li>
 <li>改造消费者，<strong>每次消费的时候，从数据库中查询，如果消息已经被消费，不用再重复发送数据。</strong>这样即可保证，如果rabbitMQ服务器，即使重启之后重新推送消息，通过数据库进行判断，也不会重复消费而发生业务异常。</li>
 </ul>
 <p><strong>利用定时任务对消息投递失败进行补偿：</strong></p>
@@ -1339,7 +1339,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-08-31 21:43:27" itemprop="dateModified" datetime="2024-08-31T21:43:27+08:00">2024-08-31</time>
+                <time title="修改时间：2024-09-09 22:10:31" itemprop="dateModified" datetime="2024-09-09T22:10:31+08:00">2024-09-09</time>
               </span>
 
           
@@ -1354,6 +1354,15 @@
 
       
           <h1 id="一、java基础"><a href="#一、java基础" class="headerlink" title="一、java基础"></a>一、java基础</h1><h2 id="8种基本数据类型"><a href="#8种基本数据类型" class="headerlink" title="8种基本数据类型"></a>8种基本数据类型</h2><p>byte（8位，默认0B）、short（16位，默认0）、int（32位，默认0）、long（64位，默认0L）、float（32位，默认0.0f）、double（64位，默认0.0d）、char（16位，默认值\u0000）、boolean（jvm实现相关，一般情况下为1个字节，默认false）</p>
+<h2 id="软件设计七大原则"><a href="#软件设计七大原则" class="headerlink" title="软件设计七大原则"></a>软件设计七大原则</h2><ol>
+<li><strong>单一职责原则：</strong>一个类应该只有一个导致其变化的原因，换句话说，一个类只负责一个功能区域。</li>
+<li><strong>开闭原则：</strong>软件实体（类、模块、函数等）应该对扩展开放，对修改关闭。</li>
+<li><strong>里氏替换原则</strong>：子类对象应该能够替换父类对象，并且不影响程序的行为。即子类必须完全实现父类的方法，不破坏父类的功能。</li>
+<li><strong>依赖倒置原则：</strong>高层模块不应该依赖于底层模块，二者都应该依赖于抽象；抽象不应该依赖于具体实现，具体实现应该依赖与抽象。</li>
+<li><strong>接口隔离原则：</strong>不应该强迫用户依赖它们不使用的接口，换句话说，接口应该尽量小而专注，不要让接口承担过多职责。</li>
+<li><strong>迪米特法则：</strong>一个对象应该对其他对象有尽可能少的了解，也称为最少知道原则。即对象只与直接的朋友通信，不与陌生对象通信。</li>
+<li><strong>合成复用原则：</strong>尽可能使用对象组合而不是继承来达到复用的目的。</li>
+</ol>
 <h2 id="包装类型的常量池技术"><a href="#包装类型的常量池技术" class="headerlink" title="包装类型的常量池技术"></a><strong>包装类型的常量池技术</strong></h2><p>Byte、Short、Integer、Long这 4 种包装类默认创建了数值 [-128，127] 的相应类型的缓存数据。Character 创建了数值在 [0,127] 范围的缓存数据，Boolean直接返回True或False。</p>
 <p><strong>两种浮点类型的包装类Float、Double并没有实现包装类技术。</strong></p>
 <p><strong>所有整型包装类对象之间值的比较，全部使用equals方法进行比较。</strong></p>
@@ -1516,13 +1525,13 @@
 </li>
 </ol>
 <h1 id="Java集合"><a href="#Java集合" class="headerlink" title="Java集合"></a>Java集合</h1><h2 id="几种集合的数据结构："><a href="#几种集合的数据结构：" class="headerlink" title="几种集合的数据结构："></a>几种集合的数据结构：</h2><ul>
-<li>HashMap：哈希表 + 链表 ，无序，允许键和值为null，线程不安全</li>
+<li>HashMap：哈希表 + 链表 ，无序，允许键和值为null，线程不安全。有线程安全版本的ConcurrentHashMap。</li>
 <li>LinkedHashMap： 哈希表 + 双向链表，保持插入顺序或访问顺序。</li>
 <li>TreeMap： <strong>基于红黑树</strong>实现的<strong>有序</strong>Map</li>
 <li>Hashtable：基于哈希表实现的map，线程安全</li>
 <li>concurrentHashMap：基于哈希表实现的线程安全的 Map，支持高并发操作。</li>
-<li>ArrayList：底层<strong>基于数组</strong></li>
-<li>LinkedList：底层<strong>基于双向链表</strong></li>
+<li>ArrayList：底层<strong>基于数组</strong>，线程不安全。vector是线程安全的。可以使用线程安全版本的CopyOnWriteArrayList。</li>
+<li>LinkedList：底层<strong>基于双向链表</strong>，线程不安全。</li>
 </ul>
 <h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><ul>
 <li>1.7之前，数组 +链表</li>
@@ -1544,7 +1553,24 @@
 </ul>
 </li>
 </ul>
-<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="volatile关键字："><a href="#volatile关键字：" class="headerlink" title="volatile关键字："></a>volatile关键字：</h2><p>volatile关键字保证了 <strong>可见性（一个线程对共享变量进行修改后，其他线程能立即看到这个修改）</strong> 和 <strong>有序性（程序执行的顺序与代码的顺序一致）</strong></p>
+<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="Runnable和Callable有什么区别："><a href="#Runnable和Callable有什么区别：" class="headerlink" title="Runnable和Callable有什么区别："></a>Runnable和Callable有什么区别：</h2><ul>
+<li><strong>返回值：</strong><ul>
+<li>Runnable没有返回值。Runnable的run()方法不返回任何值，它仅执行任务。</li>
+<li>Callable有返回值，Callable的call()方法返回一个泛型类型的值，通常与线程池或并发任务的结果相关联。</li>
+</ul>
+</li>
+<li><strong>异常值：</strong><ul>
+<li>Runnable：不能抛出受检查的异常，只能处理运行时异常。</li>
+<li>Callable：可以抛出受检查的异常，这意味着call()方法允许使用throws生命抛出异常。</li>
+</ul>
+</li>
+<li><strong>线程池使用</strong><ul>
+<li>使用Java的线程池时，提交runnable任务时，可以使用submit(Runnable task)，返回Future&lt;?&gt;，即没有明确返回结果。</li>
+<li>提交Callable任务时，使用submit(Callable<V> task)，返回Future<V>，可以通过Future.get()获取执行结果。</li>
+</ul>
+</li>
+</ul>
+<h2 id="volatile关键字："><a href="#volatile关键字：" class="headerlink" title="volatile关键字："></a>volatile关键字：</h2><p>volatile关键字保证了 <strong>可见性（一个线程对共享变量进行修改后，其他线程能立即看到这个修改）</strong> 和 <strong>有序性（程序执行的顺序与代码的顺序一致）</strong></p>
 <p><strong>volatile如何保证可见性：</strong></p>
 <ul>
 <li>一个变量被声明为volatile时，<strong>线程在写入变量时</strong>， 不会立即把值缓存到寄存器或其他地方，而是<strong>会把值刷新回主内存。</strong></li>
@@ -1592,7 +1618,7 @@
 </ul>
 <p><strong>具体过程如下</strong>：</p>
 </li>
-<li><p>当<strong>多个线程同时访问</strong>同步代码块时，首<strong>先会进入到EntryList中</strong>，然后通过<strong>CAS</strong>的方式尝试<strong>将Monitor中的owner字段设置为当前线程，同时count加一</strong>（锁计数器，获取锁时加1，释放锁时减1）。<strong>若</strong>发现<strong>之前owner的值就是指向当前线程的</strong>，<strong>recursions字段也需要加一</strong>（锁重入次数）。如果CAS尝试获取锁失败，则进入到<strong>EntryList</strong>中。</p>
+<li><p>当<strong>多个线程同时访问</strong>同步代码块时，首<strong>先会进入到EntryList中</strong>，然后通过<strong>CAS</strong>的方式尝试<strong>将Monitor中的owner字段设置为当前线程，同时count加一</strong>（锁计数器，获取锁时加1，释放锁时减1）。<strong>若</strong>发现<strong>之前owner的值就是指向当前线程的</strong>，<strong>recursions字段也需要加一</strong>（锁重入次数）。如果CAS尝试获取锁失败，则进入到<strong>WaitSet</strong>中。</p>
 </li>
 <li><p>当<strong>获取锁的线程调用wait()<strong>方法，则会将owner设置为null，同时count减一，recursion减一，当前</strong>线程加入到waitSet</strong>中，等待被唤醒。</p>
 </li>
@@ -1614,6 +1640,7 @@
 </ul>
 <h2 id="锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁"><a href="#锁以及锁升级-无锁、偏向锁、轻量级锁、重量级锁" class="headerlink" title="锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)"></a>锁以及锁升级(无锁、偏向锁、轻量级锁、重量级锁)</h2><p>jdk1.6中，<strong>为了减少获取锁和释放锁带来的性能消耗</strong>，引入了偏向锁和轻量级锁，锁状态变为了四种。锁的状态会随着竞争激烈程度而升级。并且锁只能升级不能降级（为了提高获取&#x2F;释放锁的效率）。锁升级顺序如下:</p>
 <p><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240518144521730.png" alt="image-20240518144521730"></p>
+<p>当对象状态为偏向锁（biasable）时，mark word存储的是偏向的线程ID；当状态为轻量级锁（lightweight locked）时，mark word存储的是指向线程栈中Lock Record的指针；当状态为重量级锁（inflated）时，为指向堆中的monitor对象的指针。</p>
 <h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><p>引入偏向锁的目的：<strong>减少只有一个线程执行同步代码块时的性能消耗</strong>。（没有其他线程竞争，只有1个线程获取到锁）</p>
 <p>⭐一句话总结<strong>偏向锁原理：使用CAS操作将当前线程的ID记录到对象头的mark word中。</strong>具体流程如下：</p>
 <p><strong>偏向锁的获取流程</strong>：</p>
@@ -1824,13 +1851,13 @@
 <h3 id="Spring事务传播行为："><a href="#Spring事务传播行为：" class="headerlink" title="Spring事务传播行为："></a>Spring事务传播行为：</h3><p>事务传播行为是为了解决<strong>service层方法之间互相调用</strong>的事务问题（一个事务方法被另一个事务方法调用时，需要指定事务如何传播）。</p>
 <p><strong>事务传播行为包括如下：</strong></p>
 <ul>
-<li>REQUIRED： 默认的事务传播行为，required表示当前方法必须在一个事务中运行，如果当前存在事务，则加入该事务；如果当前没有事务，则创建一个新的事务；</li>
-<li>SUPPORTS：当前方法支持在一个事务中运行，如果当前存在事务，则加入该事务；如果当前没有事务，则以非事务的方式执行；</li>
-<li>MANDATORY：当前方法必须在一个事务中运行，如果当前存在事务，则加入该事务，如果当前没有事务，则抛出异常；</li>
-<li>REQUIRES_NEW：当前方法必须在一个新的事务中运行，如果当前存在事务，就挂起该事务，并创建一个新的事务。</li>
-<li>NOT_SUPPORTED：当前方法不应该在事务中运行，如果当前存在事务，就挂起该事务，以非事务的方式执行。</li>
-<li>NEVER：表示当前方法不应在事务中运行，如果当前存在事务，则抛出异常。</li>
-<li>NESTED：表示当前方法必须在一个嵌套的事务中运行，如果当前存在事务，则该在事务的嵌套事务中运行；如果当前没有事务，则创建一个新的嵌套事务。</li>
+<li><strong>REQUIRED： 默认的事务传播行为</strong>，required表示当前方法必须在一个事务中运行，如果当前存在事务，则加入该事务；如果当前没有事务，则创建一个新的事务；</li>
+<li><strong>SUPPORTS</strong>：当前方法支持在一个事务中运行，如果当前存在事务，则加入该事务；如果当前没有事务，则以非事务的方式执行；</li>
+<li><strong>MANDATORY</strong>：当前方法必须在一个事务中运行，如果当前存在事务，则加入该事务，如果当前没有事务，则抛出异常；</li>
+<li><strong>REQUIRES_NEW</strong>：当前方法必须在一个新的事务中运行，如果当前存在事务，就挂起该事务，并创建一个新的事务。</li>
+<li><strong>NOT_SUPPORTED</strong>：当前方法不应该在事务中运行，如果当前存在事务，就挂起该事务，以非事务的方式执行。</li>
+<li><strong>NEVER</strong>：表示当前方法不应在事务中运行，如果当前存在事务，则抛出异常。</li>
+<li><strong>NESTED</strong>：表示当前方法必须在一个嵌套的事务中运行，如果当前存在事务，则该在事务的嵌套事务中运行；如果当前没有事务，则创建一个新的嵌套事务。</li>
 </ul>
 <h3 id="事务失效场景"><a href="#事务失效场景" class="headerlink" title="事务失效场景"></a>事务失效场景</h3><ul>
 <li><strong>@Transactional 应用在非 public 修饰的方法上</strong>：<strong>spring要求被代理方法必须是public的</strong>。在<code>AbstractFallbackTransactionAttributeSource</code>类的<code>computeTransactionAttribute</code>方法中有个判断，如果目标方法不是 public，则<code>TransactionAttribute</code>返回 null，即不支持事务。</li>
@@ -1885,20 +1912,76 @@
 <li><img src="https://jiawei-blog-pictures.oss-cn-beijing.aliyuncs.com/blog_pictures/image-20240527220525316.png" alt="image-20240527220525316"></li>
 </ul>
 </li>
-<li><strong>注解注入</strong>（**@Autowired &amp; @Resource**）<ul>
+<li><strong>静态工厂注入：</strong><ul>
+<li>静态工厂顾名思义，就是通过调用静态工厂的方法来获取自己需要的对象，为了让Spring管理所有对象，不能直接通过“工程类.静态方法()”来获取对象，而是通过spring注入的形式获取。</li>
+</ul>
+</li>
+<li><strong>非静态工厂注入：</strong><ul>
+<li>非静态工厂也叫实例工厂，意思是工厂方法不是静态的，所以需要首先new一个工厂实例，再调用普通的实例方法。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Spring自动装配原理"><a href="#Spring自动装配原理" class="headerlink" title="Spring自动装配原理"></a>Spring自动装配原理</h2><h3 id="Autowired-amp-Resource的区别与联系"><a href="#Autowired-amp-Resource的区别与联系" class="headerlink" title="@Autowired &amp; @Resource的区别与联系"></a>@Autowired &amp; @Resource的区别与联系</h3><ul>
 <li>如果我们使用的是@Autowired 注入的时候，在单例池中查找，先byType进行查找，如果有多个结果不知道该注入哪个，就继续byName再做查找，如果byName还是找不到，如果我们声明了这个依赖是一个强制依赖，则会报错；否则不报错。</li>
 <li>同样的，如果byType的时候，从单例池中只有一个bean，那么就使用该bean进行注入，不管beanName对不对的上。</li>
 <li>如果我们使用的是@Resource注解（没有指定name），那么直接byName进行查找，如果查找不到就会byType查找。</li>
 <li>如果我们使用的是@Resource注解（指定了name），那么直接byName进行查找，如果查找不到就直接报错。</li>
 </ul>
-</li>
+<h3 id="Spring自动装配类型"><a href="#Spring自动装配类型" class="headerlink" title="Spring自动装配类型"></a>Spring自动装配类型</h3><ul>
+<li><strong>byName</strong></li>
+<li><strong>byType</strong></li>
+<li><strong>constructor</strong>:  与byType类似，只不过它是针对构造函数注入而言的。如果容器中没有找到和构造函数入参匹配类型的Bean，Spring将抛出异常。</li>
+<li><strong>autodect</strong>：根据bean的自省机制决定使用byType还是constructor进行自动装配，如果bean提供了默认的构造函数则采用byType，否则采用constructor。</li>
 </ul>
-<h2 id="5-AOP"><a href="#5-AOP" class="headerlink" title="5. AOP"></a>5. AOP</h2><h3 id="什么是AOP？有没有用过AOP？"><a href="#什么是AOP？有没有用过AOP？" class="headerlink" title="什么是AOP？有没有用过AOP？"></a>什么是AOP？有没有用过AOP？</h3><p>AOP称为面向切面编程，用于将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块，这个模块被命名为”切面“Aspect，减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。</p>
+<h2 id="5-AOP"><a href="#5-AOP" class="headerlink" title="5. AOP"></a>5. AOP</h2><h3 id="什么是AOP？有没有用过AOP？"><a href="#什么是AOP？有没有用过AOP？" class="headerlink" title="什么是AOP？有没有用过AOP？"></a>什么是AOP？有没有用过AOP？</h3><p>AOP称为面向切面编程，<strong>AOP的核心是代理机制。</strong>用于将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块，这个模块被命名为”切面“Aspect，减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。</p>
 <p>AOP常见使用场景：</p>
 <ul>
 <li>记录操作日志</li>
 <li>缓存数据</li>
 <li><strong>Spring事务</strong></li>
+</ul>
+<h3 id="AOP通知类型"><a href="#AOP通知类型" class="headerlink" title="AOP通知类型"></a>AOP通知类型</h3><ul>
+<li><code>@Before</code>: 在目标方法执行之前执行。</li>
+<li><code>@After</code>: 在目标方法执行之后执行，无论是否抛出异常。</li>
+<li><code>@AfterReturning</code>: 在目标方法正常返回后执行。</li>
+<li><code>@AfterThrowing</code>: 在目标方法抛出异常后执行。</li>
+<li><code>@Around</code>: 环绕通知，包裹目标方法的执行，可以控制方法的执行顺序。</li>
+</ul>
+<h3 id="SpringAOP-和-AspectJ-AOP-有什么区别？"><a href="#SpringAOP-和-AspectJ-AOP-有什么区别？" class="headerlink" title="SpringAOP 和 AspectJ AOP 有什么区别？"></a><strong>SpringAOP 和 AspectJ AOP 有什么区别？</strong></h3><ul>
+<li>SpringAOP 属于运行时增强，而Aspect J属于编译时增强；</li>
+<li>SpringAOP 基于代理，而AspectJ 基于字节码操作；</li>
+<li>如果切面较少，那么两者性能差异不大。如果较多的话，最好选择AspectJ，它更快一点。</li>
+</ul>
+<h3 id="JDK代理与CGLIB代理的联系与区别"><a href="#JDK代理与CGLIB代理的联系与区别" class="headerlink" title="JDK代理与CGLIB代理的联系与区别"></a>JDK代理与CGLIB代理的联系与区别</h3><h4 id="AOP的两种代理机制："><a href="#AOP的两种代理机制：" class="headerlink" title="AOP的两种代理机制："></a>AOP的两种代理机制：</h4><ul>
+<li><strong>JDK动态代理</strong>：基于JDK的反射机制，只能代理实现了接口的类。</li>
+<li><strong>CGLIB代理</strong>：基于字节码生成机制，通过继承目标类来创建代理对象，能够代理没有实现接口的类。</li>
+</ul>
+<h4 id="JDK动态代理："><a href="#JDK动态代理：" class="headerlink" title="JDK动态代理："></a>JDK动态代理：</h4><ul>
+<li><strong>实现方式：</strong> 通过实现目标对象的接口创建代理对象。</li>
+<li><strong>代理对象：</strong>代理类实现了目标对象的接口，所以代理对象实际上是目标对象接口的实现类。</li>
+<li><strong>适用场景：</strong>当目标类有接口时，Spring优先选择JDK动态代理。</li>
+<li><strong>优点：</strong> 实现相对简单，直接通过反射来调用接口方法。</li>
+<li><strong>缺点：</strong>只能代理实现了接口的类，无法代理没有接口的类。</li>
+</ul>
+<h4 id="CGLIB代理"><a href="#CGLIB代理" class="headerlink" title="CGLIB代理"></a>CGLIB代理</h4><ul>
+<li><strong>实现方式：</strong> 通过继承目标类，动态生成目标类的子类作为代理类。CGLIB使用字节码操作技术来生成类，并在子类中拦截方法调用。</li>
+<li><strong>代理对象：</strong>生成的代理对象是目标类的子类，通过继承和覆盖目标类的方法来实现增强功能。</li>
+<li><strong>适用场景：</strong> 当目标类没有实现接口时，使用CGLIB实现代理。</li>
+<li><strong>优点：</strong> 可以代理没有实现接口的类，并且对于大量方法的代理，CGLIB代理的性能通常比JDK动态代理更好。</li>
+<li><strong>缺点：</strong>由于通过继承实现，所以目标类和方法不能声明为final，否则无法代理。此外CGLIB动态代理相对来讲更复杂，因为涉及字节码的操作。</li>
+</ul>
+<h3 id="AOP怎么做？具体流程是什么？"><a href="#AOP怎么做？具体流程是什么？" class="headerlink" title="AOP怎么做？具体流程是什么？"></a>AOP怎么做？具体流程是什么？</h3><ul>
+<li><p><strong>1.引入AOP依赖：</strong>在项目中引入aop的依赖。</p>
+</li>
+<li><p><strong>2.定义一个切面类：使用@Aspect注解标记切面类，并使用@Before、@After、@Around等注解定义增强逻辑。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Aspect</span>  <span class="comment">// 声明为切面类</span></span><br><span class="line"><span class="meta">@Component</span>  <span class="comment">// 让Spring管理这个切面类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyAspect</span> &#123;</span><br><span class="line"><span class="comment">// 定义一个增强，匹配某个类的所有方法</span></span><br><span class="line">    <span class="meta">@Before(&quot;execution(* com.example.service.MyService.*(..))&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeMethod</span><span class="params">()</span> &#123;</span><br><span class="line">        .....</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>execution定义切点，表示对Myservice类中的所有方法进行增强。</p>
+<p>如果是环绕通知，方法参数中还需要一个joinPoint,<code>ProceedingJoinPoint</code>: 允许你控制目标方法的执行。<code>proceed()</code>方法用于执行目标方法。<code>@Around</code>增强不仅可以在方法前后执行逻辑，还能控制方法是否执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyAspect</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 环绕通知，包裹目标方法</span></span><br><span class="line">    <span class="meta">@Around(&quot;execution(* com.example.service.MyService.*(..))&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">aroundMethod</span><span class="params">(ProceedingJoinPoint joinPoint)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Before method execution&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行目标方法</span></span><br><span class="line">        <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> joinPoint.proceed();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;After method execution&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此外，切入点表达式还有其他玩法，例如可以指定匹配包中的所有类、指定类的某个方法、带有特定注解的方法等。</p>
+</li>
 </ul>
 <h2 id="6-Spring-Bean"><a href="#6-Spring-Bean" class="headerlink" title="6. Spring Bean"></a>6. Spring Bean</h2><h3 id="spring-中-bean的作用域有哪些？"><a href="#spring-中-bean的作用域有哪些？" class="headerlink" title="spring 中 bean的作用域有哪些？"></a>spring 中 bean的作用域有哪些？</h3><ul>
 <li><strong>singleton</strong>：唯一bean实例，<strong>Spring中的bean默认都是单例的</strong>。</li>
@@ -1932,9 +2015,9 @@
 <li><p><strong>代理模式（AOP用到的）</strong>：如果要代理的对象，<strong>实现了某个接口</strong>，那么springAOP会使用<strong>JDK Proxy</strong>，去创建代理对象；对于<strong>没有实现接口</strong>的对象，会使用<strong>cglib生成一个被代理对象的子类</strong>来作为代理。当然也可以使用<strong>AspectJ</strong>，AspectJ可以算得上Java生态系统中最完整的AOP框架了。<strong>SpringAOP 已经集成了 AspectJ AOP了</strong></p>
 <p><strong>SpringAOP 和 AspectJ AOP 有什么区别？</strong></p>
 <ul>
-<li>SpringAOP 属于运行时增强，而Aspect J属于编译时增强；</li>
-<li>SpringAOP 基于代理，而AspectJ 基于字节码操作；</li>
-<li>如果切面较少，那么两者性能差异不大。如果较多的话，最好选择AspectJ，它更快一点。</li>
+<li>SpringAOP 属于<strong>运行时增强</strong>，而Aspect J属于<strong>编译时增强</strong>；</li>
+<li><strong>SpringAOP 基于代理</strong>，而<strong>AspectJ 基于字节码</strong>操作；</li>
+<li>如果切面较少，那么两者性能差异不大。如果<strong>较多的话，最好选择AspectJ，它更快</strong>一点。</li>
 </ul>
 </li>
 <li><p><strong>模板模式：</strong>一种行为设计模式，它<strong>定义一个操作中的算法的骨架，而将一些步骤延迟到子类中</strong>。模板方法使得子类可以不改变一个算法的结构即可重新定义该算法的某些特定步骤的实现方式。</p>
@@ -1971,7 +2054,32 @@
 </ul>
 </li>
 </ul>
-<h1 id="三、计算机网络"><a href="#三、计算机网络" class="headerlink" title="三、计算机网络"></a>三、计算机网络</h1><h2 id="1-TCP三次握手-amp-四次挥手"><a href="#1-TCP三次握手-amp-四次挥手" class="headerlink" title="1. TCP三次握手 &amp; 四次挥手"></a>1. TCP三次握手 &amp; 四次挥手</h2><p><strong>三次握手建立连接</strong>。从client的视角来看：</p>
+<h2 id="10-SpringBoot拦截器如何实现？"><a href="#10-SpringBoot拦截器如何实现？" class="headerlink" title="10. SpringBoot拦截器如何实现？"></a>10. SpringBoot拦截器如何实现？</h2><p><strong>第一步，创建拦截器类</strong>：实现HandlerInterceptor接口。可以实现其中的一些方法：</p>
+<ul>
+<li>preHandler：在控制器处理请求之前调用。</li>
+<li>postHandler：在控制器处理完请求后，但在视图渲染之前调用。</li>
+<li>afterCompletion：在整个请求结束后调用，一般用于资源整理。</li>
+</ul>
+<p><strong>第二步，配置拦截器</strong>：通过继承WebMvcConfigurer并重写addInterceptors方法来注册拦截器。这里可以配置拦截的规则等等，返回true表示放行，false为拦截。</p>
+<h1 id="三、计算机网络"><a href="#三、计算机网络" class="headerlink" title="三、计算机网络"></a>三、计算机网络</h1><h2 id="OSI七层模型（从上至下）："><a href="#OSI七层模型（从上至下）：" class="headerlink" title="OSI七层模型（从上至下）："></a>OSI七层模型（从上至下）：</h2><ul>
+<li><strong>应用层：</strong>为应用程序提供服务。<ul>
+<li>常见协议：HTTP、FTP、SMTP、SNMP、DNS、SSH。</li>
+</ul>
+</li>
+<li><strong>表示层：</strong>数据格式化、数据加密。</li>
+<li><strong>会话层：</strong>不同机器上的用户之间建立及管理会话。</li>
+<li><strong>传输层：</strong>建立、管理和维护端到端的链接。<ul>
+<li>常见协议：TCP、UDP。</li>
+</ul>
+</li>
+<li><strong>网络层：</strong>IP地址及路由选择。<ul>
+<li>常见协议：IP、ICMP（传递控制消息和错误消息）、ARP（将IP地址映射为MAC地址）、RARP、IPv6。</li>
+</ul>
+</li>
+<li><strong>数据链路层：</strong> 提供介质访问和链路管理。</li>
+<li><strong>物理层：</strong>硬件层面。</li>
+</ul>
+<h2 id="TCP三次握手-amp-四次挥手"><a href="#TCP三次握手-amp-四次挥手" class="headerlink" title="TCP三次握手 &amp; 四次挥手"></a>TCP三次握手 &amp; 四次挥手</h2><p><strong>三次握手建立连接</strong>。从client的视角来看：</p>
 <ul>
 <li><strong>第一次握手</strong>： client发送一个带有<code>syn（seq = x）</code>标志的数据包到server端，然后标识自己的状态为<strong>syn_send</strong>已发送状态；</li>
 <li><strong>第二次握手</strong>：server收到了client发来的消息，于是向client发送 <code>syn (seq = y) + ack（ack=x+1） </code>确认信息。client接收到确认信息后，这时候client知道自己的发送和接收都能正常进行，对方的发送和接收都正常；server知道自己能正常接收，对方能正常发送（<strong>但不知道对方能否正常接收，自己能不能正常发送</strong>）；在server发送确认信息后表示自己状态为<strong>syn_recv</strong>已接收状态。</li>
@@ -2101,28 +2209,36 @@
 <p>运算器、控制器是在中央处理器中的，存储器就是我们常见的内存，输入输出设备则是计算机外界的设备。</p>
 <p>存储单元与输入输出设备通过 <strong>总线</strong> 与CPU相连。</p>
 <h2 id="2-进程管理"><a href="#2-进程管理" class="headerlink" title="2. 进程管理"></a>2. 进程管理</h2><h3 id="进程间通信方式："><a href="#进程间通信方式：" class="headerlink" title="进程间通信方式："></a>进程间通信方式：</h3><ul>
-<li><p><strong>管道：半双工通信</strong>，只能单向传输。分为<strong>无名管道（pipe）</strong>和<strong>有名管道（FIFO）</strong>。无名管道只能用于具有亲缘关系的进程之间通信；有名管道可以用于任意进程之间的通信。</p>
-<ul>
+<li><strong>管道：半双工通信</strong>，只能单向传输。分为<strong>无名管道（pipe）</strong>和<strong>有名管道（FIFO）</strong>。无名管道只能用于具有亲缘关系的进程之间通信；有名管道可以用于任意进程之间的通信。<ul>
 <li>缺点：通信效率低，不适合频繁交换数据。</li>
 </ul>
 </li>
-<li><p><strong>消息队列：</strong>它是保存在内核中的消息链表。消息被存储在消息队列中，并按照一定的规则进行发送和接收。可以频繁交换数据。</p>
-<ul>
+<li><strong>消息队列：</strong>它是保存在内核中的消息链表。消息被存储在消息队列中，并按照一定的规则进行发送和接收。可以频繁交换数据。<ul>
 <li>缺点：消息队列不适合比较大消息的传输；并且消息队列通信过程中，存在用户态与内核态之间的数据拷贝开销。</li>
 </ul>
 </li>
-<li><p><strong>共享内存：</strong>其机制就是，拿出一块虚拟地址空间来，映射到相同的物理内存中。</p>
-</li>
-<li><p><strong>信号量（PV操作）：</strong>如果使用共享内存通信方式，带来新的问题，那就<strong>是如果多个进程同时修改同一个共享内存，很有可能就冲突了</strong>。为了防止多线程竞争导致数据错乱，因此需要保护机制，使得<strong>共享的资源，在任意时刻只能被一个进程访问</strong>。由此引入信号量机制。</p>
-<ul>
+<li><strong>共享内存：</strong>其机制就是，拿出一块虚拟地址空间来，映射到相同的物理内存中。</li>
+<li><strong>信号量（PV操作）：</strong>如果使用共享内存通信方式，带来新的问题，那就<strong>是如果多个进程同时修改同一个共享内存，很有可能就冲突了</strong>。为了防止多线程竞争导致数据错乱，因此需要保护机制，使得<strong>共享的资源，在任意时刻只能被一个进程访问</strong>。由此引入信号量机制。<ul>
 <li><strong>信号量其实是一个整形的计数器</strong>，<strong>主要用于实现进程之间的互斥与同步</strong>，而不是用于缓存进程之间通信的数据。</li>
 </ul>
 </li>
-<li><p><strong>信号：</strong>对于异常情况下的工作模式，就需要用 信号 的方式来通知进程。</p>
-</li>
-<li><p><strong>Socket：</strong>套接字是一种通用的进程间通信机制，不仅可以用于网络通信，还可以用于本地进程之间通信。套接字通信基于网络协议，提供了可靠、灵活的数据传输方式。在本地通信中，套接字可以用于不同进程之间通信，实现进程间数据交换和协作。</p>
-</li>
+<li><strong>信号：</strong>对于异常情况下的工作模式，就需要用 信号 的方式来通知进程。</li>
+<li><strong>Socket：</strong>套接字是一种通用的进程间通信机制，不仅可以用于网络通信，还可以用于本地进程之间通信。套接字通信基于网络协议，提供了可靠、灵活的数据传输方式。在本地通信中，套接字可以用于不同进程之间通信，实现进程间数据交换和协作。</li>
 </ul>
+<h2 id="3-死锁"><a href="#3-死锁" class="headerlink" title="3.死锁"></a>3.死锁</h2><h3 id="死锁产生的四个必要条件："><a href="#死锁产生的四个必要条件：" class="headerlink" title="死锁产生的四个必要条件："></a>死锁产生的四个必要条件：</h3><ul>
+<li><strong>互斥条件：</strong>系统中的资源是不可共享的，也就是说，某些资源在同一时间只能由同一个进程占用。如果一个进程已经占用了资源，其他进程就必须等待，直到资源被释放。</li>
+<li><strong>不剥夺条件：</strong>进程所获得的资源在未使用完毕之前，不被其他进程强行剥夺，只能由获得该资源的进程释放资源。</li>
+<li><strong>请求保持条件：</strong>进程每次申请它所需的一部分资源，在申请新的资源的同时，继续占用以分配的资源。</li>
+<li><strong>环路等待：</strong>存在一个<strong>进程链</strong>，其中每个进程都在等待下一个进程所占用的资源，从而形成一个闭环</li>
+</ul>
+<h3 id="死锁避免："><a href="#死锁避免：" class="headerlink" title="死锁避免："></a>死锁避免：</h3><ul>
+<li>破坏互斥条件：这个一般不现实。</li>
+<li>破坏不剥夺条件：可以允许强制剥夺资源来打破，但这可能会导致系统不稳定。</li>
+<li>破坏请求保持条件：可以通过规定所有进程在开始时一次性请求所有需要的资源来打破，但这可能导致资源浪费。</li>
+<li>破坏环路等待条件：可以通过对资源编号排序、规定进程按一定顺序请求资源来打破。</li>
+</ul>
+<h3 id="死锁预防："><a href="#死锁预防：" class="headerlink" title="死锁预防："></a>死锁预防：</h3><p>银行家算法：系统对进程发出的每一个资源申请进行检查，并根据检查结果决定是否分配资源，如果分配后系统可能发生死锁就不进行分配。</p>
+<p>安全状态就是当前系统存在一个安全的进程序列，不会发生死锁。反正就是不安全状态。</p>
 <h1 id="四、JVM"><a href="#四、JVM" class="headerlink" title="四、JVM"></a>四、JVM</h1><h2 id="1-JVM内存"><a href="#1-JVM内存" class="headerlink" title="1. JVM内存"></a>1. JVM内存</h2><h3 id="jvm内存组成："><a href="#jvm内存组成：" class="headerlink" title="jvm内存组成："></a>jvm内存组成：</h3><ul>
 <li><strong>方法区</strong>（线程共享区）<ul>
 <li>也称为永久代，JDK8后改为<strong>元空间</strong>；</li>
@@ -2160,7 +2276,7 @@
 </ul>
 <h3 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h3><ul>
 <li><strong>对象头</strong><ul>
-<li>对象运行时数据：<ul>
+<li>对象运行时数据（mark word，在32位系统上长度为32bit，64位系统上长度为64bit）：<ul>
 <li>哈希码</li>
 <li>GC分代年龄</li>
 <li>锁状态标识</li>
@@ -2450,7 +2566,7 @@
 <h4 id="事务的四大特性ACID："><a href="#事务的四大特性ACID：" class="headerlink" title="事务的四大特性ACID："></a><strong>事务的四大特性ACID：</strong></h4><ul>
 <li><strong>原子性：</strong>事务的所有操作要么都执行，要么不执行；</li>
 <li><strong>一致性：</strong>事务在执行前后，数据库必须满足一致性约束。只能使数据库从一个一致性状态转变为一致性状态；</li>
-<li><strong>隔离性：</strong>一个事务所进行的修改操作在提交事务时，对其他事务是不可见的；</li>
+<li><strong>隔离性：</strong>数据库为每一个用户开启的事务，不能被其他事务的操作所干扰，多个并发事务之间要相互隔离。</li>
 <li><strong>持久性：</strong>一旦事务提交，则所做的修改会永久保存到数据库；</li>
 </ul>
 <h4 id="ACID如何保证的："><a href="#ACID如何保证的：" class="headerlink" title="ACID如何保证的："></a>ACID如何保证的：</h4><ul>
@@ -2490,7 +2606,7 @@
 <li>对于 <strong>串行化</strong> 级别，通过添加<strong>读写锁（排他锁）</strong>的方式实现。</li>
 </ul>
 <h2 id="3-MySQL锁"><a href="#3-MySQL锁" class="headerlink" title="3.  MySQL锁"></a>3.  MySQL锁</h2><h3 id="全局锁："><a href="#全局锁：" class="headerlink" title="全局锁："></a><strong>全局锁</strong>：</h3><ul>
-<li><p>使用全局锁后，整个数据库就处于只读状态了。这时其他线程执行以下操作，都会被阻塞：</p>
+<li><p>使用全局锁后，整个数据库就处于<strong>只读</strong>状态了。这时其他线程执行以下操作，都会被阻塞：</p>
 <ul>
 <li>对<strong>数据的增删改</strong>操作，比如 insert、delete、update等语句；</li>
 <li>对<strong>表结构的更改</strong>操作，比如 alter table、drop table 等语句。</li>
@@ -2523,7 +2639,7 @@
 <li>对<strong>表结构</strong>进行变更的时候，添加的是<strong>MDL写锁</strong>；</li>
 </ul>
 </li>
-<li><p>MDL在事务提交之后才会释放，这意味着<strong>事务执行期间，MDL是一直持有的。</strong></p>
+<li><p>MDL在<strong>事务提交之后才会释放</strong>，这意味着<strong>事务执行期间，MDL是一直持有的。</strong></p>
 </li>
 <li><p>申请MDL锁的操作会形成一个队列，队列中，<strong>写锁的优先级高于读锁</strong>，一旦出现MDL写锁等待，<strong>会阻塞后续该表中所有的CRUD操作</strong>（因为拿不到读锁了）。</p>
 </li>
@@ -2613,7 +2729,7 @@
 </ol>
 <ul>
 <li>bin log是<strong>server层</strong>实现的日志，<strong>所有存储引擎都能用</strong>。</li>
-<li>redo log和 undo log都是<strong>InnoDB引擎</strong>实现的日志。</li>
+<li>redo log和undo log都是<strong>InnoDB引擎</strong>实现的日志。</li>
 </ul>
 <ol start="2">
 <li><strong>文件格式不同：</strong></li>
@@ -2809,7 +2925,7 @@
 <li>缺点：如果过期键很少被访问，会占用大量内存。</li>
 </ul>
 </li>
-<li>定时删除： 在设置key的过期时间时，同时创建一个定时事件，当事件到达时，由事件处理器自动执行key的删除操作。</li>
+<li><strong>定时删除：</strong> 在设置key的过期时间时，同时创建一个定时事件，当事件到达时，由事件处理器自动执行key的删除操作。</li>
 <li><strong>定期删除</strong>：redis默认每10秒执行一次定时任务，随机抽取一部分键进行检查，删除过期的键。<ul>
 <li>这种策略通过定期删除过期键来释放内存，相比于惰性删除，可以更及时的删除过期键，但也有可能会有一些过期键没被删除。</li>
 </ul>
@@ -2974,7 +3090,7 @@
 </ul>
 </li>
 </ul>
-<h5 id="如何应对主从数据的不一致性："><a href="#如何应对主从数据的不一致性：" class="headerlink" title="如何应对主从数据的不一致性："></a>如何应对主从数据的不一致性：</h5><p>主从数据不一致因为主从数据同步是异步进行的，无法实现强一致性。</p>
+<h5 id="如何应对主从数据的不一致性："><a href="#如何应对主从数据的不一致性：" class="headerlink" title="如何应对主从数据的不一致性："></a>如何应对主从数据的不一致性：</h5><p>主从数据不一致因为主从数据同步是异步进行的<strong>，无法实现强一致性。</strong></p>
 <ul>
 <li>保证主从节点之间网络通信良好，避免主从节点在不同的机房。</li>
 <li>INFO replication 命令可以查看主节点写的偏移量 master_repl_offset和从节点的偏移量 slave_repl_offset。因此可以开发一个程序监控二者的差值，以进行主从复制进度的监控。如果两个偏移量的差值大于我们设定的阈值，可以不让客户端从这个节点读取，这样可以减少读到不一致数据的情况。</li>
@@ -3003,7 +3119,7 @@
 <h4 id="高可用之哨兵机制："><a href="#高可用之哨兵机制：" class="headerlink" title="高可用之哨兵机制："></a>高可用之哨兵机制：</h4><p>哨兵机制的主要作用就是<strong>实现主从节点故障转移</strong>。哨兵节点主要负责<strong>三件事情：监控、选主、通知</strong>。</p>
 <h5 id="如何判断主节点真的故障了（主管下线-amp-客观下线）："><a href="#如何判断主节点真的故障了（主管下线-amp-客观下线）：" class="headerlink" title="如何判断主节点真的故障了（主管下线&amp;客观下线）："></a>如何判断主节点真的故障了（主管下线&amp;客观下线）：</h5><ul>
 <li><strong>哨兵每隔一秒ping主节点和从节点</strong>，以确定主节点和从节点能正常运行。<strong>如果主从节点没有在规定时间内响应哨兵</strong>，哨兵就会将他们标记为 <strong>主观下线</strong>。</li>
-<li><strong>客观下线只适用于主节点。</strong>当一个哨兵判断主节点为 主管下线后，会向其他哨兵发起命令，其他哨兵收到这个命令后，就会根据自身和主节点的连接状况，做出赞成投票 和 反对投票。</li>
+<li><strong>客观下线只适用于主节点。</strong>当一个哨兵判断主节点为 主观下线后，会向其他哨兵发起命令，其他哨兵收到这个命令后，就会根据自身和主节点的连接状况，做出赞成投票 和 反对投票。</li>
 <li>一旦这个哨兵的赞成票数大于 <strong>哨兵配置文件的 <quorum> 配置设定的值</strong>后，这时主节点就会被该哨兵（指第一个主观下线主节点的哨兵）标记为 <strong>客观下线</strong>。</li>
 <li><strong>主节点被客观下线后，就需要哨兵们选取新的主节点了</strong>。</li>
 </ul>
